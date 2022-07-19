@@ -34,6 +34,7 @@
 	<li>IndexedDB storage, using <a href="https://dexie.org" target='_blank' rel='noopener noreferrer'>Dexie</a></li>
 	<li><a href="https://pinia.vuejs.org/" target='_blank' rel='noopener noreferrer'>Pinia</a> for local data storage</li>
 	<li>Client side routing with <a href="https://router.vuejs.org/" target='_blank' rel='noopener noreferrer'>Vue Router</a></li>
+	<li>Restricted (server side validated) User & Admin User areas</li>
 	<li>Form validation with <a href="https://vuelidate.js.org/" target='_blank' rel='noopener noreferrer'>Vuelidate</a></li>
 	<li>QR code creation</li>
 	<li>Github release workflow</li>
