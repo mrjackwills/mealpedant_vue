@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+   <url>
+      <loc>https://www.mealpedant.com/</loc>
+      <lastmod>2019-07-22T18:46:35+00:00</lastmod>
+      <changefreq>never</changefreq>
+      <priority>1</priority>
+   </url>
+   <url>
+        <loc>https://www.mealpedant.com/signin</loc>
+        <lastmod>2019-07-22T18:46:35+00:00</lastmod>
+        <changefreq>never</changefreq>
+      <priority>.5</priority>
+    </url>
+    <url>
+        <loc>https://www.mealpedant.com/register</loc>
+        <lastmod>2019-07-22T18:46:35+00:00</lastmod>
+        <changefreq>never</changefreq>
+      <priority>.25</priority>
+    </url>
+</urlset> 

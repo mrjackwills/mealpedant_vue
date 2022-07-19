@@ -1,0 +1,5 @@
+[{
+	"relation": ["delegate_permission/common.handle_all_urls"],
+	"target" : { "namespace": "android_app", "package_name": "com.mealpedant.app",
+				 "sha128_cert_fingerprints": ["E1:C6:56:04:14:75:D5:6D:92:5B:E3:13:24:5B:22:B6:B6:D9:6D:7E:14:6C:CF:B3:86:FD:03:25:03:0B:53:6A"] }
+  }]
