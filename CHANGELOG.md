@@ -3,7 +3,7 @@
 
 ### Features
 + Chip style footer, [1130239d4c25577c74f028afff9621460ec9ef90]
-+ Admin logs received at JSON instead of string, [13b8b560c385b5c60949cf739b92057afc0ba3c2]
++ Admin logs received, parsed, and rendered, as JSON instead of a single, long, string, [13b8b560c385b5c60949cf739b92057afc0ba3c2]
 
 # <a href='https://github.com/mrjackwills/mealpedant_vue/releases/tag/v1.0.0'>v1.0.0</a>
 ### 2022-07-19
