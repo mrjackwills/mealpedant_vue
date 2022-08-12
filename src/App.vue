@@ -1,15 +1,16 @@
 <template>
 	<v-app id='mealpedant' container--fluid fill-height class='ma-0 vh-fix'>
+		<app-app-bar />
+		<app-dialog />
+		<app-nav-menu v-if='init && $vuetify.breakpoint.smAndDown || init && authenticated' />
+		<app-snackbar />
+	
 		<v-main
 			v-touch='{
 				left: () => toggleDrawer(true),
 				right: () => toggleDrawer(false),
 			}'
 		>
-			<app-app-bar />
-			<app-dialog />
-			<app-nav-menu v-if='init && $vuetify.breakpoint.smAndDown || init && authenticated' />
-			<app-snackbar />
 			<transition
 				v-if='appReady'
 				:name='pwa ? "" : "fade"'
@@ -17,8 +18,10 @@
 			>
 				<router-view />
 			</transition>
-			<app-footer v-if='!authenticated && $vuetify.breakpoint.mdAndUp' />
+			<!-- <app-footer v-if='!authenticated && $vuetify.breakpoint.mdAndUp' />
+			 -->
 		</v-main>
+		<app-footer />
 	</v-app>
 </template>
 
