@@ -7,8 +7,8 @@
 		:right='position.x === "right"'
 		:timeout='timeout'
 		:top='position.y === "top"'
-		app
 	>
+		<!-- app -->
 		<v-row v-intersect='onIntersect' justify='center' align='center' class='no-gutters ma-0 pa-0'>
 			<v-col cols='auto' class='pa-0 mr-2' v-if='loading'>
 				<v-progress-circular
