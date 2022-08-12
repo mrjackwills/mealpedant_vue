@@ -14,6 +14,7 @@ import Vuetify, {
 	VCardText,
 	VCardActions,
 	VCheckbox,
+	VChip,
 	VCol,
 	VContainer,
 	VDataTable,
@@ -66,6 +67,7 @@ Vue.use(Vuetify, {
 		VCardText,
 		VCardActions,
 		VCheckbox,
+		VChip,
 		VCol,
 		VContainer,
 		VDataTable,
@@ -129,7 +131,8 @@ const opts = {
 				secondary: '#6e95c5',
 				error: '#6C0505',
 				mealtype: '#eda3e4',
-				infobar: 'c58f6e'
+				infobar: 'c58f6e',
+				offwhite: '#ffeecb',
 			},
 			options: {
 				customProperties: true,

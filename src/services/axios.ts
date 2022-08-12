@@ -105,7 +105,7 @@ const wrap = <T> () => {
 					return;
 				}
 				else {
-					const p = <ErrorData>e.response;
+					const p = <ErrorData>e?.response;
 					const eeee = p.data?.response ?? 'Unable to access server';
 					snackError({ message: eeee });
 				}

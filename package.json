@@ -1,6 +1,6 @@
 {
   "name": "mealpedant_vue",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "author": {
     "name": "Jack Wills"
@@ -12,33 +12,33 @@
   },
   "dependencies": {
     "@vue/composition-api": "^1.7.0",
-    "@vueuse/core": "^8.9.4",
+    "@vueuse/core": "^9.1.0",
     "axios": "^0.27.2",
     "clipboard-copy": "^4.0.1",
-    "core-js": "^3.23.5",
+    "core-js": "^3.24.1",
     "dexie": "^3.2.2",
     "hibp": "^11.1.0",
     "lodash": "^4.17.21",
-    "pinia": "^2.0.16",
+    "pinia": "^2.0.18",
     "qrcode.vue": "^1.7.0",
     "register-service-worker": "^1.7.2",
-    "secure-json-parse": "^2.4.0",
-    "vue": "^2.7.7",
+    "secure-json-parse": "^2.5.0",
+    "vue": "^2.7.8",
     "vue-meta": "^2.4.0",
     "vue-router": "^3.5.3",
     "vuelidate": "^0.7.7",
-    "vuetify": "^2.6.7"
+    "vuetify": "^2.6.9"
   },
-  "buildDate": "Tue 19 2022 July 16:59:53 EDT",
+  "buildDate": "Fri 12 2022 August 14:20:06 EDT",
   "homepage": "https://github.com/mrjackwills/mealpedant_vue",
   "license": "MIT",
   "devDependencies": {
     "@babel/plugin-proposal-class-properties": "^7.18.6",
-    "@mdi/js": "^6.9.96",
+    "@mdi/js": "^7.0.96",
     "@types/lodash": "^4.14.182",
     "@types/vuelidate": "^0.7.15",
-    "@typescript-eslint/eslint-plugin": "^5.30.7",
-    "@typescript-eslint/parser": "^5.30.7",
+    "@typescript-eslint/eslint-plugin": "^5.33.0",
+    "@typescript-eslint/parser": "^5.33.0",
     "@vue/cli-plugin-babel": "^4.5.15",
     "@vue/cli-plugin-eslint": "^4.5.15",
     "@vue/cli-plugin-pwa": "^4.5.15",
@@ -53,13 +53,13 @@
     "eslint-plugin-vue": "^9.2.0",
     "eslint-plugin-vuetify": "^1.1.0",
     "file-loader": "^6.2.0",
-    "launch-editor-middleware": "^2.4.0",
-    "sass": "^1.53.0",
+    "launch-editor-middleware": "^2.5.0",
+    "sass": "^1.54.4",
     "sass-loader": "^10.1.1",
     "tslib": "^2.4.0",
     "typescript": "~4.7.4",
     "vue-cli-plugin-vuetify": "^2.5.1",
-    "vue-template-compiler": "^2.7.7",
+    "vue-template-compiler": "^2.7.8",
     "webpack-bundle-analyzer": "^4.5.0"
   }
 }

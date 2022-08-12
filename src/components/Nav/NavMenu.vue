@@ -72,11 +72,6 @@
 				</v-col>
 			</v-row>
 		</v-list>
-		<template  v-slot:append  v-if='!minivariant'>
-			<div v-if='isIntersecting'>
-				<app-footer-text />
-			</div>
-		</template>
 	</v-navigation-drawer>
 </template>
 
@@ -97,15 +92,10 @@ import {
 	mdiPower,
 } from '@mdi/js';
 import { su } from '@/types';
-import FooterText from '@/components/Footer/FooterText.vue';
 import Vue from 'vue';
 
 export default Vue.extend({
 	name: 'app-nav-menu',
-
-	components: {
-		appFooterText: FooterText,
-	},
 
 	computed: {
 		admin (): boolean {
