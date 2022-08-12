@@ -1,6 +1,6 @@
 {
   "name": "mealpedant_vue",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "author": {
     "name": "Jack Wills"
@@ -29,7 +29,7 @@
     "vuelidate": "^0.7.7",
     "vuetify": "^2.6.9"
   },
-  "buildDate": "Tue 19 2022 July 16:59:53 EDT",
+  "buildDate": "Fri 12 2022 August 14:20:06 EDT",
   "homepage": "https://github.com/mrjackwills/mealpedant_vue",
   "license": "MIT",
   "devDependencies": {
