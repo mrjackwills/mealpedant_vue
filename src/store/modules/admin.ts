@@ -18,12 +18,8 @@ export const adminModule = defineStore(ModuleName.Admin, {
 			this.email =b;
 		},
 			
-		set_logs (b: Array<string>) {
-			const output = [];
-			for (const logs of b) {
-				output.push({ logs });
-			}
-			this.logs = output;
+		set_logs (b: Array<TLogs>) {
+			this.logs = b;
 		},
 			
 		set_backup (b: TBackup) {

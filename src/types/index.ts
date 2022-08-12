@@ -137,7 +137,7 @@ export type TResetPassword =
 	& {	model : 'new_password' }
 
 export type TErrorLog = { [ K in 'error_log_id' | 'message' | 'stack' | 'uuid'] : string } & { timestamp: Date, level: TLogLevels, http_code?: number}
-export type TLogs = { logs: string }
+export type TLogs = { timestamp: string, level: string, fields: {[key: string]: string}, target: string }
 
 export type TFooterProps = {
 	itemsPerPageOptions: Array<number>,

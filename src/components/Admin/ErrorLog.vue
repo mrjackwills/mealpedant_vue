@@ -3,7 +3,7 @@
 		<v-col cols='12' class=''>
 			<v-row justify='center' class='no-gutters'>
 				<v-col cols='12' >
-					<v-data-table
+					<!-- <v-data-table
 						:headers='headers'
 						:items='errorLog'
 						:mobile-breakpoint='0'
@@ -18,17 +18,35 @@
 						<template v-slot:[`item.logs`]='{ item }'>
 							<div class=''>{{ item.logs }}</div>
 						</template>
-					</v-data-table>
-				</v-col>
-			</v-row>
-			<v-row justify='center' class='no-gutters'>
-				<v-col cols='auto' class='mt-2'>
-					<v-btn
-						@click='removeVerbose'
-						:disabled='!errorOriginal'
+					</v-data-table> -->
+
+					<v-data-table
+						:headers='headers'
+						:items='errorLog'
+						:mobile-breakpoint='0'
+						sort-by='timestamp'
+						:sort-desc='true'
+						class='elevation-1 mt-4'
+						id='datatable'
+						ref='errorlogDatatable'
+						must-sort
+						single-expand
 					>
-						remove verbose
-					</v-btn>
+
+						<template v-slot:[`item.timestamp`]='{ item }'>
+							<div class=''>{{ item.timestamp }}</div>
+						</template>
+
+						<template v-slot:[`item.level`]='{ item }'>
+							<div :class='item.level === "ERROR" ? "mealtype--text" : ""'>{{ item.level }}</div>
+						</template>
+						<template v-slot:[`item.fields`]='{ item }'>
+							<div v-for='(i, ii) in item.fields' :key='ii' class=''>
+								{{ i }}
+							</div>
+						</template>
+
+					</v-data-table>
 				</v-col>
 			</v-row>
 		</v-col>
@@ -50,14 +68,6 @@ export default Vue.extend({
 		errorLog (): Array<TLogs> {
 			return this.adminStore.logs;
 		},
-		errorOriginal: {
-			get: function (): boolean {
-				return this.adminStore.errorOriginal;
-			},
-			set: function (b: boolean): void {
-				this.adminStore.set_errorOriginal(b);
-			}
-		},
 		loading: {
 			get: function (): boolean {
 				return loadingModule().loading;
@@ -71,10 +81,22 @@ export default Vue.extend({
 	data: () => ({
 		headers: [
 			{
-				text: 'logs',
+				text: 'timestamp',
 				align: 'left',
-				sortable: false,
-				value: 'logs'
+				sortable: true,
+				value: 'timestamp'
+			},
+			{
+				text: 'level',
+				align: 'left',
+				sortable: true,
+				value: 'level'
+			},
+			{
+				text: 'fields',
+				align: 'left',
+				sortable: true,
+				value: 'fields'
 			},
 		],
 	}),
@@ -83,12 +105,12 @@ export default Vue.extend({
 		formatTime (i: string): string {
 			return `${i.substring(0, 10)} ${new Date(i).toString().substring(16, 24)}`;
 		},
-		removeVerbose (): void {
-			const newData = [];
-			for (const e of this.errorLog) if (e.level !== 'verbose') newData.push(e);
-			this.adminStore.set_error(newData);
-			this.errorOriginal = false;
-		},
+		// removeVerbose (): void {
+		// 	const newData = [];
+		// 	for (const e of this.errorLog) if (e.level !== 'verbose') newData.push(e);
+		// 	// this.adminStore.set_error(newData);
+		// 	// this.errorOriginal = false;
+		// },
 	},
 });
 </script>
