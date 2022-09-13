@@ -62,7 +62,7 @@ module.exports = {
 		host: 'localhost',
 		open: false
 	},
-	transpileDependencies: [ 'vuetify', 'vuex-persist', 'hibp' ],
+	transpileDependencies: [ 'vuetify', 'hibp' ],
 	// crossorigin: 'use-credentials',
 	configureWebpack: {
 		optimization: {
