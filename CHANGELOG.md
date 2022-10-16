@@ -1,3 +1,11 @@
+### Chores
++ dependencies updated, [520318f598e441f96a1d509548e811768c7b44d3], [627135ea0e7314b7dd9e5ef734439ba4ecd7ae92]
++ create_release v0.1.0, [f1676541d4585f754327b075602e88848dd58b1d]
+
+### Features
++ replace vue-use with pinia-plugin-persistedstate, [a24cac54c54099c764864c8f51099dd06fbf4dad]
+
+
 # <a href='https://github.com/mrjackwills/mealpedant_vue/releases/tag/v1.0.1'>v1.0.1</a>
 ### 2022-08-12
 

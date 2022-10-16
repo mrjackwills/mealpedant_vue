@@ -148,6 +148,7 @@ npm_build () {
 	npm run build
 	ask_continue
 }
+
 # Work out the current version, based on git tags
 # create new semver version based on user input
 # Set MAJOR MINOR PATCH
@@ -196,7 +197,6 @@ release_continue () {
 	ask_continue
 }
 
-# TODO change this
 release_flow() {
 	check_git
 	get_git_remote_url
