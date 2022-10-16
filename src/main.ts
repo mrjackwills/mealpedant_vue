@@ -7,8 +7,12 @@ import Vue, { VNode } from 'vue';
 import Vuelidate from 'vuelidate';
 import vuetify from '@/plugins/vuetify';
 
+import piniaPluginPersistedstate from 'pinia-plugin-persistedstate';
+
 const pinia = createPinia();
+pinia.use(piniaPluginPersistedstate);
 Vue.use(PiniaVuePlugin);
+
 Vue.use(Meta);
 Vue.use(Vuelidate);
 

@@ -4,7 +4,6 @@ import { dexieDB } from '@/services/dexieDB';
 import { localStorageKeyName } from '@/vanillaTS/globalConsts';
 import { ModuleName } from '@/types/enum_module';
 import { router } from '@/router';
-import { useStorage } from '@vueuse/core';
 
 export const userModule = defineStore(ModuleName.User, {
 	state: ()=> ({
@@ -12,6 +11,12 @@ export const userModule = defineStore(ModuleName.User, {
 		admin: false,
 		email: ''
 	}),
+
+	
+	persist: {
+		storage: localStorage,
+		paths: [ 'authenticated' ],
+	  },
 
 	actions: {
 
