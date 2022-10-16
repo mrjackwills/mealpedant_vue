@@ -1,8 +1,7 @@
 #!/bin/bash
 
-# v0.0.11
-
-PACKAGE_NAME='mealpedant_vue'
+# Vue release
+# v0.1.0
 
 # Colours for echo
 RED='\033[0;31m'
@@ -23,11 +22,6 @@ error_close() {
 	exit 1
 }
 
-if [ -z "$PACKAGE_NAME" ]
-then
-	error_close "No package name"
-fi
-
 # $1 string - question to ask
 ask_yn () {
 	printf "%b%s? [y/N]:%b " "${GREEN}" "$1" "${RESET}"
@@ -46,7 +40,6 @@ ask_continue () {
 		exit
 	fi
 }
-
 
 update_major () {
 	local bumped_major
@@ -121,12 +114,23 @@ update_release_body_and_changelog () {
 	echo -e
 	DATE_SUBHEADING="### $(date +'%Y-%m-%d')\n\n"
 	RELEASE_BODY_ADDITION="${DATE_SUBHEADING}$1"
-	echo -e "${RELEASE_BODY_ADDITION}\n\nsee <a href='${GIT_REPO_URL}/blob/main/CHANGELOG.md'> CHANGELOG.md</a> for more details" > .github/release-body.md
+
+	# Put new changelog entries into release-body, add link to changelog
+	echo -e "${RELEASE_BODY_ADDITION}\n\nsee <a href='${GIT_REPO_URL}/blob/main/CHANGELOG.md'>CHANGELOG.md</a> for more details" > .github/release-body.md
+
+	# Add subheading with release version and date of release
 	echo -e "# <a href='${GIT_REPO_URL}/releases/tag/${NEW_TAG_WITH_V}'>${NEW_TAG_WITH_V}</a>\n${DATE_SUBHEADING}${CHANGELOG_ADDITION}$(cat CHANGELOG.md)" > CHANGELOG.md
-	sed -i -E "s=(\s)\[([0-9a-f]{8})([0-9a-f]{32})\]= [\2](${GIT_REPO_URL}/commit/\2\3)=g" ./CHANGELOG.md
+	
+	# Update changelog to add links to commits [hex:8](url_with_full_commit)
+	# "[aaaaaaaaaabbbbbbbbbbccccccccccddddddddd]" -> "[aaaaaaaa](https:/www.../commit/aaaaaaaaaabbbbbbbbbbccccccccccddddddddd),"
+	sed -i -E "s=(\s)\[([0-9a-f]{8})([0-9a-f]{32})\]= [\2](${GIT_REPO_URL}/commit/\2\3),=g" ./CHANGELOG.md
+
+	# Update changelog to add links to closed issues - comma included!
+	# "closes #1," -> "closes [#1](https:/www.../issues/1),""
+	sed -i -r -E "s=closes \#([0-9]+)\,=closes [#\1](${GIT_REPO_URL}/issues/\1),=g" ./CHANGELOG.md
 }
 
-update_json () {
+update_version_number_in_files () {
 	local json_file="./package.json"
 	local json_version_update
 	local json_build_update
@@ -185,33 +189,67 @@ check_tag () {
 	done
 }
 
+
+# $1 text to colourise
+release_continue () {
+	echo -e "\n${PURPLE}$1${RESET}"
+	ask_continue
+}
+
+# TODO change this
 release_flow() {
 	check_git
 	get_git_remote_url
 	linter
 	npm_build
 	cd "${CWD}" || error_close "Can't find ${CWD}"
-
+	
 	check_tag
 	NEW_TAG_WITH_V="v${MAJOR}.${MINOR}.${PATCH}"
 	printf "\nnew tag chosen: %s\n\n" "${NEW_TAG_WITH_V}"
 	RELEASE_BRANCH=release-$NEW_TAG_WITH_V
 	echo -e
 	ask_changelog_update
+	
+	release_continue "checkout ${RELEASE_BRANCH}"
 	git checkout -b "$RELEASE_BRANCH"
-	update_json
+
+	release_continue "update_version_number_in_files"
+	update_version_number_in_files	
+	
 	git add .
 	git commit -m "chore: release $NEW_TAG_WITH_V"
 
+	release_continue "git add ."
+	git add .
+
+	release_continue "git commit -m \"chore: release \"${NEW_TAG_WITH_V}\""
+	git commit -m "chore: release ${NEW_TAG_WITH_V}"
+
+	release_continue "git checkout main"
 	git checkout main
+
+	release_continue "git merge --no-ff \"${RELEASE_BRANCH}\" -m \"chore: merge ${RELEASE_BRANCH} into main\"" 
 	git merge --no-ff "$RELEASE_BRANCH" -m "chore: merge ${RELEASE_BRANCH} into main"
+
+	release_continue "git tag -am \"${RELEASE_BRANCH}\" \"$NEW_TAG_WITH_V\""
 	git tag -am "${RELEASE_BRANCH}" "$NEW_TAG_WITH_V"
-	echo "git tag -am \"${RELEASE_BRANCH}\" \"$NEW_TAG_WITH_V\""
+
+	release_continue "git push --atomic origin main \"$NEW_TAG_WITH_V\""
 	git push --atomic origin main "$NEW_TAG_WITH_V"
+
+	release_continue "git checkout dev"
 	git checkout dev
-	git merge --no-ff main -m 'chore: merge main into dev'
-	git branch -d "$RELEASE_BRANCH"
+
+	release_continue "git merge --no-ff main -m \"chore: merge main into dev\""
+	git merge --no-ff main -m "chore: merge main into dev"
+
+	release_continue "git push origin dev"
 	git push origin dev
+
+	release_continue "git branch -d \"$RELEASE_BRANCH\""
+	git branch -d "$RELEASE_BRANCH"
+
 	npm run build
 }
 
