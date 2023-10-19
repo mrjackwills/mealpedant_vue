@@ -4,7 +4,8 @@
 			v-model='dialog'
 			eager
 			max-width='650'
-			with='100%'
+			scroll-strategy='none'
+			width='100%'
 		>
 			<v-card>
 				<v-img
@@ -22,7 +23,7 @@
 								@click.stop='click(item.click)'
 								:color='textColor'
 								:class='textColorClass'
-								text
+								variant='text'
 							>
 								<v-progress-circular
 									v-if='localLoading && index === 0'
@@ -32,13 +33,9 @@
 									indeterminate
 									small
 								/>
-								<v-icon v-if='!localLoading && index === 0' class='rotated mr-2' style='vertical-align: middle' :large='$vuetify.breakpoint.lgAndUp' :small='$vuetify.breakpoint.mdAndDown'>
-									{{ item.icon }}
-								</v-icon>
-								<span class='text-subtitle-1' :class='{"text-caption" : $vuetify.breakpoint.mdAndDown}'>{{ item.text }} </span>
-								<v-icon v-if='!localLoading && index === 1' class='ml-2' style='vertical-align: middle' :large='$vuetify.breakpoint.lgAndUp' :small='$vuetify.breakpoint.mdAndDown'>
-									{{ item.icon }}
-								</v-icon>
+								<v-icon v-if='!localLoading && index === 0' class='rotated mr-2' style='vertical-align: middle' :size='iconSize' :icon='item.icon' />
+								<span class='text-subtitle-1' :class='{"text-caption" : mdAndDown}'>{{ item.text }} </span>
+								<v-icon v-if='!localLoading && index === 1' class='ml-2' style='vertical-align: middle' :size='iconSize' :icon='item.icon' />
 							</v-btn>
 						</v-col>
 					</v-row>
@@ -48,118 +45,103 @@
 	</div>
 </template>
 
-<script lang='ts'>
+<script setup lang='ts'>
 import { axios_downloadPhoto } from '@/services/axios';
 import { env } from '@/vanillaTS/env';
-import { foodModule, loadingModule } from '@/store';
 import { mdiPublish, mdiClose } from '@mdi/js';
-import { su, TPerson, u } from '@/types';
-import Vue from 'vue';
-
-export default Vue.extend({
-	name: 'download-dialog-component',
-
-	computed: {
+import type { su, TPerson, u } from '@/types';
+import { useDisplay } from 'vuetify';
+const { lgAndUp, mdAndDown } = useDisplay();
 		
-		dialog: {
-			get: function (): boolean {
-				return foodModule().dialog;
-			},
-			set: function (b: boolean): void {
-				foodModule().set_dialog(b);
-			}
-		},
-		imgSource (): string {
-			return `${env.domain_static}${this.photoUrlConverted}`;
-		},
-		loading: {
-			get: function (): boolean {
-				return loadingModule().loading;
-			},
-			set: function (b: boolean): void {
-				loadingModule().set_loading(b);
-			}
-		},
-		photoDate (): su {
-			return foodModule().photo_date;
-		},
-		photoPerson (): u<TPerson> {
-			return foodModule().photo_person;
-		},
-		photoUrlConverted (): su {
-			return foodModule().photo_url_converted;
-		},
-		photoUrlOriginal (): su {
-			return foodModule().photo_url_original;
-		},
-		spinnerSize (): string {
-			return this.$vuetify.breakpoint.mdAndDown ? '16' : '32';
-		},
-		spinnerWidth (): string {
-			return this.$vuetify.breakpoint.mdAndDown ? '2' : '4';
-		},
-		textColor (): string {
-			return this.photoPerson ==='Dave' ? 'primary': 'secondary';
-		},
-		textColorClass (): string {
-			return this.textColor === 'primary' ? 'black--text' : '';
-		},
-		windowHeight (): number {
-			return window.innerHeight * .70;
-		},
+const dialog = computed({
+	get (): boolean {
+		return foodModule().dialog;
 	},
-
-	data: () => ({
-		buttonFields: [
-			{
-				text: ' original',
-				icon: mdiPublish,
-				click: 'downloadOriginalFromStatic' as const
-			},
-			{
-				text: 'close',
-				icon: mdiClose,
-				click: 'closeDialog' as const
-			}
-		],
-		localLoading: false,
-	}),
-
-	methods: {
-		click (x: 'closeDialog' | 'downloadOriginalFromStatic'): void {
-			switch (x) {
-			case 'closeDialog':
-				this.closeDialog();
-				break;
-			case 'downloadOriginalFromStatic':
-				this.downloadOriginalFromStatic();
-				break;
-			}
-		},
-
-		closeDialog (): void {
-			this.dialog = false;
-			this.localLoading = false;
-		},
-
-		async downloadOriginalFromStatic (): Promise<void> {
-			if (!this.photoUrlOriginal) return;
-			this.localLoading = true;
-			const image = await axios_downloadPhoto.photo_get(this.photoUrlOriginal);
-			this.localLoading = false;
-			if (image) {
-				const url = window.URL.createObjectURL(new Blob([ image ]));
-				const link = document.createElement('a');
-				link.href = url;
-				link.setAttribute('download', `${this.photoPerson}-${this.photoDate}.jpeg`);
-				document.body.appendChild(link);
-				link.click();
-				document.body.removeChild(link);
-			}
-		},
-	},
-	
+	set (b: boolean): void {
+		foodModule().set_dialog(b);
+	}
 });
+const imgSource = computed((): string => {
+	return `${env.domain_static}${photoUrlConverted.value}`;
+});
+
+const photoDate = computed((): su => {
+	return foodModule().photo_date;
+});
+const photoPerson = computed((): u<TPerson> => {
+	return foodModule().photo_person;
+});
+const photoUrlConverted = computed((): su => {
+	return foodModule().photo_url_converted;
+});
+const photoUrlOriginal = computed((): su => {
+	return foodModule().photo_url_original;
+});
+const iconSize = computed((): string => {
+	return lgAndUp.value ? 'large' : mdAndDown.value? 'small' :'';
+});
+const spinnerSize = computed((): string => {
+	return mdAndDown.value ? '16' : '32';
+});
+const spinnerWidth = computed((): string => {
+	return mdAndDown.value ? '2' : '4';
+});
+const textColor = computed((): string => {
+	return photoPerson.value ==='Dave' ? 'primary': 'secondary';
+});
+const textColorClass = computed((): string => {
+	return textColor.value === 'primary' ? 'black--text' : '';
+});
+const windowHeight = computed((): number => {
+	return window.innerHeight * .70;
+});
+
+const buttonFields = [
+	{
+		text: ' original',
+		icon: mdiPublish,
+		click: 'downloadOriginalFromStatic' as const
+	},
+	{
+		text: 'close',
+		icon: mdiClose,
+		click: 'closeDialog' as const
+	}
+];
+const localLoading = ref(false);
+
+const click = (x: 'closeDialog' | 'downloadOriginalFromStatic'): void => {
+	switch (x) {
+	case 'closeDialog':
+		closeDialog();
+		break;
+	case 'downloadOriginalFromStatic':
+		downloadOriginalFromStatic();
+		break;
+	}
+} ;
+
+const closeDialog = (): void => {
+	dialog.value = false;
+	localLoading.value = false;
+};
+
+const downloadOriginalFromStatic = async (): Promise<void> => {
+	if (!photoUrlOriginal.value) return;
+	localLoading.value = true;
+	const image = await axios_downloadPhoto.photo_get(photoUrlOriginal.value);
+	localLoading.value = false;
+	if (image) {
+		const url = window.URL.createObjectURL(new Blob([ image ]));
+		const link = document.createElement('a');
+		link.href = url;
+		link.setAttribute('download', `${photoPerson.value}-${photoDate.value}.jpeg`);
+		document.body.appendChild(link);
+		link.click();
+		document.body.removeChild(link);
+	}
+};
+	
 </script>
 
 <style>

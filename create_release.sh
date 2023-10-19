@@ -1,7 +1,9 @@
 #!/bin/bash
 
 # Vue release
-# v0.1.0
+# v0.2.0
+
+PACKAGE_NAME='mealpedant_vue'
 
 # Colours for echo
 RED='\033[0;31m'
@@ -22,15 +24,14 @@ error_close() {
 	exit 1
 }
 
+if [ -z "$PACKAGE_NAME" ]
+then
+	error_close "No package name"
+fi
+
 # $1 string - question to ask
 ask_yn () {
 	printf "%b%s? [y/N]:%b " "${GREEN}" "$1" "${RESET}"
-}
-
-# return user input
-user_input() {
-	read -r data
-	echo "$data"
 }
 
 ask_continue () {
@@ -39,6 +40,12 @@ ask_continue () {
 	then 
 		exit
 	fi
+}
+
+# return user input
+user_input() {
+	read -r data
+	echo "$data"
 }
 
 update_major () {
@@ -59,26 +66,17 @@ update_patch () {
 	echo "${MAJOR}.${MINOR}.${bumped_patch}"
 }
 
-# Get the url of the github repo, strip .git from the end of it
 get_git_remote_url() {
-	REMOTE_ORIGIN=$(git config --get remote.origin.url)
-	TO_REMOVE=".git"
-	GIT_REPO_URL="${REMOTE_ORIGIN//$TO_REMOVE}"
+	GIT_REPO_URL="$(git config --get remote.origin.url | sed 's/\.git$//')"
 }
 
-# Check that git status is clean
-check_git_clean() {
+check_git() {
+	CURRENT_GIT_BRANCH=$(git branch --show-current)
 	GIT_CLEAN=$(git status --porcelain)
 	if [[ -n $GIT_CLEAN ]]
 	then
 		error_close "git dirty"
 	fi
-}
-
-# Check currently on dev branch
-check_git() {
-	CURRENT_GIT_BRANCH=$(git branch --show-current)
-	check_git_clean
 	if [[ ! "$CURRENT_GIT_BRANCH" =~ ^dev$ ]]
 	then
 		error_close "not on dev branch"
@@ -87,7 +85,11 @@ check_git() {
 
 check_git_update() {
 	CURRENT_GIT_BRANCH=$(git branch --show-current)
-	check_git_clean
+	GIT_CLEAN=$(git status --porcelain)
+	if [[ -n $GIT_CLEAN ]]
+	then
+		error_close "git dirty"
+	fi
 	if [[ ! "$CURRENT_GIT_BRANCH" =~ ^chore/npm_update$ ]]
 	then
 		error_close "not on chore/npm_update branch"
@@ -109,7 +111,9 @@ ask_changelog_update() {
 	fi
 }
 
-# $1 RELEASE_BODY
+# Edit the release-body to include new lines from changelog
+# add commit urls to changelog
+# $1 RELEASE_BODY 
 update_release_body_and_changelog () {
 	echo -e
 	DATE_SUBHEADING="### $(date +'%Y-%m-%d')\n\n"
@@ -120,17 +124,17 @@ update_release_body_and_changelog () {
 
 	# Add subheading with release version and date of release
 	echo -e "# <a href='${GIT_REPO_URL}/releases/tag/${NEW_TAG_WITH_V}'>${NEW_TAG_WITH_V}</a>\n${DATE_SUBHEADING}${CHANGELOG_ADDITION}$(cat CHANGELOG.md)" > CHANGELOG.md
-	
-	# Update changelog to add links to commits [hex:8](url_with_full_commit)
-	# "[aaaaaaaaaabbbbbbbbbbccccccccccddddddddd]" -> "[aaaaaaaa](https:/www.../commit/aaaaaaaaaabbbbbbbbbbccccccccccddddddddd),"
-	sed -i -E "s=(\s)\[([0-9a-f]{8})([0-9a-f]{32})\]= [\2](${GIT_REPO_URL}/commit/\2\3),=g" ./CHANGELOG.md
 
-	# Update changelog to add links to closed issues - comma included!
-	# "closes #1," -> "closes [#1](https:/www.../issues/1),""
-	sed -i -r -E "s=closes \#([0-9]+)\,=closes [#\1](${GIT_REPO_URL}/issues/\1),=g" ./CHANGELOG.md
+	# Update changelog to add links to commits [hex:8](url_with_full_commit)
+	# "[aaaaaaaaaabbbbbbbbbbccccccccccddddddddd]" -> "[aaaaaaaa](https:/www.../commit/aaaaaaaaaabbbbbbbbbbccccccccccddddddddd)"
+	sed -i -E "s=(\s)\[([0-9a-f]{8})([0-9a-f]{32})\]= [\2](${GIT_REPO_URL}/commit/\2\3)=g" CHANGELOG.md
+
+	# Update changelog to add links to closed issues
+	# "closes #1" -> "closes [#1](https:/www.../issues/1)""
+	sed -i -r -E "s=closes \#([0-9]+)=closes [#\1](${GIT_REPO_URL}/issues/\1)=g" CHANGELOG.md
 }
 
-update_version_number_in_files () {
+update_json () {
 	local json_file="./package.json"
 	local json_version_update
 	local json_build_update
@@ -139,21 +143,16 @@ update_version_number_in_files () {
 	echo "$json_build_update" > "$json_file"
 }
 
-linter () {
-	npm run lint
-	ask_continue
-}
-
-npm_build () {
-	npm run build
-	ask_continue
+# $1 new_version
+update_version_number_in_files () {
+	update_json
 }
 
 # Work out the current version, based on git tags
 # create new semver version based on user input
 # Set MAJOR MINOR PATCH
 check_tag () {
-	LATEST_TAG=$(git describe --tags --abbrev=0 --always)
+	LATEST_TAG=$(git describe --tags "$(git rev-list --tags --max-count=1)")
 	echo -e "\nCurrent tag: ${PURPLE}${LATEST_TAG}${RESET}\n"
 	echo -e "${YELLOW}Choose new tag version:${RESET}\n"
 	if [[ $LATEST_TAG =~ ^v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(-((0|[1-9][0-9]*|[0-9]*[a-zA-Z-][0-9a-zA-Z-]*)(\.(0|[1-9][0-9]*|[0-9]*[a-zA-Z-][0-9a-zA-Z-]*))*))?(\+([0-9a-zA-Z-]+(\.[0-9a-zA-Z-]+)*))?$ ]]
@@ -184,29 +183,52 @@ check_tag () {
 				PATCH=$((PATCH + 1))
 				break;;
 			*)
-				error_close "invalid option $REPLY"
-				break;;
+				error_close "invalid option $REPLY";;
 		esac
 	done
 }
 
+linter () {
+	npm run check
+	npm run lint
+	ask_continue
+}
+
+npm_build () {
+	npm run build
+	ask_continue
+}
 
 # $1 text to colourise
 release_continue () {
 	echo -e "\n${PURPLE}$1${RESET}"
 	ask_continue
+
 }
 
+# Check repository for typos
+check_typos () {
+	echo -e "\n${PURPLE}check typos${RESET}"
+	typos
+	ask_continue
+}
+
+# Full flow to create a new release
 release_flow() {
+	check_typos
+
 	check_git
 	get_git_remote_url
+	
 	linter
 	npm_build
-	cd "${CWD}" || error_close "Can't find ${CWD}"
 	
+	cd "${CWD}" || error_close "Can't find ${CWD}"
 	check_tag
+	
 	NEW_TAG_WITH_V="v${MAJOR}.${MINOR}.${PATCH}"
 	printf "\nnew tag chosen: %s\n\n" "${NEW_TAG_WITH_V}"
+
 	RELEASE_BRANCH=release-$NEW_TAG_WITH_V
 	echo -e
 	ask_changelog_update
@@ -215,11 +237,8 @@ release_flow() {
 	git checkout -b "$RELEASE_BRANCH"
 
 	release_continue "update_version_number_in_files"
-	update_version_number_in_files	
+	update_version_number_in_files
 	
-	git add .
-	git commit -m "chore: release $NEW_TAG_WITH_V"
-
 	release_continue "git add ."
 	git add .
 
@@ -254,11 +273,12 @@ release_flow() {
 }
 
 main() {
-	cmd=(dialog --backtitle "Choose build option" --radiolist "choose" 14 80 16)
+	cmd=(dialog --backtitle "Start ${MONO_NAME} containers" --radiolist "choose" 14 80 16)
 	options=(
 		1 "lint" off
 		2 "build" off
-		3 "release" off
+		3 "test" off
+		4 "release" off
 	)
 	choices=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
 	exitStatus=$?
@@ -270,8 +290,8 @@ main() {
 	do
 		case $choice in
 			0)
-				exit
-				break;;
+				exit;;
+		
 			1)
 				linter
 				main
@@ -281,6 +301,10 @@ main() {
 				main
 				break;;
 			3)
+				npm_test
+				main
+				break;;
+			4)
 				release_flow
 				break;;
 		esac

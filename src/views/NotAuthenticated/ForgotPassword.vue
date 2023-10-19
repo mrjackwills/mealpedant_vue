@@ -10,15 +10,16 @@
 							v-on:submit.prevent>
 							<v-text-field
 								v-model='user.email'
-								@input='touch(`email`)'
-								@blur='touch(`email`)'
 								v-on:keyup.enter='forgot'
+								@input='touch'
+								@blur='touch()'
 								:disabled='loading || completed'
 								:error-messages='emailErrors'
 								:prepend-icon='mdiEmail'
 								name='login'
 								label='EMAIL'
 								type='email'
+								variant='underlined'
 							>
 							</v-text-field>
 						</v-form>
@@ -26,26 +27,27 @@
 							<v-btn
 								@click='goback'
 								:disabled='loading || completed'
-								:class='{"elevation-0": $v.$invalid || loading || completed }'
+								:class='{"elevation-0": loading || completed }'
+								:color='loading || completed? "":"error"'
+								:variant='loading || completed?"outlined":"flat"'
+								class='elevation-2 mr-4'
 								dark
 								large
-								class='elevation-2 mr-4'
-								color='error'
 							>
-								<app-button-icon :icon='mdiClose' />
+								<ButtonIcon :icon='mdiClose' />
 								cancel
 							</v-btn>
 							<v-btn
 								@click='forgot'
 								class='elevation-2'
-								:disabled='$v.$invalid || loading || completed'
-								:class='{"elevation-0": $v.$invalid || loading || completed }'
-								color='secondary'
+								:disabled='send_disabled'
+								:class='{"elevation-0": send_disabled }'
+								:variant='send_disabled?"outlined":"flat"'
 								dark
 								large
 							>
 								send
-								<app-button-icon :icon='mdiSend' :margin='"ml-2"' />
+								<ButtonIcon :icon='mdiSend' :margin='"ml-2"' />
 							</v-btn>
 						</div>
 					</v-col>
@@ -55,95 +57,79 @@
 	</v-container>
 </template>
 
-<script lang='ts'>
+<script setup lang='ts'>
 import { axios_incognito } from '@/services/axios';
-import { email, required } from 'vuelidate/lib/validators';
-import { env } from '@/vanillaTS/env';
-import { loadingModule } from '@/store';
+import { email, required } from '@vuelidate/validators';
 import { mdiClose, mdiEmail, mdiSend } from '@mdi/js';
-import { MetaInfo } from 'vue-meta';
 import { snackSuccess } from '@/services/snack';
-import ButtonIcon from '@/components/ButtonIcon.vue';
-import Vue from 'vue';
+import { useRouter } from 'vue-router';
+import { useDisplay } from 'vuetify';
+import useVuelidate from '@vuelidate/core';
 
-export default Vue.extend({
-	name: 'app-forgot-password',
+const { mdAndDown } = useDisplay();
 
-	components: {
-		appButtonIcon: ButtonIcon,
+const loading = computed({
+	get (): boolean {
+		return loadingModule().loading;
 	},
-
-	computed: {
-		emailErrors (): Array<string> {
-			const errors: Array<string> = [];
-			if (!this.$v.user?.email?.$dirty) return errors;
-			!this.$v.user?.email?.email && errors.push('email invalid');
-			!this.$v.user?.email?.required && errors.push('email required');
-			return errors;
-		},
-		fontSize (): string {
-			return this.$vuetify.breakpoint.mdAndDown? 'text-subtitle-1': 'text-h5';
-		},
-		loading: {
-			get: function (): boolean {
-				return loadingModule().loading;
-			},
-			set: function (b: boolean): void {
-				loadingModule().set_loading(b);
-			}
-		}
-	},
-
-	data: () => ({
-		completed: false,
-		mdiClose,
-		mdiEmail,
-		mdiSend,
-		pageTitle: 'Forgot password',
-		user: {
-			email: '',
-		},
-	}),
-
-	methods: {
-		touch (name: string): void {
-			this.$v.user?.[name]?.$touch();
-		},
-
-		goback (): void {
-			this.$router.back();
-
-		},
-		/**
-		 ** ALWAYS sends a forgotten password axios request, and snack success
-		 */
-		async forgot (): Promise<void> {
-			if (this.$v.$invalid) return;
-			this.loading = true;
-			const resetRequest = await axios_incognito.resetPassword_post(this.user.email);
-			if (resetRequest) snackSuccess({ message: resetRequest, icon: mdiEmail, type: 'success', timeout: 15000 });
-			this.completed = true;
-			this.loading = false;
-		},
-	},
-	
-	metaInfo (): MetaInfo {
-		return {
-			title: this.pageTitle,
-			link: [
-				{ rel: 'canonical', href: `${env.domain_www}${this.$route.path}` }
-			]
-		};
-	},
-	
-	validations: {
-		user: {
-			email: {
-				email,
-				required,
-			},
-		}
-	},
-
+	set (b: boolean): void {
+		loadingModule().set_loading(b);
+	}
 });
+
+const send_disabled = computed(() => {
+	return v$.value.$invalid || loading.value || completed.value;
+});
+
+const emailErrors = computed((): Array<string> => {
+	const errors: Array<string> = [];
+	if (!v$.value.user?.email?.$dirty) return errors;
+	!v$.value.user?.email?.$dirty && errors.push('email invalid');
+	!v$.value.email?.required && errors.push('email required');
+	return errors;
+});
+const fontSize = computed((): string => {
+	return mdAndDown? 'text-subtitle-1': 'text-h5';
+});
+
+const completed = ref(false);
+const user = ref({
+	email: '',
+});
+
+let router = useRouter();
+const touch = (): void => {
+	v$.value.user?.email?.$touch();
+};
+
+const goback = (): void => {
+	router.back();
+};
+
+/**
+ ** ALWAYS sends a forgotten password axios request, and snack success
+ */
+const forgot = async (): Promise<void> => {
+	if (v$.value.$invalid) return;
+	loading.value = true;
+	const resetRequest = await axios_incognito.resetPassword_post(user.value.email);
+	if (resetRequest) snackSuccess({ message: resetRequest, icon: mdiEmail, type: 'success', timeout: 15000 });
+	completed.value = true;
+	loading.value = false;
+};
+
+onMounted(() => {
+	const browserStore = browserModule();
+	browserStore.set_pageTitle('Forgot Password');
+	browserStore.set_description('Meal Pedant - Reset you user account password');
+});
+	
+const rules = {
+	email: {
+		email,
+		required,
+	},
+};
+const v$ = useVuelidate(rules, user);
+
 </script>
