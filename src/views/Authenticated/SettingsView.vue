@@ -1,5 +1,9 @@
 <template>
-	<v-container container--fluid fill-height v-if='pageInit'>
+	<v-container
+		v-if='pageInit'
+		container--fluid
+		fill-height
+	>
 		<v-row class='ma-0 pa-0' align='center' justify='center'>
 			<v-col cols='11' class='ma-0 pa-0'>
 				<TwoFactor />

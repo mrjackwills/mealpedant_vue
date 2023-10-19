@@ -1,5 +1,5 @@
 // This, and the manifest.json, is to kill any installations of the old version of the site
-// can probably be removed in 180 days from today (2023-10-14), meaning after TODO fix me 2023-05-01
+// can probably be removed in 180 days from today (2023-10-19), meaning after 2024-04-16
 
 self.addEventListener('install', () => {
 	// Skip over the "waiting" lifecycle state, to ensure that our

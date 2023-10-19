@@ -1,5 +1,5 @@
 <template>
-	<v-container fluid class='ma-0 pa-0 no-gutters fill-height' >
+	<v-container fluid class='' >
 		<v-row
 			align='center'
 			justify='center'

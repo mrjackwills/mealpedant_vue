@@ -1,7 +1,7 @@
 <template>
 	<v-container container--fluid fill-height>
 		<v-row align='center' justify='center' class='no-gutters'>
-			<v-col class='pa-0' cols='12' sm='8' md='6'>
+			<v-col class='' cols='12' sm='8' md='6'>
 				<v-form v-on:submit.prevent >
 					<v-col class='pa-0' cols='12'>
 

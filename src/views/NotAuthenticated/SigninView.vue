@@ -1,6 +1,6 @@
 
 <template>
-	<v-container fluid class='ma-0 pa-0 no-gutters fill-height' >
+	<v-container fluid class='fill-height' >
 		<v-row align='center' justify='center' wrap v-if='!authed'>
 			<v-col cols='12' sm='8' md='4'>
 				<v-form

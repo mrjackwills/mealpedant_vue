@@ -1,7 +1,11 @@
 <template>
-	<v-container v-if='pageReady' class='ma-0 pa-0 no-gutters mt-4 fill-height'>
-		<v-row class='fill-height ma-0 pa-0'>
-			<v-col cols='12' class='ma-0 pa-0'>
+	<v-container
+		v-if='pageReady'
+		container--fluid
+		fill-height
+	>
+		<v-row class='ma-o pa-0'>
+			<v-col cols='12' class='ma-0'>
 
 				<div v-for='(item, index) of infobar_messages' :key='index'>
 					<InfoBar :message='item.message' :color='item.color'/>
