@@ -31,7 +31,6 @@
 							color='primary'
 							label='all'
 						/>
-						<!-- </div> -->
 					</v-col>
 					<v-col cols='12' v-for='(item, index) in lineRows' :key='index' class='ma-0 pa-0'>
 						<v-textarea

@@ -94,7 +94,6 @@
 				</template>
 
 				<template v-slot:[`item.sessions`]='{item, internalItem, toggleExpand }'>
-					<!-- @click='showRow(); toggleExpand(internalI);' -->
 					<v-btn
 						@click='showRow(item.email, toggleExpand, internalItem)'
 						variant='text'

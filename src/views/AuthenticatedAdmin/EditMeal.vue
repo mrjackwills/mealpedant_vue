@@ -32,36 +32,6 @@
 								/>
 							</v-menu>
 						</v-text-field>
-						<!-- <v-text-field
-							v-model='meal.date'
-							@click:append-outer='yesterday'
-							:append-outer-icon='mdiRestore'
-							:label='computedDateLabel'
-							:prepend-icon='mdiCalendar'
-							id='start-date'
-							readonly
-						>
-						</v-text-field> -->
-
-						<!-- <v-menu
-							ref='menu'
-							activator='#start-date'
-							:close-on-content-click='false'
-							transition='scale-transition'
-							v-model='menu'
-							:nudge-right='40'
-							offset-y
-							min-width='290px'
-						>
-							<v-date-picker
-								v-model='meal.date'
-								@input='menu = false'
-								first-day-of-week='1'
-								min='2015-05-09'
-							>
-							</v-date-picker>
-						</v-menu> -->
-
 						<v-col class='pa-0' cols='12'>
 							<v-row justify='space-around'>
 								<v-col class='pa-0' v-for='(item,index) in ["Dave", "Jack"]' :key='index' cols='auto'>
@@ -117,20 +87,16 @@
 					</v-col>
 				</v-form>
 				<v-expand-transition>
-					<v-col cols='12' class='pa-0'>
-						<v-row v-if='imageUrl' justify='center' align='center' class='no-gutters'>
-							<v-col class='pa-0' cols='auto'>
-								<v-img
-									:src='imageUrl'
-									alt='A photograph of a meal'
-									max-height='35vh'
-									max-width='35vw'
-									contain
-								>
-								</v-img>
-							</v-col>
-						</v-row>
-					</v-col>
+					<v-row justify='center' align='center' class='no-gutters ma-0 pa-0' v-if='imageUrl'>
+						<v-col class='ma-0 pa-0' cols='8'>
+							<v-img
+								:src='imageUrl'
+								alt='A photograph of a meal'
+								min-width='100%'
+								contain
+							/>
+						</v-col>
+					</v-row>
 				</v-expand-transition>
 				<v-col class='pa-0' cols='12'>
 					<v-file-input

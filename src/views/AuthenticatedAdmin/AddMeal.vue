@@ -83,21 +83,19 @@
 						/>
 					</v-col>
 				</v-form>
+
 				<v-expand-transition>
-					<v-col cols='12' class='pa-0'>
-						<v-row v-if='imageUrl' justify='center' align='center' class='no-gutters'>
-							<v-col class='pa-0' cols='auto'>
-								<v-img
-									:src='imageUrl'
-									alt='A photograph of a meal'
-									max-height='15vh'
-									max-width='15vw'
-									contain
-								>
-								</v-img>
-							</v-col>
-						</v-row>
-					</v-col>
+					<v-row justify='center' align='center' class='no-gutters ma-0 pa-0' v-if='imageUrl'>
+						<v-col class='ma-0 pa-0' cols='8'>
+							<v-img
+								:src='imageUrl'
+								alt='A photograph of a meal'
+								min-width='100%'
+								contain
+							/>
+						</v-col>
+					</v-row>
+
 				</v-expand-transition>
 				<v-col class='pa-0' cols='12'>
 					<v-file-input

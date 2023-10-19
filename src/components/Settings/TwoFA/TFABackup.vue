@@ -70,17 +70,6 @@
 							</v-row>
 						</v-col>
 					</v-row>
-					<!-- <col v-for='(item, index) in backupArray.slice(0,5)' :key='index'> -->
-					<!-- <v-row class='ma-0 pa-0' dense no-gutters>
-								<v-col class='pa-0 ma-0' :class='{"smalltext" : smAndDown}'>
-									{{ item }}
-								</v-col>
-							</v-row>
-							<v-row class='ma-0 pa-0' dense no-gutters>
-								<v-col class='pa-0 ma-0 text-right' :class='{"smalltext" : smAndDown}'>
-									{{ backupArray[index+5] }}
-								</v-col>
-							</v-row> -->
 					<v-row
 						justify='space-around'
 						align='center'

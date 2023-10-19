@@ -11,20 +11,6 @@
 		hover
 	>
 
-		<!-- <template v-slot:headers='{ headers }'>
-			<tr>
-				<template v-for='(item, index) in headers[0]' :key='index'>
-					<th :class='headerClass(item.title)'>
-						<v-row justify='start' class=''>
-							<v-col cols='auto' class='ml-3'>
-								{{ item.title }}
-							</v-col>
-						</v-row>
-					</th>
-				</template>
-			</tr>
-		</template> -->
-
 		<template v-slot:headers='{ columns, isSorted, getSortIcon, toggleSort }'>
 			<tr>
 				<template v-for='column in columns' :key='column.key'>

@@ -42,7 +42,7 @@
 		</v-toolbar-items>
 		<v-toolbar-items v-if='mobile ' class='mr-xs-4 '>
 			<v-row class='no-gutters' justify='center' align='center'>
-				<v-col cols='auto'>
+				<v-col cols='auto' class='mr-2'>
 					<v-icon class='' large @click='drawer=!drawer' :icon='mdiMenu' />
 				</v-col>
 			</v-row>
