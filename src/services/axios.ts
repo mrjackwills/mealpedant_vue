@@ -17,7 +17,7 @@ const baseAxios: AxiosInstance = Axios.create({
 		'Content-Type': 'application/json; charset=utf-8',
 		'Cache-control': 'no-cache'
 	},
-	timeout: 15000
+	timeout: 7000
 });
 
 const staticAxios: AxiosInstance = Axios.create({
@@ -88,7 +88,7 @@ const wrap = <T> () => {
 			} catch (err) {
 				loadingModule().set_loading(false);
 				const e = <AxiosError>err;
-				if (e.message === 'Network Error') {
+				if (e.message === 'offline') {
 					const BrowserStore = browserModule();
 					if (BrowserStore.online) snackError({ message: 'Server offline' });
 					BrowserStore.set_online(false);

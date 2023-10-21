@@ -15,9 +15,9 @@
 			<router-view v-slot='{ Component }'>
 				<component :is='Component' />
 			</router-view>
+			<TheDialog />
+			<SnackBar />
 		</v-main>
-		<TheDialog />
-		<SnackBar />
 
 		<TheFooter />
 	</v-app>
@@ -32,7 +32,7 @@ import { registerSW } from 'virtual:pwa-register';
 import { useRoute } from 'vue-router';
 
 import { useDisplay } from 'vuetify';
-const { mdAndDown, lgAndUp } = useDisplay();
+const { mdAndDown } = useDisplay();
 
 onBeforeMount(async () => {
 	loading.value = true;
@@ -74,8 +74,7 @@ const browserHasIndexedDB = async (): Promise<void> => {
 };
 
 const toggleDrawer = (status: boolean): void => {
-	if (lgAndUp) return;
-	drawerModule().set_open(status);
+	if (mdAndDown) drawerModule().set_open(status);
 };
 
 const { updateServiceWorker } = useRegisterSW();
@@ -84,7 +83,6 @@ if ('serviceWorker' in navigator) {
 	registerSW({
 		onNeedRefresh () {
 			appUpdate();
-
 		}
 	});
 }

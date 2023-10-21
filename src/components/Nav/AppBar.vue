@@ -50,11 +50,10 @@
 
 		<template v-slot:extension v-if='!online'>
 			<v-row
-				v-if='!online'
 				:class='alert_class'
 				class='ma-0 pa-0'
 				justify='end'
-				dense
+				denisty='compact'
 				no-gutters
 			>
 				<v-col cols='12' class='ma-0 pa-0'>

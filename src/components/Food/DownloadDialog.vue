@@ -1,48 +1,46 @@
 <template>
-	<div class='text-center'>
-		<v-dialog
-			v-model='dialog'
-			eager
-			max-width='650'
-			scroll-strategy='none'
-			width='100%'
-		>
-			<v-card>
-				<v-img
-					:src='imgSource'
-					alt='A photograph of a meal'
-					class='grey darken-4'
-					:max-height='windowHeight'
-					contain
-				>
-				</v-img>
-				<v-card-actions>
-					<v-row justify='space-between' class='no-gutters'>
-						<v-col cols='auto' class='pa-0' v-for='(item ,index) in buttonFields' :key='index'>
-							<v-btn
-								@click.stop='click(item.click)'
-								:color='textColor'
-								:class='textColorClass'
-								variant='text'
-							>
-								<v-progress-circular
-									v-if='localLoading && index === 0'
-									:size='spinnerSize'
-									:width='spinnerWidth'
-									class='mr-2'
-									indeterminate
-									small
-								/>
-								<v-icon v-if='!localLoading && index === 0' class='rotated mr-2' style='vertical-align: middle' :size='iconSize' :icon='item.icon' />
-								<span class='text-subtitle-1' :class='{"text-caption" : mdAndDown}'>{{ item.text }} </span>
-								<v-icon v-if='!localLoading && index === 1' class='ml-2' style='vertical-align: middle' :size='iconSize' :icon='item.icon' />
-							</v-btn>
-						</v-col>
-					</v-row>
-				</v-card-actions>
-			</v-card>
-		</v-dialog>
-	</div>
+	<v-dialog
+		v-model='dialog'
+		:max-width='maxWidth'
+		eager
+		scroll-strategy='none'
+	>
+		<!-- width='100%' -->
+		<v-card>
+			<v-img
+				:src='imgSource'
+				alt='A photograph of a meal'
+				class='grey darken-4'
+				:max-height='windowHeight'
+				contain
+			>
+			</v-img>
+			<v-card-actions>
+				<v-row justify='space-between' class='no-gutters'>
+					<v-col cols='auto' class='pa-0' v-for='(item ,index) in buttonFields' :key='index'>
+						<v-btn
+							@click.stop='click(item.click)'
+							:color='textColor'
+							:class='textColorClass'
+							variant='text'
+						>
+							<v-progress-circular
+								v-if='localLoading && index === 0'
+								:size='spinnerSize'
+								:width='spinnerWidth'
+								class='mr-2'
+								indeterminate
+								small
+							/>
+							<v-icon v-if='!localLoading && index === 0' class='rotated mr-2' style='vertical-align: middle' :size='iconSize' :icon='item.icon' />
+							<span class='text-subtitle-1' :class='{"text-caption" : mdAndDown}'>{{ item.text }} </span>
+							<v-icon v-if='!localLoading && index === 1' class='ml-2' style='vertical-align: middle' :size='iconSize' :icon='item.icon' />
+						</v-btn>
+					</v-col>
+				</v-row>
+			</v-card-actions>
+		</v-card>
+	</v-dialog>
 </template>
 
 <script setup lang='ts'>
@@ -51,8 +49,12 @@ import { env } from '@/vanillaTS/env';
 import { mdiPublish, mdiClose } from '@mdi/js';
 import type { su, TPerson, u } from '@/types';
 import { useDisplay } from 'vuetify';
-const { lgAndUp, mdAndDown } = useDisplay();
-		
+const { lgAndUp, mdAndDown, mdAndUp } = useDisplay();
+
+const maxWidth = computed((): string => {
+	return 	mdAndUp.value? '60vw' : '100vw';
+});
+
 const dialog = computed({
 	get (): boolean {
 		return foodModule().dialog;
