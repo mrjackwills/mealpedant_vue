@@ -28,6 +28,7 @@
 				"dbaeumer.vscode-eslint",
 				"meganrogge.template-string-converter",
 				"mutantdino.resourcemonitor",
+				"redhat.vscode-yaml",
 				"timonwong.shellcheck",
 				"vue.volar",
 				"vue.vscode-typescript-vue-plugin",
