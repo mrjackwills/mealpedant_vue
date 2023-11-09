@@ -188,7 +188,6 @@ import { mdiAttachment, mdiCalendar, mdiClose, mdiDeleteForever, mdiFood, mdiMes
 import { required } from '@vuelidate/validators';
 import { snackError, snackSuccess } from '@/services/snack';
 import { useDisplay } from 'vuetify';
-import { VDatePicker } from 'vuetify/labs/VDatePicker';
 import type { PV, TAuthObject, TMealDatePerson, TPerson } from '@/types';
 import useVuelidate from '@vuelidate/core';
 const { smAndDown } = useDisplay();

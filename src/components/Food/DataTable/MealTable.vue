@@ -78,19 +78,17 @@
 <script setup lang='ts'>
 import { genesisDate, months, days } from '@/vanillaTS/globalConst';
 import type { TPiniaDateMeal } from '@/types';
-import { VDataTable } from 'vuetify/labs/VDataTable';
 import { useDisplay } from 'vuetify';
 const { mdAndDown } = useDisplay();
-// 	computed: {
-// 		// Shrink date font on small screens
+
 const computedDateFont = computed((): string => {
 	return mdAndDown.value ? 'smallesttext': 'smalltext';
 });
-// 		// Padding shrink on small screens - used for date cell
+// Padding shrink on small screens - used for date cell
 const computedPadding = computed((): string => {
 	return mdAndDown.value ? 'pa-1': 'pa-2';
 });
-// 		// All Dave meals visible status, set&get
+// All Dave meals visible status, set&get
 const Dave = computed({
 	get (): boolean {
 		return foodModule().Dave;
@@ -100,24 +98,10 @@ const Dave = computed({
 	}
 });
 
-const headerClass = (x: string): string => {
+const headerClass = (x: string |undefined): string => {
 	return x === 'Dave' ? 'dave-header': x=== 'Jack' ? 'jack-header' : '';
 };
-// 		// photo dialog status
-// 		dialog: {
-// 			get (): boolean {
-// 				return foodModule().dialog;
-// 			},
-// 			set(b: boolean): void {
-// 				foodModule().set_dialog(b);
-// 			}
-// 		},
-// footerProps (): TFooterProps {
-// 	return {
-// 		itemsPerPageOptions: [ 10, 20, 30, -1 ],
-// 		itemsPerPageText: this.$vuetify.breakpoint.mdAndUp ? 'days per page' : 'days',
-// 	};
-// },
+
 const headers = computed(() => {
 	const headers = [];
 	headers.push(
@@ -163,24 +147,6 @@ const Jack = computed({
 		foodModule().set_Jack(b);
 	}
 });
-// 		// Global loading boolean, get&set
-// const loading = computed({
-// 	get (): boolean {
-// 		return loadingModule().loading;
-// 	},
-// 	set (b: boolean): void {
-// 		loadingModule().set_loading(b);
-// 	}
-// });
-
-// const photoDisabled = computed({
-// 	get (): boolean {
-// 		return foodModule().photo_disabled;
-// 	},
-// 	set (b: boolean): void {
-// 		foodModule().set_photo_disabled(b);
-// 	}
-// });
 
 const tableData = computed((): Array<TPiniaDateMeal> => {
 	return mealsModule().meals;

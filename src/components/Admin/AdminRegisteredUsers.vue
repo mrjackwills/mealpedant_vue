@@ -198,8 +198,10 @@ import { axios_admin } from '@/services/axios';
 import { mdiClose, mdiChevronDown, mdiChevronUp } from '@mdi/js';
 import { snackError, } from '@/services/snack';
 import type { TAdminSession, TAllUserInfo } from '@/types';
-import { VDataTable } from 'vuetify/labs/VDataTable';
-import type { VDataTableRow } from 'vuetify/labs/VDataTable';
+import type { VDataTableRow } from 'vuetify/components/VDataTable';
+
+// import type { VRow } from 'vuetify/components/VGrid';
+// justify: VRow['$props']['justify']
 
 const expandedEmail = ref(undefined as undefined|string);
 const expandedRow = ref(false);

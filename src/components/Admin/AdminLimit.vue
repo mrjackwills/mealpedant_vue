@@ -28,18 +28,8 @@
 <script setup lang='ts'>
 import { axios_admin } from '@/services/axios';
 import { mdiCloseCircleOutline } from '@mdi/js';
-// import { secondsToDays } from '@/vanillaTS/secondsToDays';
 import type { TLimit } from '@/types';
-import { VDataTable } from 'vuetify/labs/VDataTable';
 
-// const loading = computed({
-// 	get (): boolean {
-// 		return loadingModule().loading;
-// 	},
-// 	set (b: boolean): void {
-// 		loadingModule().set_loading(b);
-// 	}
-// });
 const userLimits = computed((): TLimit => {
 	return adminModule().limit;
 });

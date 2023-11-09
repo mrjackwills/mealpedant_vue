@@ -67,8 +67,6 @@ import {
 	mdiFileStar
 } from '@mdi/js';
 import { axios_admin } from '@/services/axios';
-import { VDataTable } from 'vuetify/labs/VDataTable';
-
 import { useDisplay } from 'vuetify';
 const { mdAndDown, smAndDown } = useDisplay();
 

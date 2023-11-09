@@ -74,7 +74,7 @@ const browserHasIndexedDB = async (): Promise<void> => {
 };
 
 const toggleDrawer = (status: boolean): void => {
-	if (mdAndDown) drawerModule().set_open(status);
+	if (mdAndDown.value) drawerModule().set_open(status);
 };
 
 const { updateServiceWorker } = useRegisterSW();

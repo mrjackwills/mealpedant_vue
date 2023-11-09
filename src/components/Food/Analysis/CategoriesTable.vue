@@ -71,7 +71,6 @@
 <script setup lang='ts'>
 import { dexieDB } from '@/services/dexieDb';
 import type { TCategoryTableDate, TPiniaDateMeal, TFooterProps } from '@/types';
-import { VDataTableVirtual } from 'vuetify/labs/VDataTable';
 import { useDisplay } from 'vuetify';
 const { mdAndDown, mdAndUp } = useDisplay();
 

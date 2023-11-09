@@ -157,7 +157,6 @@
 
 <script setup lang='ts'>
 import { axios_adminMeal, axios_adminPhoto } from '@/services/axios';
-import { VDatePicker } from 'vuetify/labs/VDatePicker';
 import { env } from '@/vanillaTS/env';
 import { mdiAttachment, mdiCalendar, mdiClose, mdiCloudUpload, mdiFood, mdiMessageText, mdiPlusCircle, mdiRestore } from '@mdi/js';
 import type { PV, TPerson } from '@/types';

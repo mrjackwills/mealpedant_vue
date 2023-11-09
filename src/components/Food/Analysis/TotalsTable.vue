@@ -75,7 +75,6 @@
 <script setup lang='ts'>
 import { dexieDB } from '@/services/dexieDb';
 import type { TCategoryTotals } from '@/types';
-import { VDataTable } from 'vuetify/labs/VDataTable';
 import { useDisplay } from 'vuetify';
 const { mdAndDown } = useDisplay();
 

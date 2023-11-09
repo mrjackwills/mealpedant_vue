@@ -64,7 +64,6 @@
 </template>
 
 <script setup lang='ts'>
-import { VDatePicker } from 'vuetify/labs/VDatePicker';
 import { mdiCalendarBlank, mdiCalendarToday } from '@mdi/js';
 import { snackError } from '@/services/snack';
 import type { TCategory, TMealType, TPiniaDateMeal } from '@/types';
