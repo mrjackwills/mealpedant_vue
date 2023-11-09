@@ -2,7 +2,6 @@
 	<v-row wrap justify='center'>
 		<v-col cols='12' sm='8' md='6' >
 			<v-data-table
-				:mobile-breakpoint='0'
 				:headers='headers'
 				:items='userLimits'
 				footer-props.items-per-page-text='abc'

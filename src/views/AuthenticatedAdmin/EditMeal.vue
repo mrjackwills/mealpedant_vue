@@ -10,7 +10,41 @@
 					v-on:submit.prevent>
 					<v-col class='pa-0' cols='12'>
 
-						<v-text-field
+						<v-row justify='space-between' class='ma-0 pa-0'>
+							<v-col class='ma-0 pa-0' cols='11'>
+
+								<v-text-field
+									v-model='meal.date'
+									@click='showDate=!showDate'
+									:prepend-icon='mdiCalendar'
+									:label='computedDateLabel'
+									variant='underlined'
+									persistent-hint
+									readonly
+								>
+									<v-menu
+										v-model='showDate'
+										activator='parent'
+										:close-on-content-click='false'
+									>
+										<v-date-picker
+											v-model='mealDate'
+											first-day-of-week='1'
+											@click:cancel='showDate=!showDate'
+											@click:save='showDate=!showDate'
+											:min='minDate'
+										/>
+									</v-menu>
+								</v-text-field>
+
+							</v-col>
+							<v-col class='ma-0 pa-0' cols='auto'>
+								<v-icon class='mt-5' @click='previous' :icon='mdiRestore' />
+
+							</v-col>
+						</v-row>
+
+						<!-- <v-text-field
 							v-model='meal.date'
 							@click:append-inner='yesterday'
 							@click='showDate=!showDate'
@@ -32,10 +66,11 @@
 									first-day-of-week='1'
 									@click:cancel='showDate=!showDate'
 									@click:save='showDate=!showDate'
+									@update:modelValue='showDate=false'
 									:min='minDate'
 								/>
 							</v-menu>
-						</v-text-field>
+						</v-text-field> -->
 						<v-col class='pa-0' cols='12'>
 							<v-row justify='space-around'>
 								<v-col class='pa-0' v-for='(item,index) in ["Dave", "Jack"]' :key='index' cols='auto'>
@@ -265,7 +300,7 @@ const loading = computed({
 });
 
 const showDate = ref(false);
-const mealDate = ref([]);
+const mealDate = ref(undefined as undefined | string);
 
 watch(mealDate, (i) => {
 	if (i) {
@@ -426,13 +461,12 @@ const updateMeal_confirm = async (): PV => {
 	}
 };
 
-/**
-** Change meal.value.date to yesterdays date
-*/
-const yesterday = (): void => {
-	const today = new Date(Date.now() - new Date().getTimezoneOffset() * 60000);
-	today.setDate(today.getDate() -1);
-	meal.value.date = today.toISOString().slice(0, 10);
+const previous = (): void => {
+	if (meal.value.date) {
+		const d = new Date(meal.value.date);
+		d.setDate(d.getDate() -1);
+		meal.value.date = d.toISOString().slice(0, 10);
+	}
 };
 
 const rules = {

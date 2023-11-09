@@ -2,7 +2,6 @@
 	<v-row justify='center' class=''>
 		<v-col justify='center' cols='12' md='7' class=''>
 			<v-data-table
-				:mobile-breakpoint='0'
 				:headers='categoriesHeaders'
 				:items='computedTypeItems'
 				hide-default-footer

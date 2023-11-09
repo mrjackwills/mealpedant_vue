@@ -14,7 +14,6 @@
 				id='datatable'
 				:headers='registeredUsersHeaders'
 				:items='registeredUsers'
-				:mobile-breakpoint='0'
 				:sort-desc='true'
 				class='elevation-1 mt-4'
 			>

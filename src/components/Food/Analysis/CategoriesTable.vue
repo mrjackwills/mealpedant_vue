@@ -5,7 +5,6 @@
 				:footer-props='footerProps'
 				:headers='analysisHeaders'
 				:items='tableData'
-				:mobile-breakpoint='0'
 				class='elevation-1'
 				:height='height'
 				item-key='name'

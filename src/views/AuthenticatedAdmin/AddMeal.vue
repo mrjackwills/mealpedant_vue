@@ -3,33 +3,43 @@
 		<v-row align='center' justify='center' class='no-gutters'>
 			<v-col class='' cols='12' sm='8' md='6'>
 				<v-form v-on:submit.prevent >
+
 					<v-col class='pa-0' cols='12'>
 
-						<v-text-field
-							v-model='meal.date'
-							@click:append-inner='yesterday'
-							@click='showDate=!showDate'
-							:append-inner-icon='mdiRestore'
-							:prepend-icon='mdiCalendar'
-							:label='computedDateLabel'
-							variant='underlined'
-							persistent-hint
-							readonly
-						>
-							<v-menu
-								v-model='showDate'
-								activator='parent'
-								:close-on-content-click='false'
-							>
-								<v-date-picker
-									v-model='mealDate'
-									first-day-of-week='1'
-									@click:cancel='showDate=!showDate'
-									@click:save='showDate=!showDate'
-									:min='minDate'
-								/>
-							</v-menu>
-						</v-text-field>
+						<v-row justify='space-between' class='ma-0 pa-0'>
+							<v-col class='ma-0 pa-0' cols='11'>
+
+								<v-text-field
+									v-model='meal.date'
+									@click='showDate=!showDate'
+									:prepend-icon='mdiCalendar'
+									:label='computedDateLabel'
+									variant='underlined'
+									persistent-hint
+									readonly
+								>
+									<v-menu
+										v-model='showDate'
+										activator='parent'
+										:close-on-content-click='false'
+									>
+										<v-date-picker
+											v-model='mealDate'
+											first-day-of-week='1'
+											@click:cancel='showDate=!showDate'
+											@click:save='showDate=!showDate'
+											:min='minDate'
+										/>
+									</v-menu>
+								</v-text-field>
+
+							</v-col>
+							<v-col class='ma-0 pa-0' cols='auto'>
+								<v-icon class='mt-5' @click='previous' :icon='mdiRestore' />
+
+							</v-col>
+						</v-row>
+					
 						<v-col class='pa-0' cols='12'>
 							<v-row justify='space-around'>
 								<v-col class='pa-0' v-for='(item,index) in ["Dave", "Jack"]' :key='index' cols='auto'>
@@ -214,7 +224,7 @@ onMounted(() => {
 	browserModule().set_description('Meal Pedant - Add a new meal');
 });
 
-const mealDate = ref([]);
+const mealDate = ref(undefined as undefined | string);
 
 const mealTypes = [ 'restaurant' as const, 'takeaway' as const, 'vegetarian' as const ];
 const completed = ref(false);
@@ -236,6 +246,7 @@ const meal = ref({
 watch(mealDate, (i) => {
 	if (i) {
 		meal.value.date = convert_date(String(i));
+		showDate.value = false;
 	}
 });
 
@@ -318,13 +329,13 @@ const fileInserted = async (): PV => {
 const trimCategory = (): void => {
 	if (meal.value.category) meal.value.category = meal.value.category.trim();
 };
-/**
- ** Change meal.value.date to yesterdays date
- */
-const yesterday = (): void => {
-	const today = new Date(Date.now() - new Date().getTimezoneOffset() * 60000);
-	today.setDate(today.getDate() -1);
-	meal.value.date = today.toISOString().slice(0, 10);
+
+const previous = (): void => {
+	if (meal.value.date) {
+		const d = new Date(meal.value.date);
+		d.setDate(d.getDate() -1);
+		meal.value.date = d.toISOString().slice(0, 10);
+	}
 };
 // },
 

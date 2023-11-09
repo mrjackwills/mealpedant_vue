@@ -3,8 +3,8 @@
 		v-model='drawer'
 		:location='mobile?"right":"left"'
 		:rail='minivariant'
+		:mobile-breakpoint='960'
 		height='100vh'
-		mobile-breakpoint='960'
 		width='175'
 		app
 		touchless

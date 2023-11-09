@@ -4,7 +4,6 @@
 		v-model:items='tableData'
 		:headers='headers'
 		:items-per-page='25'
-		:mobile-breakpoint='0'
 		class='elevation-1'
 		density='compact'
 		item-key='d'

@@ -21,8 +21,8 @@
 					activator='parent'
 					:close-on-content-click='false'
 				>
+					<!-- v-model='startModel' -->
 					<v-date-picker
-						v-model='startModel'
 						first-day-of-week='1'
 						@click:cancel='showStartDate=!showStartDate'
 						@click:save='showStartDate=!showStartDate'

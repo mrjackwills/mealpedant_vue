@@ -161,18 +161,14 @@ const loading = computed({
 	}
 });
 
-// 	computed: {
-// const dialog = computed((): boolean => {
-// 	return foodModule().dialog;
-// });
 const analysis = computed((): boolean => {
 	return foodModule().button_analysis;
 });
+
 const infobar_messages = computed((): Array<TInfobarmessage> =>{
 	return infobarModule().messages;
-	// TODO fix me
-	// return [ abc[0], abc[1], abc[2] ];
 });
+
 const original = computed((): boolean => {
 	return foodModule().original;
 });

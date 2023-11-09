@@ -4,7 +4,6 @@
 			<v-data-table
 				:headers='headers'
 				:items='backup'
-				:mobile-breakpoint='0'
 				class='elevation-1 mt-4'
 			>
 				<template v-slot:item='{item}'>
