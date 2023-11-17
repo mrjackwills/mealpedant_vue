@@ -1,10 +1,11 @@
-### 2022-08-12
+### 2023-11-17
 
 ### Chores
-+ dependencies updated, [58a7f3254e485476423069fa89162de772807b1d]
++ dependencies updated, [520318f598e441f96a1d509548e811768c7b44d3], [627135ea0e7314b7dd9e5ef734439ba4ecd7ae92]
++ create_release v0.1.0, [f1676541d4585f754327b075602e88848dd58b1d]
 
 ### Features
-+ chip style footer, [1130239d4c25577c74f028afff9621460ec9ef90]
-+ admin logs received, parsed, and rendered, as JSON, instead of a single, long, string, [13b8b560c385b5c60949cf739b92057afc0ba3c2]
++ replace vue-use with pinia-plugin-persistedstate, [a24cac54c54099c764864c8f51099dd06fbf4dad]
++ full conversion to Vue/Vuetify 3, [74e1ebb150bb220d76d63537217d5913cf73d65b]
 
-see <a href='https://github.com/mrjackwills/mealpedant_vue/blob/main/CHANGELOG.md'> CHANGELOG.md</a> for more details
+see <a href='https://github.com/mrjackwills/mealpedant_vue/blob/main/CHANGELOG.md'>CHANGELOG.md</a> for more details
