@@ -33,12 +33,13 @@ export type TUserLimit = { key: string }
 
 type TActivePatch = { active: boolean}
 type TAttemptPatch = { attempt: boolean}
-type TPasswordResetId = { password_reset_id: string }
-type TReset = { reset: boolean }
-type TLogLevels = 'debug' | 'error' | 'verbose' | 'warn'
+type TPasswordResetId = { password_reset_id: number }
+type TPasswordReset = { reset: boolean }
 type TTfaSecret = { two_fa_secret: boolean }
+type TLogLevels = 'debug' | 'error' | 'verbose' | 'warn'
 
 export type TPhoto = { [K in 'o' |'c']: string }
+export type TPhotoLong = { [K in 'original' |'converted']: string }
 
 export type TUserInfo =
 	{ timestamp: Date, login_attempt_number?:number }
@@ -48,7 +49,7 @@ export type TUserInfo =
 	& { [ K in 'password_reset_consumed' | 'login_success' ]?: boolean }
 
 export type TAdminPatch = {
-	patch: TActivePatch | TAttemptPatch | TPasswordResetId | TReset | TTfaSecret
+	patch: TActivePatch | TAttemptPatch | TPasswordResetId | TPasswordReset | TTfaSecret
 	email: string
 }
 
@@ -63,12 +64,12 @@ export type TCategoryTableDate = { category_name: string } & { [ K in 't' | 'd' 
 
 export type TMealPatch = {
 	meal: TMealDatePerson
-	originalDate: string
+	original_date: string
 }
 
 type TBaseMeal = { [ K in 'date' | 'category' | 'description'] : string } & { [K in 'restaurant' | 'takeaway' | 'vegetarian']: boolean } & { person: TPerson }
 
-export type TInsertMeal = TBaseMeal & { [K in 'photoNameOriginal' | 'photoNameConverted']: string|null }
+export type TInsertMeal = TBaseMeal & { [K in 'photo_original' | 'photo_converted']: string|undefined }
 
 export type TMealDatePerson = TInsertMeal & { [K in 'id' | 'meal_photo_id']: string }
 
@@ -95,13 +96,13 @@ export type TSingleMeal = { date: string, person: TPerson}
 
 export type TServerStats = { [K in 'rss' | 'virt']: string } & {[K in 'uptime' | 'uptime_app' ]: number }
 
-export type TBackup = Array<{ [K in 'filename' | 'filesize' ]: string }>
+export type TBackup = Array<{ [K in 'file_name' | 'file_size' ]: string }>
 
 export type TLimit = Array<{ key: string, points: number }>
 
 export type TAllUserInfo = Array<TUserInfo>
 
-export type TAdminSession = { [ K in 'user_agent'| 'ip' | 'login_date'| 'end_date'| 'uuid' ]: string }
+export type TAdminSession = { [ K in 'user_agent'| 'ip' | 'login_date'| 'end_date'| 'uuid'| 'current' ]: string }
 
 export type TConfirmFunction = (authentication : TAuthObject) => Promise<void>
 

@@ -1,229 +1,259 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { axios_incognito, axios_admin, axios_authenticatedUser, axios_authenticatedFood } from '@/services/axios';
-import { browserModule, loadingModule, resetPasswordModule, userModule } from '@/store';
-import { PiniaVuePlugin } from 'pinia';
-import { Position } from 'vue-router/types/router';
-import { PV } from '@/types';
+import { axios_admin, axios_authenticatedFood, axios_authenticatedUser, axios_incognito } from '@/services/axios';
+import type { PV } from '@/types';
+import Home from '@/views/HomeView.vue';
+import { createRouter, createWebHistory, type NavigationGuardNext, type RouteLocationNormalized, type RouteRecordRaw } from 'vue-router';
+import { FrontEndNames, FrontEndRoutes } from '@/types/enum_routes';
+import EmptyComponent from '@/components/EmptyComponent.vue';
 import { snackError, snackSuccess } from '@/services/snack';
-import Home from '@/views/Home.vue';
-import Router, { RouteConfig } from 'vue-router';
-import Vue from 'vue';
-
-Vue.use(PiniaVuePlugin);
-Vue.use(Router);
 
 const init_check = async (): PV => {
 	const BrowserStore = browserModule();
 	const init = BrowserStore.init;
 	if (!init) {
 		loadingModule().set_loading(true);
-		await axios_incognito.online_get();
-		const isAuthenticated = userModule().authenticated;
-		if (isAuthenticated) await axios_authenticatedUser.authenticated_get();
-		const isAdmin = userModule().admin;
-		if (isAdmin) await axios_admin.admin_get();
+		try {
+			await axios_incognito.online_get();
+			const isAuthenticated = userModule().authenticated;
+			if (isAuthenticated) await axios_authenticatedUser.authenticated_get();
+			const isAdmin = userModule().admin;
+			if (isAdmin) await axios_admin.admin_get();
+		} catch (e) {
+			console.log(e);
+		}
 	}
 	BrowserStore.set_init(true);
 	loadingModule().set_loading(false);
 
 };
 
-const adminRoutes: Array<RouteConfig> = [
-	{
-		path: '/admin',
-		name: 'admin',
-		component: () => import(/* webpackChunkName: "a" */ '@/views/AdminAuthenticated/Admin.vue'),
-		beforeEnter: async (_to, _from, next): PV => {
-			const isAdmin = userModule().admin;
-			isAdmin ? next(): next('/error');
-		}
-	},
-	{
-		path: '/addmeal',
-		name: 'addmeal',
-		component: () => import(/* webpackChunkName: "am" */ '@/views/AdminAuthenticated/AddMeal.vue'),
-		beforeEnter: async (_to, _from, next): PV => {
-			const isAdmin = userModule().admin;
-			isAdmin ? next(): next('/error');
-		}
-	},
-	{
-		path: '/editmeal',
-		name: 'editmeal',
-		component: () => import(/* webpackChunkName: "em" */ '@/views/AdminAuthenticated/EditMeal.vue'),
-		beforeEnter: async (to, _from, next): PV => {
-			try {
-				const isAdmin = userModule().admin;
-				if (!isAdmin) return next('/error');
-				const dateRegex = /([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))/;
-				const personValid = to.query.p === 'Jack' || to.query.p === 'Dave';
-				const dateValid = dateRegex.test(to.query.d as string);
-				if (personValid && dateValid) next();
-				else next('/error');
-			} catch (e) {
-				next('/');
+const adminBefore = async (_to: RouteLocationNormalized, _from: RouteLocationNormalized, next: NavigationGuardNext): PV => {
+	await init_check();
+	const isAuthenticated = !!userModule().admin && !!userModule().authenticated;
+	isAuthenticated ? next(): next(FrontEndRoutes.BASE);
+};
+
+const adminCache = async (_to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext): PV=> {
+	try {
+		await axios_authenticatedFood.cache_delete();
+		next(from.path);
+	} catch (e) {
+		const message = e instanceof Error ? e.message : 'ERROR: flushcache';
+		snackError({ message });
+		next(FrontEndRoutes.BASE);
+	}
+};
+
+const adminEditMeal = async (to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) : PV => {
+	try {
+		const dateRegex = /([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))/;
+
+		if (to.query.date && to.query.person) {
+			const personValid = to.query.person.toString() === 'Jack' || to.query.person.toString()=== 'Dave';
+			const dateValid = dateRegex.test(to.query.date.toString());
+		
+			if (personValid && dateValid) {
+				adminModule().set_date(to.query.date.toString());
+				adminModule().set_person(to.query.person.toString());
+				next();
 			}
+			else next(FrontEndRoutes.ERROR);
+		} else {
+
+			const personValid = adminModule().person === 'Jack' || adminModule().person === 'Dave';
+			const dateValid = dateRegex.test(adminModule().date);
+			if (personValid && dateValid) next();
+			else next(FrontEndRoutes.ERROR);
 		}
+	} catch (e) {
+		next(FrontEndRoutes.BASE);
+	}
+};
+
+const adminRoutes: Array<RouteRecordRaw> = [
+	{
+		path: FrontEndRoutes.ADMIN,
+		name: FrontEndNames.ADMIN,
+		component: () => import(/* webpackChunkName: "a" */ '@/views/AuthenticatedAdmin/AdminView.vue'),
+		beforeEnter: [ adminBefore ]
 	},
 	{
-		path: '/flushcache',
-		name: 'flushcache',
-		beforeEnter: async (_to, from, next): PV => {
-			try {
-				const isAdmin = userModule().admin;
-				if (isAdmin) await axios_authenticatedFood.cache_delete();
-				next(from.path);
-			} catch (e) {
-				const message = e instanceof Error ? e.message : 'ERROR: flushcache';
-				snackError({ message });
-				next('/');
-			}
-		},
+		path: FrontEndRoutes.ADDMEAL,
+		name: FrontEndNames.ADDMEAL,
+		component: () => import('@/views/AuthenticatedAdmin/AddMeal.vue'),
+		beforeEnter: [ adminBefore ]
+		
+	},
+	{
+		path: FrontEndRoutes.EDITMEAL,
+		name: FrontEndNames.EDITMEAL,
+		component: () => import('@/views/AuthenticatedAdmin/EditMeal.vue'),
+		beforeEnter: [ adminBefore, adminEditMeal ]
+	},
+	{
+		path: FrontEndRoutes.FLUSH_CACHE,
+		name: FrontEndNames.FLUSH_CACHE,
+		component: EmptyComponent,
+		beforeEnter: [ adminBefore, adminCache ]
 	}
 ];
 
-const authedRoutes: Array<RouteConfig> = [
+const authedRoutes: Array<RouteRecordRaw> = [
 	{
-		path: '/meals',
-		name: 'meals',
-		component: () => import(/* webpackChunkName: "m" */ '@/views/Authenticated/Meal.vue'),
+		path: FrontEndRoutes.MEALS,
+		name: FrontEndRoutes.MEALS,
+		component: () => import('@/views/Authenticated/MealView.vue'),
 	},
 	{
-		path: '/settings',
-		name: 'settings',
-		component: () => import(/* webpackChunkName: "s" */ '@/views/Authenticated/Settings.vue'),
+		path: FrontEndRoutes.SETTINGS,
+		name: FrontEndRoutes.SETTINGS,
+		component: () => import('@/views/Authenticated/SettingsView.vue'),
 	}
 ];
 
 for (const route of authedRoutes) {
-	route.beforeEnter = (_to, _from, next): void => {
+	route.beforeEnter = async (_to, _from, next): PV => {
+		await init_check();
 		const isAuthenticated = userModule().authenticated;
-		isAuthenticated ? next(): next('/');
+		isAuthenticated ? next(): next(FrontEndRoutes.BASE);
 	};
 }
 
-const hexRoutes: Array<RouteConfig> = [
-	{
-		path: '/user/reset/:id',
-		name: 'resetID',
-		beforeEnter: async (to, _from, next): PV => {
-			const isAuthenticated = userModule().authenticated;
-			if (isAuthenticated) {
-				next('/');
-			} else {
-				// TODO need to change this,
-				if (to.params.id?.length !== 128) throw Error('Invalid verification data');
-				const LoadingStore = loadingModule();
-				LoadingStore.set_loading(true);
-				const success = await axios_incognito.reset_get(to.params.id);
-				if (success) next('/user/reset');
-				else {
-					resetPasswordModule().set_id(undefined);
-					next('/');
-				}
-				LoadingStore.set_loading(false);
-			}
+const notAuthedBefore = async (_to: RouteLocationNormalized, _from: RouteLocationNormalized, next: NavigationGuardNext):PV => {
+	try {
+		await init_check();
+	} finally {
+		const isAuthenticated = userModule().authenticated;
+		isAuthenticated ? next(FrontEndRoutes.BASE) : next();
+	}
+
+};
+const hexPasswordReset = async (to: RouteLocationNormalized, _from: RouteLocationNormalized, next: NavigationGuardNext) : PV => {
+	const secret = String(to.params?.id);
+	if (!secret || secret.length !== 128) {
+		snackError({ message: 'Invalid verification data' });
+		next(FrontEndRoutes.BASE);
+	} else {
+		const LoadingStore = loadingModule();
+		LoadingStore.set_loading(true);
+		const success = await axios_incognito.reset_get(secret);
+		LoadingStore.set_loading(false);
+		if (success) next(FrontEndRoutes.USER_RESET);
+		else {
+			resetPasswordModule().set_id(undefined);
+			next(FrontEndRoutes.BASE);
 		}
+	
+	}
+};
+
+const hexReset = async (_to: RouteLocationNormalized, _from: RouteLocationNormalized, next: NavigationGuardNext) : PV => {
+	if (! resetPasswordModule().id) {
+		next(FrontEndRoutes.ERROR);
+	} else {
+		next();
+	}
+};
+
+const hexRegister = async (to: RouteLocationNormalized, _from: RouteLocationNormalized, next: NavigationGuardNext) : PV => {
+	if (to.params.id?.length !== 128) snackError({ message: 'Invalid verification data' });
+	const success = await axios_incognito.verify_get(String(to.params.id));
+	if (success) {
+		snackSuccess({ message: 'Verified, please sign in to continue' });
+		next(FrontEndRoutes.SIGNIN);
+	} else {
+		next(FrontEndRoutes.BASE);
+
+	}
+};
+const hexRoutes: Array<RouteRecordRaw> = [
+	{
+		path: FrontEndRoutes.RESETPASSWORD_param_ID,
+		name: FrontEndNames.USER_RESET_ID,
+		component: EmptyComponent,
+		beforeEnter: [ notAuthedBefore, hexPasswordReset ]
 	},
 	{
-		path: '/user/reset/',
-		name: 'reset',
-		component: () => import(/* webpackChunkName: "rp" */ '@/views/HexAuthenticated/Reset.vue'),
-		beforeEnter: (_to, _from, next): void => {
-			const isAuthenticated = userModule().authenticated;
-			const resetId = resetPasswordModule().id;
-			if (isAuthenticated || !resetId) {
-				next('/error');
-			} else {
-				next();
-			}
-		}
+		path: FrontEndRoutes.USER_RESET,
+		name: FrontEndNames.USER_RESET,
+		component: () => import(/* webpackChunkName: "rp" */ '@/views/HexAuthenticated/ResetView.vue'),
+		beforeEnter: [ notAuthedBefore, hexReset ]
+		
 	},
 	{
 		/** Verify user after successful register - componentless */
-		path: '/user/verify/:id',
-		name: 'verify',
-		beforeEnter: async (to, _from, next): PV => {
-			const isAuthenticated = userModule().authenticated;
-			if (isAuthenticated) {
-				next('/');
-			} else {
-				if (to.params.id?.length !== 128) throw Error('Invalid verification data');
-				const success = await axios_incognito.verify_get(to.params.id);
-				if (success) {
-					next('/signin');
-					snackSuccess({ message: 'Verified, please sign in to continue' });
-				}
-				next('/');
-			}
-		}
+		path: FrontEndRoutes.USER_VERIFY_param_ID,
+		name: FrontEndNames.USER_VERIFY_param_ID,
+		component: EmptyComponent,
+		beforeEnter: [ notAuthedBefore, hexRegister ]
+	}
+];
+
+const notAuthedRoutes: Array<RouteRecordRaw> = [
+	{
+		path: FrontEndRoutes.SIGNIN,
+		name: FrontEndNames.SIGNIN,
+		component: () => import('@/views/NotAuthenticated/SigninView.vue'),
+		beforeEnter: [ notAuthedBefore ]
+	},
+	{
+		path: FrontEndRoutes.REGISTER,
+		name: FrontEndNames.REGISTER,
+		component: () => import('@/views/NotAuthenticated/RegisterView.vue'),
+		beforeEnter: [ notAuthedBefore ]
+	},
+	{
+		path: FrontEndRoutes.FORGOTPASSWORD,
+		name: FrontEndNames.FORGOTPASSWORD,
+		component: () => import('@/views/NotAuthenticated/ForgotPassword.vue'),
+		beforeEnter: [ notAuthedBefore ]
 	},
 ];
 
-const notAuthedRoutes: Array<RouteConfig> = [
-	{
-		path: '/signin',
-		name: 'signin',
-		component: () => import(/* webpackChunkName: "si" */ '@/views/NotAuthenticated/Signin.vue'),
-	},
-	{
-		path: '/register',
-		name: 'register',
-		component: () => import(/* webpackChunkName: "r" */ '@/views/NotAuthenticated/Register.vue'),
-	},
-	{
-		path: '/forgotpassword',
-		name: 'forgotpassword',
-		component: () => import(/* webpackChunkName: "fp" */ '@/views/NotAuthenticated/ForgotPassword.vue'),
-	},
-];
+const baseBefore = async (_to: RouteLocationNormalized, _from: RouteLocationNormalized, next: NavigationGuardNext):PV => {
+	try {
+		await init_check();
+	} finally {
+		next();
+	}
+};
 
-for (const route of notAuthedRoutes) {
-	route.beforeEnter = (_to, _from, next): void => {
-		const isAuthenticated = userModule().authenticated;
-		isAuthenticated ? next('/') : next();
-	};
-}
+const baseMealBefore = async (_to: RouteLocationNormalized, _from: RouteLocationNormalized, next: NavigationGuardNext):PV => {
+	const isAuthenticated = userModule().authenticated;
+	if (isAuthenticated) {
+		next(FrontEndRoutes.MEALS);
+	} else {
+		next();
+	}
+};
 
-const baseRoutes: Array<RouteConfig> = [
+const baseRoutes: Array<RouteRecordRaw> = [
 	{
-		path: '/',
-		name: 'home',
+		path: FrontEndRoutes.BASE,
+		name: FrontEndNames.HOME,
 		component: Home,
-		beforeEnter: async (_to, _from, next): PV => {
-			const isAuthenticated = userModule().authenticated;
-			if (isAuthenticated) {
-				next('/meals');
-			} else {
-				next();
-			}
-		},
+		beforeEnter: [ baseBefore, baseMealBefore ]
 	},
 	{
-		path: '/error',
-		name: 'error',
-		component: () => import(/* webpackChunkName: "e" */ '@/views/Error.vue'),
+		path: FrontEndRoutes.ERROR,
+		name: FrontEndNames.ERROR,
+		component: () => import('@/views/ErrorView.vue'),
+		beforeEnter: [ baseBefore ]
 	},
 	{
-		path: '*',
-		redirect: { name: 'error' },
+		path: FrontEndRoutes.CATCH_ALL,
+		redirect: { name: FrontEndNames.ERROR },
 	},
 ];
 
-const routes = [ ...baseRoutes, ...adminRoutes, ...authedRoutes, ...hexRoutes, ...notAuthedRoutes ];
+const allRoutes = [ ...adminRoutes, ...authedRoutes, ...notAuthedRoutes, ...hexRoutes, ...baseRoutes ];
 
-export const router = new Router({
-	mode: 'history',
-	base: '/',
-	scrollBehavior (_to, _from, savedPosition): void|Position {
-		return savedPosition ?? { x: 0, y: 0 };
-	},
-	routes,
-	
+const router = createRouter({
+	history: createWebHistory(import.meta.env.BASE_URL),
+	routes: allRoutes,
+	scrollBehavior (_to, _from, savedPosition) {
+		return savedPosition ?? { top: 0 };
+
+	}
 });
 
-router.beforeEach(async (_to, _from, next) => {
-	await init_check();
-	// TODO remove all queries?
-	next();
-});
+export default router;

@@ -2,64 +2,43 @@
 	<v-row justify='center' align='center' no-gutters class='ma-0 pa-0' >
 		<v-expand-transition>
 			<v-col v-if='showBuild && authed' cols='12' :order='3' class='text-caption text-center' >
-				<v-tooltip class='' attach='#bdtt' top v-model='tooltip_date' color='black'>
-					<template v-slot:activator='{ on }' >
-						<div v-on='on' ></div>
-					</template>
-					<div >site build date</div>
-				</v-tooltip>
+
 				<div
-					id='bdtt'
 					class='mt-1'
-					@mouseover='tooltip_date = true'
-					@mouseleave='tooltip_date = false'
 				>
 					{{ buildDate }}
 				</div>
-
-				<v-tooltip attach='#apitt' top v-model='tooltip_api' color='black'>
-					<template v-slot:activator='{ on }' >
-						<div v-on='on' ></div>
-					</template>
-					<span>api version</span>
+				<v-tooltip activator='parent' location='top center' content-class='tooltip'>
+					<span>site build date</span>
 				</v-tooltip>
+
 				<div
-					id='apitt'
 					class='mt-1'
-					@mouseover='tooltip_api = true'
-					@mouseleave='tooltip_api = false'
 				>
 					{{ api_version }}
 				</div>
+				<v-tooltip activator='parent' location='top center' content-class='tooltip'>
+					<span>api version</span>
+				</v-tooltip>
 
 			</v-col>
 		</v-expand-transition>
 		<v-col cols='12' :md='authed? "12":"auto"' :order='appOrder' class='text-caption text-center' :class='authedMargin' @click='buildInfo'>
 
-			<v-tooltip
-				v-if='authed'
-				v-model='tooltip_siteVersion'
-				attach='#sv'
-				color='black'
-				top
-			>
-				<template v-slot:activator='{ on }' >
-					<div v-on='on' ></div>
-				</template>
-				<span>site version</span>
-			</v-tooltip>
 			<div
-				id='sv'
-				@mouseover='tooltip_siteVersion = true'
-				@mouseleave='tooltip_siteVersion = false'
+				class='mt-1'
 			>
 				{{ appVersion }}
 			</div>
+			<v-tooltip activator='parent' location='top center' content-class='tooltip'>
+				<span>site version</span>
+			</v-tooltip>
+				
 		</v-col>
 		<v-col cols='12' md='auto' order='2' order-md='1' class='text-caption text-center' :class='authedMargin' @click='buildInfo'>
 			<v-row class='no-gutters' align='center' justify='center'>
 				<v-col class='' cols='auto' :order='copyrightOrder' :class='copyrightMargin'>
-					<v-icon style='vertical-align: middle;' white x-small dense > {{ mdiCopyright }}</v-icon>
+					<v-icon style='vertical-align: middle;' white size='x-small' :icon='mdiCopyright' />
 				</v-col>
 				<v-col class='' :order='yearOrder' cols='auto' >
 					Meal Pedant {{ year }}
@@ -67,10 +46,10 @@
 			</v-row>
 		</v-col>
 		<v-col cols='12' order='2' order-md='1' class='text-caption text-center' :class='authedMargin' >
-			<a :href='github_repo' target='_blank' rel='noopener noreferrer' class='text-caption white--text'>
+			<a :href='source_code' target='_blank' rel='noopener noreferrer' class='text-caption white--text'>
 				<v-row class='no-gutters' align='center' justify='center'>
 					<v-col class='' cols='auto' :class='copyrightMargin'>
-						<v-icon style='vertical-align: middle;' white x-small dense > {{ mdiGithub  }}</v-icon>
+						<v-icon style='vertical-align: middle;' white size='x-small' :icon='mdiGithub' />
 					</v-col>
 					<v-col class='' cols='auto' >
 						source code
@@ -81,78 +60,65 @@
 	</v-row>
 </template>
 
-<script lang='ts'>
-import { browserModule, userModule } from '@/store';
+<script setup lang='ts'>
 import { env } from '@/vanillaTS/env';
 import { mdiCopyright, mdiGithub } from '@mdi/js';
-import { su } from '@/types';
-import Vue from 'vue';
+import type { su } from '@/types';
+import { githubHref } from '@/vanillaTS/globalConst';
+import { useDisplay } from 'vuetify';
+const { mdAndUp, smAndDown } = useDisplay();
 
-export default Vue.extend({
-	name: 'app-footer-text',
+onBeforeUnmount(() => {
+	clearTimeout(buildTimeout.value);
 
-	async beforeDestroy () {
-		clearTimeout(this.buildTimeout);
-	},
-	
-	computed: {
-		api_version (): su {
-			return browserModule().api_version;
-		},
-		appOrder (): string {
-			return this.authed || this.$vuetify.breakpoint.mdAndUp ? '1' : '2';
-		},
-		appVersion (): string {
-			return env.app_version;
-		},
-		authed (): boolean {
-			return userModule().authenticated;
-		},
-		authedMargin (): string {
-			return this.authed ? 'py-0' : 'pa-1';
-		},
-		buildDate (): string {
-			return env.build_date;
-		},
-		copyrightOrder (): string {
-			return this.$vuetify.breakpoint.mdAndUp && !this.authed ? '2' : '1' ;
-		},
-		copyrightMargin (): string {
-			return this.$vuetify.breakpoint.smAndDown ? 'mr-1' : 'mx-1';
-		},
-		github_repo (): string {
-			return env.github;
-		},
-		year (): number {
-			return new Date().getUTCFullYear();
-		},
-		yearOrder (): string {
-			return this.$vuetify.breakpoint.mdAndUp ? '1' : '2';
-		}
-	},
-
-	data: () => ({
-		showBuild: false,
-		buildTimeout: 0,
-		tooltip_api: false,
-		tooltip_date: false,
-		tooltip_siteVersion: false,
-		mdiCopyright,
-		mdiGithub
-	}),
-
-	methods: {
-		buildInfo (): void {
-			if (!this.authed) return;
-			clearTimeout(this.buildTimeout);
-			this.showBuild = !this.showBuild;
-			this.buildTimeout = setTimeout(() => {
-				this.showBuild = false;
-			}, 20000);
-		},
-	},
-	
 });
+
+const source_code = `${githubHref}/mealpedant_vue`;
+	
+const api_version = computed((): su => {
+	return browserModule().api_version;
+});
+const appOrder = computed((): string => {
+	return authed.value || mdAndUp.value ? '1' : '2';
+});
+const appVersion = computed((): string => {
+	return env.app_version;
+});
+const authed = computed((): boolean => {
+	return userModule().authenticated;
+});
+const authedMargin = computed((): string => {
+	return authed.value ? 'py-0' : 'pa-1';
+});
+const buildDate = computed((): string => {
+	return env.build_date;
+});
+const copyrightOrder = computed((): string => {
+	return mdAndUp.value && !authed.value ? '2' : '1' ;
+});
+const copyrightMargin = computed((): string => {
+	return smAndDown.value ? 'mr-1' : 'mx-1';
+});
+
+const year = computed((): number => {
+	return new Date().getUTCFullYear();
+});
+const yearOrder = computed((): string => {
+	return mdAndUp.value ? '1' : '2';
+});
+
+const showBuild = ref(false);
+const buildTimeout = ref(0);
+
+const buildInfo = (): void => {
+	if (!authed.value) return;
+	clearTimeout(buildTimeout.value);
+	showBuild.value = !showBuild.value;
+	buildTimeout.value = setTimeout(() => {
+		showBuild.value = false;
+	}, 20000);
+};
+	
 </script>
 
 <style>

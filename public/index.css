@@ -1,24 +1,9 @@
 html, body {
-	background-color:#929892;
+	background-color: #929892;
 	margin: 0;
 	height: 100%;
+	font-family: 'Hammersmith One';
 }
-
-.ie-flex-container {
-	height: 100%;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-}
-
-.ie-row {
-	width: auto;
-}
-
-.ie-flex-item {
-	font-weight: bold;
-	text-align: center;
-	font-size: 2rem;
-	font-family: Arial, sans-serif;
-	text-align: center;
+.mastodon {
+	display: none;
 }

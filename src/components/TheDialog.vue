@@ -1,14 +1,12 @@
 <template>
 	<v-dialog
+		:model-value='visible'
 		:max-width='maxWidth'
-		:overlay-opacity='.5'
-		:value='visible'
-		overlay-color='#929892'
-		width='100%'
-		eager
+		scroll-strategy='none'
 		persistent
+		eager
 	>
-		<v-card v-intersect='onIntersect'>
+		<v-card v-intersect='onIntersect' >
 			<v-progress-linear
 				:active='loading'
 				:indeterminate='loading'
@@ -26,23 +24,30 @@
 							v-on:submit.prevent
 							autocomplete='off'
 						>
+						
 							<template v-if='passwordRequired'>
+								<v-text-field
+									v-show='false'
+									label='EMAIL'
+									type='email'
+									autocomplete='email'
+								/>
 								<v-text-field
 									v-for='item in textFields'
 									v-model='user[item.model]'
-									@click:append='passwordVisible = !passwordVisible'
+									@click:append-inner='passwordVisible = !passwordVisible'
 									@keydown.enter='click'
 									@focus='focusMethod(item.model)'
-									:append-icon='item.appendIcon'
+									:append-inner-icon='item.appendIcon'
 									:autocomplete='item.autocomplete'
-									:dense='$vuetify.breakpoint.smAndDown'
+									:dense='smAndDown'
 									:disabled='loading'
 									:key='item.model'
 									:label='item.label'
 									:prepend-inner-icon='item.icon'
 									:type='item.type'
 									class='mb-n3'
-									outlined
+									variant='underlined'
 									required
 								/>
 							</template>
@@ -52,11 +57,11 @@
 									v-model='user[item.model]'
 									@focus='focusMethod(item.model)'
 									v-on:keyup.enter='click'
-									:dense='$vuetify.breakpoint.smAndDown'
+									:dense='smAndDown'
 									:key='item.model'
 									:label='item.label'
 									:prepend-inner-icon='item.icon'
-									outlined
+									variant='underlined'
 									required
 								/>
 							</template>
@@ -65,17 +70,18 @@
 				</v-row>
 			</section>
 
-			<v-card-actions>
+			<v-card-actions >
 				<v-row class='ma-0 pa-0' justify='center' align='center'>
 					<v-col cols='12' md='8' lg='6' class='ma-0 pa-0' >
 						<v-row align='center' justify='space-around' class='ma-0 pa-0 mb-4'>
 							<v-col cols='auto' class='ma-0 pa-0'>
 								<v-btn
 									@click='cancel'
-									:small='$vuetify.breakpoint.smAndDown'
+									:small='smAndDown'
 									color='error'
+									variant='flat'
 								>
-									<app-button-icon :icon='mdiClose' />
+									<ButtonIcon :icon='mdiClose' />
 									cancel
 								</v-btn>
 							</v-col>
@@ -84,16 +90,16 @@
 								<v-btn
 									@click='click'
 									:disabled='disabled'
-									:small='$vuetify.breakpoint.smAndDown'
+									:small='smAndDown'
 									color='secondary'
+									:variant='disabled?"outlined":"flat"'
 								>
 									<div class='white--text' :class='{"monospace-font":monospace, "font-weight-black":monospace}'>{{ timeout_text }}</div>
 									
-									<app-button-icon
+									<ButtonIcon
 										v-if='!monospace'
-										:disabled.sync='disabled'
-										:icon.sync='timeout_icon'
-										
+										v-model:disabled='disabled'
+										:icon='timeout_icon'
 										color='white'
 										margin='ml-2'
 									/>
@@ -107,203 +113,174 @@
 	</v-dialog>
 </template>
 
-<script lang='ts'>
-import { dialogModule, twoFAModule } from '@/store';
-import { mapStores } from 'pinia';
+<script setup lang='ts'>
 import { mdiCellphoneInformation, mdiCheck, mdiClose, mdiEye, mdiEyeOff, mdiLock } from '@mdi/js';
-import { su, u, TConfirmFunction, TDialogTextField } from '@/types';
-import ButtonIcon from '@/components/ButtonIcon.vue';
-import Vue from 'vue';
+import type { su, u, TConfirmFunction, TDialogTextField } from '@/types';
+import { useDisplay } from 'vuetify';
+const { mdAndUp, smAndDown } = useDisplay();
 
-export default Vue.extend({
-	name: 'the-dialog',
+const dialogStore = dialogModule();
 
-	components: {
-		appButtonIcon: ButtonIcon
-	},
-
-	computed: {
-		...mapStores(dialogModule),
-
-		confirmFunction (): u<TConfirmFunction> {
-			return this.dialogStore.confirmFunction;
-		},
+const confirmFunction = computed((): u<TConfirmFunction> => {
+	return dialogStore.confirmFunction;
+});
 		
-		confirmButton (): string {
-			return this.dialogStore.confirmButton ?? 'confirm';
-		},
-		disabled (): boolean {
-			return this.loading
-				|| this.timeout
-				|| this.passwordRequired && !this.user.password
-				|| this.passwordRequired && this.twoFA_always_required && !this.user.token
-				|| this.twoFA_always_required && this.passwordRequired && this.tokenLength <6
-				|| this.passwordRequired && this.passwordLength < 10
-				? true: false;
-		},
-		logout (): string {
-			return this.title.toLowerCase() ?? 'logout';
-		},
-		maxWidth (): string {
-			return 	this.$vuetify.breakpoint.mdAndUp? '60vw' : '100vw';
-		},
-		message (): su {
-			return this.dialogStore.message;
-		},
-		messageSize (): string {
-			return this.$vuetify.breakpoint.mdAndUp? 'text-h5' : 'text-subtitle-1';
-		},
-		monospace (): boolean {
-			return this.timeout > 0 ? true : false;
-		},
-		passwordRequired (): boolean {
-			return this.dialogStore.passwordRequired;
-		},
-		passwordLength (): number {
-			return this.user.password ? this.user.password.length: 0;
-		},
-		textFields (): TDialogTextField {
-			return [
-				{
-					autocomplete: 'new-password',
-					icon: mdiLock,
-					label: 'password',
-					model: 'password' as const,
-					type: this.passwordVisible? 'text' : 'password',
-					appendIcon: this.user.password ? this.passwordVisible ? mdiEyeOff : mdiEye : '',
-				},
-			];
-		},
-		timeout: {
-			get (): number {
-				return this.dialogStore.timeout;
-			},
-			set (n: number): void {
-				this.dialogStore.set_timeout(n);
-			},
-		},
+const confirmButton = computed((): string => {
+	return dialogStore.confirmButton ?? 'confirm';
+});
 
-		timeout_text (): string {
-			return this.timeout ?
-				`${String(this.timeout).padStart(2, '0')}` : this.passwordRequired && !this.user.password || this.passwordRequired && this.passwordLength < 10
-					? 'password required ' : this.passwordRequired && this.twoFA_always_required && !this.user.token || this.passwordRequired && this.twoFA_always_required && this.tokenLength <6
-						? 'token required' : this.confirmButton;
+const disabled = computed((): boolean => {
+	return loading.value
+		|| timeout.value
+		|| passwordRequired.value && !user.value.password
+		|| passwordRequired.value && twoFA_always_required.value && !user.value.token
+		|| twoFA_always_required.value && passwordRequired.value && tokenLength.value <6
+		|| passwordRequired.value && passwordLength.value < 10
+		? true: false;
+});
+const maxWidth = computed((): string => {
+	return 	mdAndUp.value? '60vw' : '100vw';
+});
+const message = computed((): su => {
+	return dialogStore.message;
+});
+const monospace = computed((): boolean => {
+	return timeout.value > 0 ? true : false;
+});
+const passwordRequired = computed((): boolean => {
+	return dialogStore.passwordRequired;
+});
+const passwordLength = computed((): number => {
+	return user.value.password ? user.value.password.length: 0;
+});
+const textFields = computed((): TDialogTextField => {
+	return [
+		{
+			autocomplete: 'new-password',
+			icon: mdiLock,
+			label: 'password',
+			model: 'password' as const,
+			type: passwordVisible.value? 'text' : 'password',
+			appendIcon: user.value.password ? passwordVisible.value ? mdiEyeOff : mdiEye : '',
 		},
-		timeout_icon (): string {
-			return this.timeout ? '' : this.passwordRequired && !this.user.password|| this.passwordRequired && this.passwordLength < 10
-				? mdiLock : this.passwordRequired && this.twoFA_always_required && !this.user.token || this.passwordRequired && this.twoFA_always_required && this.tokenLength <6
-					? mdiCellphoneInformation: this.dialogStore.icon?? mdiCheck;
-		},
-		title (): string {
-			return this.dialogStore.title ?? 'warning';
-		},
-		titleSize (): string {
-			return this.$vuetify.breakpoint.mdAndUp? 'text-h4' : 'text-h6';
-		},
-		tokenLength (): number {
-			return this.user.token ? this.user.token.length: 0;
-
-		},
-		twoFA_always_required (): boolean {
-			return twoFAModule().alwaysRequired;
-		},
-		twoFABackup_enabled (): boolean {
-			return twoFAModule().backup_count > 0;
-		},
-
-		visible: {
-			get (): boolean {
-				return this.dialogStore.visible;
-			},
-			set (b: boolean): void {
-				this.dialogStore.set_visible(b);
-			}
-		},
+	];
+});
+const timeout = computed({
+	get (): number {
+		return dialogStore.timeout;
 	},
-	data: () => ({
-		isIntersecting: false,
-		loading: false,
-		localDisabled: false,
-		mdiCellphoneInformation,
-		mdiCheck,
-		mdiClose,
-		passwordVisible: false,
-		timeoutInterval: 0,
-		tokenFields: [
-			{
-				clearable: true,
-				icon: mdiCellphoneInformation,
-				label: '2FA code',
-				model: 'token' as const,
-			},
-		],
-		user: {
-			password: '',
-			token: undefined as string | undefined,
-		}
-	}),
-	methods: {
-		cancel (): void {
-			this.visible = false;
-		},
-		clearTimeouts (): void {
-			clearInterval(this.timeoutInterval);
-			this.localDisabled =false;
-			this.timeout = 0;
-		},
-		async click (): Promise<void> {
-			if (this.passwordRequired && !this.user.password || this.timeout > 0) return;
-			this.passwordVisible = false;
-			this.visible = false;
-			if (!this.confirmFunction) return;
+	set (n: number): void {
+		dialogStore.set_timeout(n);
+	},
+});
 
-			const data = {
-				password: this.user.password,
-				token: this.user.token,
-			};
-			await this.confirmFunction(data);
-			this.dialogStore.$reset();
-		},
-		/**
-		 ** set the this.focus to the currently in focus text field
-		 ** If the in focus field ISN't the password field, then set passwordVisible to false
-		 * @param {String} model - current model/textfield name
-		 */
-		focusMethod (model: string): void {
-			if (model !== 'password') this.passwordVisible = false;
-		},
-		/**
-		 ** When visible, set a timeout for the button, if params are met
-		 */
-		mountedTimeout (): void {
-			if (!this.isIntersecting) return ;
-			if (!this.timeout) return;
-			this.timeoutInterval = setInterval(() => {
-				this.timeout = this.timeout > 0 ? this.timeout -= 1: this.timeout;
-				if (this.timeout < 1) clearInterval(this.timeoutInterval);
-			}, 1000);
-		},
-		/**
-		 ** update this.isIntersectin when visible & not
-		 */
-		onIntersect (entries: Array<IntersectionObserverEntry>, _observer: IntersectionObserver): void {
-			this.isIntersecting = !!entries[0]?.isIntersecting;
-		},
+const timeout_text = computed((): string => {
+	return timeout.value ?
+		`${String(timeout.value).padStart(2, '0')}` : passwordRequired.value && !user.value.password || passwordRequired.value && passwordLength.value < 10
+			? 'password required ' : passwordRequired.value && twoFA_always_required.value && !user.value.token || passwordRequired.value && twoFA_always_required.value && tokenLength.value <6
+				? 'token required' : confirmButton.value;
+});
+const timeout_icon = computed((): string => {
+	return timeout.value ? '' : passwordRequired.value && !user.value.password|| passwordRequired.value && passwordLength.value < 10
+		? mdiLock : passwordRequired.value && twoFA_always_required.value && !user.value.token || passwordRequired.value && twoFA_always_required.value && tokenLength.value <6
+			? mdiCellphoneInformation: dialogStore.icon? mdiCheck: mdiCheck;
+});
+const title = computed((): string => {
+	return dialogStore.title ?? 'warning';
+});
+const tokenLength = computed((): number => {
+	return user.value.token ? user.value.token.length: 0;
+});
+const twoFA_always_required = computed((): boolean => {
+	return twoFAModule().alwaysRequired;
+});
+
+const visible = computed({
+	get (): boolean {
+		return dialogStore.visible;
 	},
-	mounted () {
-		this.mountedTimeout();
-	},
-	watch: {
-		isIntersecting (i): void {
-			if (i) this.mountedTimeout();
-			else {
-				this.user.password = '';
-				this.user.token = undefined;
-				this.clearTimeouts();
-				this.dialogStore.$reset();
-			}
-		},
+	set (b: boolean): void {
+		dialogStore.set_visible(b);
 	}
+});
+
+const isIntersecting = ref(false);
+const loading =ref(false);
+const localDisabled = ref(false);
+const passwordVisible = ref(false);
+const timeoutInterval= ref(0);
+const tokenFields = [
+	{
+		clearable: true,
+		icon: mdiCellphoneInformation,
+		label: '2FA code',
+		model: 'token' as const,
+	},
+];
+const user = ref({
+	password: '',
+	token: undefined as string | undefined,
+});
+
+const cancel = (): void => {
+	user.value.password = '';
+	user.value.token = undefined;
+	clearTimeouts();
+	dialogStore.$reset();
+	visible.value = false;
+};
+		
+const clearTimeouts = (): void => {
+	clearInterval(timeoutInterval.value);
+	localDisabled.value = false;
+	timeout.value = 0;
+};
+
+const click = async (): Promise<void> => {
+	if (passwordRequired.value && !user.value.password || timeout.value > 0) return;
+	passwordVisible.value = false;
+	visible.value = false;
+	if (!confirmFunction.value) return;
+	const data = {
+		password: user.value.password,
+		token: user.value.token,
+	};
+	await confirmFunction.value(data);
+	dialogStore.$reset();
+};
+
+/**
+ ** set the focus to the currently in focus text field
+ ** If the in focus field ISN't the password field, then set passwordVisible to false
+ * @param {String} model - current model/textfield name
+ */
+const focusMethod = (model: string): void => {
+	if (model !== 'password') passwordVisible.value = false;
+};
+
+/**
+ ** When visible, set a timeout for the button, if params are met
+ */
+const mountedTimeout = (): void => {
+	if (!isIntersecting) return ;
+	if (!timeout) return;
+	timeoutInterval.value = setInterval(() => {
+		timeout.value = timeout.value > 0 ? timeout.value -= 1: timeout.value;
+		if (timeout.value < 1) clearInterval(timeoutInterval.value);
+	}, 1000);
+};
+
+const onIntersect = (is_i: boolean, _entries: Array<IntersectionObserverEntry>, _observer: IntersectionObserver): void => {
+	isIntersecting.value = is_i;
+};
+
+onMounted(() => {
+	mountedTimeout();
+});
+
+watch(isIntersecting, (i) => {
+	if (i) mountedTimeout();
+	else cancel();
 });
 </script>
 

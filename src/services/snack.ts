@@ -1,28 +1,23 @@
 import { mdiAlertCircle, mdiCheckCircleOutline } from '@mdi/js';
-import { snackbarModule } from '@/store';
-import { PV, TSnack } from '@/types';
+import type { TSnack } from '@/types';
 
-const snacker = async (data: TSnack): PV => {
-	const SnackStore = snackbarModule();
-	SnackStore.$reset();
-	await Promise.all([
-		SnackStore.set_closable(!!data.closable),
-		SnackStore.set_color(data.type),
-		SnackStore.set_icon(data.icon),
-		SnackStore.set_message(data.message),
-		SnackStore.set_loading(!!data.loading),
-		SnackStore.set_position({ x: data.x, y: data.y }),
-		SnackStore.set_timeout(data.timeout),
-		SnackStore.set_visible(true),
-	]);
+const snacker = (data: TSnack): void => {
+	const snackbar_store = snackbarModule();
+	snackbar_store.$reset();
+	snackbar_store.set_closable(!!data.closable);
+	snackbar_store.set_color(data.type??'');
+	snackbar_store.set_icon(data.icon??'');
+	snackbar_store.set_message(data.message??'');
+	snackbar_store.set_loading(!!data.loading);
+	snackbar_store.set_position({ x: data.x?data.x:'right', y: data.y?data.y:'bottom' });
+	snackbar_store.set_timeout(data.timeout??0);
+	snackbar_store.set_visible(true);
 };
 
-export const snackSuccess = async ({ message = 'Success', icon = mdiCheckCircleOutline, timeout=5000, x=undefined, y=undefined, type='success', closable=true, loading=false }: TSnack): PV=> {
+export const snackSuccess = ({ message = 'Success', icon = mdiCheckCircleOutline, timeout=7500, x='right', y=undefined, type='success', closable=true, loading=false }: TSnack): void => {
 	snacker({ message, icon, timeout, x, y, type, closable, loading });
-	
 };
 
-// TODO need custom error, with response.data.r, and status
-export const snackError = async ({ message = 'error', icon = mdiAlertCircle, timeout=7500, x=undefined, y=undefined, type='error', closable=true }: TSnack): PV => {
+export const snackError = ({ message = 'error', icon = mdiAlertCircle, timeout=12500, x='right', y=undefined, type='error', closable=true }: TSnack): void => {
 	snacker({ message, icon, timeout, x, y, type, closable });
 };

@@ -1,5 +1,4 @@
-import { dexieDB } from '@/services/dexieDB';
-import { foodModule, selectorsModule, typesModule, loadingModule } from '@/store';
+import { dexieDB } from '@/services/dexieDb';
 
 export const resetFilters = async (): Promise<void> => {
 	const LoadingStore = loadingModule();
