@@ -183,7 +183,7 @@ class AuthenticatedUser {
 		await baseAxios.post(`${this.#url}/signout`);
 	}
 
-	// MAYBE need to be authentcated?
+	// MAYBE need to be authenticated?
 	@wrap()
 	@isAuthenticated()
 	async authenticated_get (): types.PV {

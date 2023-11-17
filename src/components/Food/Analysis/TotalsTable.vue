@@ -4,10 +4,11 @@
 			<v-data-table
 				:headers='categoriesHeaders'
 				:items='computedTypeItems'
+				class='elevation-1 ma-0 pa-0'
+				density='compact'
+				item-key='name'
 				hide-default-footer
 				must-sort
-				item-key='name'
-				class='elevation-1 ma-0 pa-0'
 			>
 				<template v-slot:item='{ item }'>
 					<tr>
@@ -43,7 +44,7 @@
 								<v-spacer />
 								<v-col cols='auto' class='ml-2 ma-0 pa-0 text-right'>
 									<div class='' :class='strikeThroughMethod(name)'>
-										({{ percentage(item.D, item.J, (index === 0) ) }})
+										({{ percentage(String(item.D), String(item.J), (index === 0) ) }})
 										<br>
 										<span v-if='filteredDays !== totalMeals' class='text-caption'>
 											({{ ((100 / filteredDays) * (Number(item[name]))).toFixed(2) }}%)

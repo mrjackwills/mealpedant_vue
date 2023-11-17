@@ -24,7 +24,7 @@
 					</v-row>
 				</div>
 				<v-row justify='center' class='mt-2'>
-					<v-col cols='12' sm='8'>
+					<v-col cols='auto'>
 						<v-row v-for='(item, index) in buttonArray'
 							:class='{"mt-4" : index === 1}'
 							:key='index'
@@ -86,7 +86,7 @@ const memory = computed((): u<TServerStats> => {
 	
 const buttonArray = [
 	{
-		text: 'restart appliction',
+		text: 'restart application',
 		icon: mdiRestartAlert,
 		color: 'error',
 		click: 'restartDialog' as const

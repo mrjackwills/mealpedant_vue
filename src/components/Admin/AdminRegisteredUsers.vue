@@ -11,11 +11,12 @@
 		>
 		
 			<v-data-table
-				id='datatable'
 				:headers='registeredUsersHeaders'
 				:items='registeredUsers'
 				:sort-desc='true'
 				class='elevation-1 mt-4'
+				density='compact'
+				id='datatable'
 			>
 				<template v-slot:[`item.active`]='{item}'>
 					<UserActive
@@ -64,11 +65,11 @@
 
 				<template v-slot:[`item.last`]='{item}'>
 					<v-row
-						v-for='(chosen, index) in [item.login_ip, item.success, item.user_agent, item.login_date]' :key='index'
+						v-for='(chosen, index) in [item.login_ip, item.login_success]' :key='index'
 						align='center'
 						class='ma-0 pa-0'
-						justify='end'
-						denssity='compact'
+						justify='start'
+						denssty='compact'
 					>
 						<v-col cols='auto' class='ma-0 pa-0'>
 							<span
@@ -83,10 +84,10 @@
 
 				<template v-slot:[`item.passwordReset`]='{item}'>
 					<UserPassword
-						v-model:email='item.email'
+						:email='item.email'
 						:passwordResetDate='item.password_reset_date'
 						:password_reset_id='item.password_reset_id'
-						:password_creation_ip='item.password_creation_ip'
+						:password_creation_ip='item.password_reset_creation_ip'
 						:reset_string='item.reset_string'
 
 					/>
@@ -199,9 +200,6 @@ import { snackError, } from '@/services/snack';
 import type { TAdminSession, TAllUserInfo } from '@/types';
 import type { VDataTableRow } from 'vuetify/components/VDataTable';
 
-// import type { VRow } from 'vuetify/components/VGrid';
-// justify: VRow['$props']['justify']
-
 const expandedEmail = ref(undefined as undefined|string);
 const expandedRow = ref(false);
 
@@ -211,7 +209,7 @@ const getSessions = async (email: string): Promise<void> => {
 	try {
 		loading.value = true;
 		const session = await axios_admin.session_get(email);
-		sessionData.value =session;
+		sessionData.value = session;
 	} catch (e) {
 		const message = e instanceof Error ? e.message : 'ERROR';
 		snackError({ message });
@@ -269,42 +267,49 @@ const registeredUsersHeaders = [
 		value: 'active',
 		align: 'start',
 		sortable: true,
+		// width: '8%',
 	},
 	{
 		title: 'Email',
 		value: 'email',
 		align: 'start',
-		sortable: true
+		sortable: true,
+		// width: '30%',
 	},
 	{
 		title: 'Admin',
 		value: 'admin',
 		align: 'start',
 		sortable: true,
+		// width: '8%',
 	},
 	{
 		title: '2FA',
 		value: 'tfa',
 		align: 'start',
 		sortable: false,
+		// width: '8%',
 	},
 	{
-		title: 'Attemps',
+		title: 'Attempts',
 		value: 'login_attempt_number',
 		align: 'start',
 		sortable: false,
+		// width: '8%',
 	},
 	{
 		title: 'Last Attempt',
 		value: 'last',
 		align: 'start',
 		sortable: false,
+		// width: '10%',
 	},
 	{
 		title: 'Sessions',
 		value: 'sessions',
 		align: 'start',
 		sortable: false,
+		// width: '8%',
 	},
 	{
 		title: 'Password Reset',
@@ -312,7 +317,7 @@ const registeredUsersHeaders = [
 		align: 'start',
 		sortable: false,
 	},
-] as const;
+]as const;
 
 const toggleDrawer = (status: boolean): void => {
 	drawerModule().set_disabled(status);
@@ -337,6 +342,6 @@ const removeSession = async (uuid: string, email: string): Promise<void> => {
 
 <style>
 	#datatable th, #datatable td{
-		padding: 8px;
+		padding: 2px;
 	}
 </style>

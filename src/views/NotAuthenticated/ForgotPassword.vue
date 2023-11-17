@@ -2,7 +2,7 @@
 	<v-container container--fluid fill-height>
 		<v-row align='center' justify='center' wrap>
 			<v-col cols='12' md='9'>
-				<p class='text-center' :class='fontSize' >Enter your email address to receive instuctions on how to reset your password</p>
+				<p class='text-center' :class='fontSize' >Enter your email address to receive instructions on how to reset your password</p>
 				<v-row align='center' justify='center' wrap>
 					<v-col cols='12' sm='8' md='4'>
 						<v-form

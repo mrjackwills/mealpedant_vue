@@ -56,8 +56,8 @@
 File that are required by mealpedant
 | file | reason|
 |---|---|
-|```./.env.development```	| development enviromental variables|
-|```./.env.production```	| productions enviromental variables|
+|```./.env.development```	| development environmental variables|
+|```./.env.production```	| productions environmental variables|
 
 ## Development
 

@@ -6,7 +6,7 @@
 				Each backup code can only be used once, and must be safely stored by the user.
 				<br>
 				<br>
-				All backup tokens are salted and hashed before being written to the databse. This means that lost backup tokens cannot be retreived by Meal Pedant.
+				All backup tokens are salted and hashed before being written to the database. This means that lost backup tokens cannot be retrieved by Meal Pedant.
 			</v-col>
 		</v-row>
 		<v-expand-transition>

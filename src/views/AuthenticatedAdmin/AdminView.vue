@@ -1,51 +1,51 @@
 <template>
-	<v-container container--fluid fill-height>
-		<v-row wrap justify='center' class='no-gutters'>
-			<v-col cols='12' v-for='(item, index) in adminRows' :key='index'>
-				<v-row wrap justify='center' align='center' class='no-gutters'>
-					<v-col cols='12' sm='8'>
-						<v-row align='center' class='no-gutters'>
-							<v-col cols='12'>
-								<v-row wrap v-ripple align='center' class='no-gutters' @click='clicker(item.axios,item.show)'>
-									<v-col cols='auto' class='mr-2' >
-										<h2 class='cl'>{{ item.title }}</h2>
-									</v-col>
-									<v-spacer />
-									<v-col cols='auto' :class='{"ml-md-12": returnThis(item.show)}'>
-										<v-icon style='vertical-align: middle;'>{{ returnThis(item.icon) }}</v-icon>
-									</v-col>
-								</v-row>
-							</v-col>
-						</v-row>
-					</v-col>
-				</v-row>
-				<v-col cols='12' class='pa-1'>
-					<v-expand-transition>
-						<div v-if='returnThis(item.show)'>
-							<v-col cols='12' class='pa-0'>
-								<v-row justify='center' class='no-gutters'>
-									<v-col cols='auto' class='mx-md-12 pa-0' v-if='returnThis(item.show)' @click='refresh(item.axios)'>
-										<v-btn class='ma-0 mt-4' small rounded color='primary' variant='flat'>
-											<ButtonIcon :icon='mdiRefresh' small color='black'/>
-											<span class='black--text'>refresh</span>
-										</v-btn>
-									</v-col>
-								</v-row>
-							</v-col>
-							<v-col cols='12' class='pa-0' >
-								<component :is='item.component' />
-							</v-col>
-						</div>
-					</v-expand-transition>
+	<!-- <v-container cols='12' fill-height> -->
+	<v-row wrap justify='center' class='no-gutters mx-3'>
+		<v-col cols='12' v-for='(item, index) in adminRows' :key='index'>
+			<v-row wrap justify='center' align='center' class='no-gutters'>
+				<v-col cols='12' sm='8'>
+					<v-row align='center' class='no-gutters'>
+						<v-col cols='12'>
+							<v-row wrap v-ripple align='center' class='no-gutters' @click='clicker(item.axios,item.show)'>
+								<v-col cols='auto' class='mr-2' >
+									<h2 class='cl'>{{ item.title }}</h2>
+								</v-col>
+								<v-spacer />
+								<v-col cols='auto' :class='{"ml-md-12": returnThis(item.show)}'>
+									<v-icon style='vertical-align: middle;'>{{ returnThis(item.icon) }}</v-icon>
+								</v-col>
+							</v-row>
+						</v-col>
+					</v-row>
 				</v-col>
-				<v-row justify='center' class='no-gutters ' v-if='index !== adminRows.length -1'>
-					<v-col cols='12' sm='8'>
-						<v-divider />
-					</v-col>
-				</v-row>
+			</v-row>
+			<v-col cols='12' class='pa-1'>
+				<v-expand-transition>
+					<div v-if='returnThis(item.show)'>
+						<v-col cols='12' class='pa-0'>
+							<v-row justify='center' class='no-gutters'>
+								<v-col cols='auto' class='mx-md-12 pa-0' v-if='returnThis(item.show)' @click='refresh(item.axios)'>
+									<v-btn class='ma-0 mt-4' small rounded color='primary' variant='flat'>
+										<ButtonIcon :icon='mdiRefresh' small color='black'/>
+										<span class='black--text'>refresh</span>
+									</v-btn>
+								</v-col>
+							</v-row>
+						</v-col>
+						<v-col cols='12' class='pa-0' >
+							<component :is='item.component' />
+						</v-col>
+					</div>
+				</v-expand-transition>
 			</v-col>
-		</v-row>
-	</v-container>
+			<v-row justify='center' class='no-gutters ' v-if='index !== adminRows.length -1'>
+				<v-col cols='12' sm='8'>
+					<v-divider />
+				</v-col>
+			</v-row>
+		</v-col>
+	</v-row>
+	<!-- </v-container> -->
 </template>
 
 <script setup lang='ts'>

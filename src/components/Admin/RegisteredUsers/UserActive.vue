@@ -2,10 +2,11 @@
 	<v-row justify='start' align='center' class='ma-0 pa-0'>
 		<v-col cols='auto' class='ma-0 pa-0'>
 			<v-switch
-				class='ma-0 pa-0 mb-n6'
 				v-model='newActive'
+				:color='newActive?"mealtype":""'
 				:disabled='disabled || readOnly'
 				:readonly='readOnly'
+				class='ma-0 pa-0 mb-n6'
 			/>
 		</v-col>
 	</v-row>

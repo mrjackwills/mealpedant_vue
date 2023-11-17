@@ -34,6 +34,7 @@ export type TUserLimit = { key: string }
 type TActivePatch = { active: boolean}
 type TAttemptPatch = { attempt: boolean}
 type TPasswordResetId = { password_reset_id: number }
+type TPasswordReset = { reset: boolean }
 type TTfaSecret = { two_fa_secret: boolean }
 type TLogLevels = 'debug' | 'error' | 'verbose' | 'warn'
 
@@ -48,7 +49,7 @@ export type TUserInfo =
 	& { [ K in 'password_reset_consumed' | 'login_success' ]?: boolean }
 
 export type TAdminPatch = {
-	patch: TActivePatch | TAttemptPatch | TPasswordResetId | TTfaSecret
+	patch: TActivePatch | TAttemptPatch | TPasswordResetId | TPasswordReset | TTfaSecret
 	email: string
 }
 
@@ -95,7 +96,7 @@ export type TSingleMeal = { date: string, person: TPerson}
 
 export type TServerStats = { [K in 'rss' | 'virt']: string } & {[K in 'uptime' | 'uptime_app' ]: number }
 
-export type TBackup = Array<{ [K in 'filename' | 'filesize' ]: string }>
+export type TBackup = Array<{ [K in 'file_name' | 'file_size' ]: string }>
 
 export type TLimit = Array<{ key: string, points: number }>
 

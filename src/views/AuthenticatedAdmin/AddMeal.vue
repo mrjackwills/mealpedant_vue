@@ -270,7 +270,7 @@ const addMeal = async (): PV => {
 };
 
 /**
- ** Remove any uplaoded photos, go back to meals back
+ ** Remove any uploaded photos, go back to meals back
  */
 const cancel = async (): PV => {
 	await clear();

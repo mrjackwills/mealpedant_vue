@@ -5,8 +5,9 @@
 				:footer-props='footerProps'
 				:headers='analysisHeaders'
 				:items='tableData'
-				class='elevation-1'
 				:height='height'
+				class='elevation-1'
+				density='compact'
 				item-key='name'
 			>
 				<template v-slot:item='{ item }'>

@@ -4,14 +4,15 @@
 			<v-data-table
 				:headers='headers'
 				:items='userLimits'
-				footer-props.items-per-page-text='abc'
 				class='elevation-1 mt-2'
 				item-key='users'
+				density='compact'
 			>
 				<template v-slot:item='{item}'>
 					<tr>
 						<td class='text-left'>{{ item.key }}</td>
-						<td class='text-center' :class='{"text--mealtype": item.b}'>
+						<td class='text-center'>
+							<!-- :class='{"text--mealtype": item.b}'> -->
 							{{ item.points }}
 						</td>
 						<td class='text-right cl' @click='clearLimit(item.key)'>

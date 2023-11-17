@@ -1,17 +1,12 @@
 <template>
-	<v-app id='mealpedant' class=''>
+	<v-app id='mealpedant' class='' ref='swipe'>
 
 		<NavMenu  v-if='init && mdAndDown || init && authenticated' :order='mdAndDown?"1":"2"' />
 		<AppBar :order='mdAndDown?"2":"1"'/>
-		
 		<v-main
 			class='d-flex align-center justify-center'
-			v-touch='{
-				left: () => toggleDrawer(true),
-				right: () => toggleDrawer(false),
-			}'
+			
 		>
-		
 			<router-view v-slot='{ Component }'>
 				<component :is='Component' />
 			</router-view>
@@ -30,6 +25,7 @@ import { useHead } from '@vueuse/head';
 import { useRegisterSW } from 'virtual:pwa-register/vue';
 import { registerSW } from 'virtual:pwa-register';
 import { useRoute } from 'vue-router';
+import { useSwipe } from '@vueuse/core';
 
 import { useDisplay } from 'vuetify';
 const { mdAndDown } = useDisplay();
@@ -41,6 +37,8 @@ onBeforeMount(async () => {
 	appReady.value = true;
 	loading.value = false;
 });
+
+const drawStore = drawerModule();
 
 const appReady = ref(false);
 
@@ -73,9 +71,17 @@ const browserHasIndexedDB = async (): Promise<void> => {
 	}
 };
 
-const toggleDrawer = (status: boolean): void => {
-	if (mdAndDown.value) drawerModule().set_open(status);
-};
+const swipe = ref<HTMLElement | null>(null);
+const { isSwiping, direction } = useSwipe(swipe);
+watch(isSwiping, (i) => {
+	if (i && mdAndDown.value) {
+		if (direction.value === 'right') {
+			drawStore.set_open(false);
+		} else if (direction.value === 'left') {
+			drawStore.set_open(true);
+		}
+	}
+});
 
 const { updateServiceWorker } = useRegisterSW();
 

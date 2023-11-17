@@ -5,6 +5,7 @@
 				:headers='headers'
 				:items='backup'
 				class='elevation-1 mt-4'
+				density='compact'
 			>
 				<template v-slot:item='{item}'>
 					<tr >
@@ -13,7 +14,7 @@
 							<span class='text-caption'>{{ item.file_name }}</span>
 						</td>
 						<td class='text-right'>
-							<div class='text-caption'>{{ bytes_to_mb(item.file_size) }} mb</div>
+							<div class='text-caption'>{{ bytes_to_mb(Number(item.file_size)) }} mb</div>
 						</td>
 						<td class='text-right cl' @click='deleteFile(item.file_name)'>
 							<ButtonIcon color='red' :icon='mdiCloseCircleOutline' />
@@ -87,18 +88,21 @@ const headers = [
 		title: 'name',
 		align: 'start',
 		sortable: true,
-		value: 'file_name'
+		value: 'filename',
+		width: '70%'
 	},
 	{
 		title: 'size',
 		align: 'end',
 		sortable: true,
-		value: 'file_size'
+		value: 'file_size',
+		width: '15%',
 	},
 	{
 		title: 'delete',
 		align: 'end',
 		sortable: false,
+		width: '15%'
 	},
 ] as const;
 const localLoading = ref(false);
@@ -119,9 +123,9 @@ const createBackup = async (): Promise<void> => {
 	localLoading.value = false;
 };
 /**
-		 ** Request to delete selected backupfile, automatically refreshes backup file list
-		 * @param {string} filename valid filename of format /^mealpedant_\d{4}-\d{2}-\d{2}_\d{2}\.\d{2}\.\d{2}_(PHOTOS_)?SQL_REDIS_LOGS_[0-9a-fA-F]{8}\.tar\.gpg$/
-		 */
+** Request to delete selected backupfile, automatically refreshes backup file list
+* @param {string} filename valid filename of format /^mealpedant_\d{4}-\d{2}-\d{2}_\d{2}\.\d{2}\.\d{2}_(PHOTOS_)?SQL_REDIS_LOGS_[0-9a-fA-F]{8}\.tar\.gpg$/
+*/
 const deleteFile = async (fileName: string): Promise<void> => {
 	if (loading.value) return;
 	loading.value = true;
@@ -137,9 +141,9 @@ const deleteFile = async (fileName: string): Promise<void> => {
 ** Add href to body of backup link, then click to download
 * @param {string} filename valid filename of format /^mealpedant_\d{4}-\d{2}-\d{2}_\d{2}\.\d{2}\.\d{2}_(PHOTOS_)?SQL_REDIS_LOGS_[0-9a-fA-F]{8}\.tar\.gpg$/
 */
-const downloadFile = async (file_name: string): Promise<void> => {
+const downloadFile = async (filename: string): Promise<void> => {
 	const downloadLink = document.createElement('a');
-	downloadLink.setAttribute('href', `${env.domain_api}/admin/backup/${file_name}`);
+	downloadLink.setAttribute('href', `${env.domain_api}/admin/backup/${filename}`);
 	downloadLink.style.display = 'none';
 	document.body.appendChild(downloadLink);
 	downloadLink.click();
