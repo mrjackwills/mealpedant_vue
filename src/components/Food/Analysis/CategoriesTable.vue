@@ -6,7 +6,7 @@
 				:headers='analysisHeaders'
 				:height='height'
 				:items='tableData'
-				items-per-page="-1"
+				items-per-page='-1'
 				class='elevation-1'
 				density='compact'
 				item-key='category_name'
@@ -88,8 +88,6 @@ const height = computed(():string => {
 	}
 	return '400';
 });
-
-const key = computed(() => tableData.value.length);
 
 const Jack = computed((): boolean => {
 	return foodModule().Jack;
