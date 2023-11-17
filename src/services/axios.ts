@@ -1,9 +1,9 @@
-import { adminModule, browserModule, infobarModule, loadingModule, resetPasswordModule, twoFAModule, userModule } from '@/store';
 import { env } from '@/vanillaTS/env';
 import { isId } from '@/types/userGuards';
 import { snackError } from './snack';
 import * as types from '@/types';
-import Axios, { AxiosInstance, AxiosError } from 'axios';
+import Axios, { type AxiosInstance, AxiosError } from 'axios';
+import { HttpCode } from '@/types/enum_http';
 
 type ErrorData = {data: { response: string } }
 
@@ -17,6 +17,7 @@ const baseAxios: AxiosInstance = Axios.create({
 		'Content-Type': 'application/json; charset=utf-8',
 		'Cache-control': 'no-cache'
 	},
+	timeout: 7000
 });
 
 const staticAxios: AxiosInstance = Axios.create({
@@ -87,19 +88,19 @@ const wrap = <T> () => {
 			} catch (err) {
 				loadingModule().set_loading(false);
 				const e = <AxiosError>err;
-				if (e.message === 'Network Error') {
+				if (e.message === 'offline') {
 					const BrowserStore = browserModule();
 					if (BrowserStore.online) snackError({ message: 'Server offline' });
 					BrowserStore.set_online(false);
 					return;
 				}
-				else if (e.response?.status === 403) {
+				else if (e.response?.status === HttpCode.FORBIDDEN) {
 					userModule().clear_email_admin();
 					await userModule().clientSideSignout();
 					snackError({ message: 'You have been signed out' });
 					return;
 				}
-				else if (e.response?.status === 429) {
+				else if (e.response?.status === HttpCode.TOO_MANY_REQUESTS) {
 					const p = <ErrorData>e.response;
 					snackError({ message: p.data.response });
 					return;
@@ -116,7 +117,7 @@ const wrap = <T> () => {
 };
 
 class Incognito {
-	readonly #url = 'incognito'
+	readonly #url = 'incognito';
 
 	@wrap()
 	async online_get (): types.PB {
@@ -175,18 +176,18 @@ class Incognito {
 }
 
 class AuthenticatedUser {
-	readonly #url = 'user'
+	readonly #url = 'user';
 	
 	@wrap()
 	async signout_post (): types.PV {
 		await baseAxios.post(`${this.#url}/signout`);
 	}
 
-	// MAYBE need to be authentcated?
+	// MAYBE need to be authenticated?
 	@wrap()
 	@isAuthenticated()
 	async authenticated_get (): types.PV {
-		const response = await baseAxios.get(`${this.#url}/`);
+		const response = await baseAxios.get(`${this.#url}`);
 		const TwoFAStore = twoFAModule();
 		const UserStore = userModule();
 		await Promise.all([
@@ -265,7 +266,7 @@ class AuthenticatedUser {
 }
 
 class AuthenticatedFood {
-	readonly #url = 'food'
+	readonly #url = 'food';
 
 	@wrap()
 	@isAuthenticated()
@@ -297,11 +298,11 @@ class AuthenticatedFood {
 }
 
 class Admin {
-	readonly #url = 'admin'
+	readonly #url = 'admin';
 
-	 // Does this need a decorator?
+	// Does this need a decorator?
 	async admin_get (): types.PV {
-		await baseAxios.get(`${this.#url}/`);
+		await baseAxios.get(`${this.#url}`);
 	}
 
 	@wrap()
@@ -374,9 +375,8 @@ class Admin {
 
 	@wrap()
 	@isAdmin()
-	async restart_put (authObject: types.TAuthObject): types.PB {
-		baseAxios.put(`${this.#url}/restart`, authObject);
-		return true;
+	async restart_put (authObject: types.TAuthObject): types.PV {
+		await baseAxios.put(`${this.#url}/restart`, authObject);
 	}
 
 	@wrap()
@@ -411,26 +411,26 @@ class Admin {
 }
 
 class AdminMeal {
-	readonly #url = 'meal/'
+	readonly #url = 'meal';
 
 	@wrap()
 	@isAdmin()
 	async missing_get (): types.PV {
-		const response = await baseAxios.get(`${this.#url}missing`);
+		const response = await baseAxios.get(`${this.#url}/missing`);
 		for (const i of response.data.response) infobarModule().add_message({ message: `${`${i.date}`.substring(0, 10)} missing for ${i.person}`, color: 'infobar' });
 	}
 
 	@wrap()
 	@isAdmin()
 	async singleMeal_get (data: types.TSingleMeal): Promise<undefined|types.TMealDatePerson> {
-		const response = await baseAxios.get(`${this.#url}${data.date}/${data.person}`);
+		const response = await baseAxios.get(`${this.#url}/${data.date}/${data.person}`);
 		return response?.data?.response?.meal;
 	}
 
 	@wrap()
 	@isAdmin()
 	async meal_delete (data: types.TMealDelete): types.PB {
-		await baseAxios.delete(`${this.#url}${data.date}/${data.person}`, { data: data.auth });
+		await baseAxios.delete(`${this.#url}/${data.date}/${data.person}`, { data: data.auth });
 		return true;
 	}
 
@@ -450,18 +450,18 @@ class AdminMeal {
 }
 
 export class AdminPhoto {
-	readonly #url = 'photo/'
+	readonly #url = 'photo';
 
 	@wrap()
 	@isAdmin()
-	async photo_delete (deleteData: types.TPhoto): types.PB {
+	async photo_delete (deleteData: types.TPhotoLong): types.PB {
 		await baseAxios.delete(this.#url, { data: deleteData });
 		return true;
 	}
 
 	@wrap()
 	@isAdmin()
-	async photo_post (photoData: FormData): Promise<types.TPhoto|undefined> {
+	async photo_post (photoData: FormData): Promise<types.TPhotoLong|undefined> {
 		const response = await baseAxios.post(this.#url, photoData, {
 			headers: {
 				'Content-Type': 'multipart/form-data',

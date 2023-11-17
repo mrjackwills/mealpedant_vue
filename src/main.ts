@@ -1,27 +1,41 @@
-import '@/vanillaTS/registerServiceWorker';
-import { createPinia, PiniaVuePlugin } from 'pinia';
-import { router } from '@/router';
-import App from '@/App.vue';
-import Meta from 'vue-meta';
-import Vue, { VNode } from 'vue';
-import Vuelidate from 'vuelidate';
-import vuetify from '@/plugins/vuetify';
+// Components
+import App from './App.vue';
+import { createPinia } from 'pinia';
 
+// Composables
+import { createApp } from 'vue';
+import vuetify from './plugins/vuetify';
+import router from './router';
+import { createHead } from '@vueuse/head';
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate';
+import { markRaw } from 'vue';
+import type { Router } from 'vue-router';
+
+const app = createApp(App);
+const head = createHead();
+
+declare module 'pinia' {
+	export interface Pinia {
+		router: () => Router
+	}
+	export interface PiniaCustomProperties {
+		router: Router
+	}
+}
+
+// adapt this based on where your router is
 
 const pinia = createPinia();
+pinia.use(({ store }) => {
+	store.router = markRaw(router);
+});
+pinia.router = (): Router => router;
+
 pinia.use(piniaPluginPersistedstate);
-Vue.use(PiniaVuePlugin);
 
-Vue.use(Meta);
-Vue.use(Vuelidate);
-
-Vue.config.devtools = process.env.NODE_ENV === 'development' ? true : false;
-Vue.config.productionTip = false;
-
-new Vue({
-	router,
-	pinia,
-	vuetify,
-	render: (h): VNode => h(App)
-}).$mount('#meal-pedant');
+app
+	.use(head)
+	.use(router)
+	.use(pinia)
+	.use(vuetify)
+	.mount('#MealPedant_app');

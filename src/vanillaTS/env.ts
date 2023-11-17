@@ -1,23 +1,18 @@
-class Env {
-	readonly #api_key = String(process.env.VUE_APP_APIKEY);
-	readonly #app_version = String(process.env.VUE_APP_VERSION);
-	readonly #domain_api = String(process.env.VUE_APP_DOMAIN_API);
-	readonly #domain_static = String(process.env.VUE_APP_DOMAIN_STATIC);
-	readonly #domain_www = String(process.env.VUE_APP_DOMAIN_WWW);
-	readonly #build_date = String(process.env.VUE_APP_BUILDDATE);
-	readonly #github = String(process.env.VUE_APP_GITHUB);
-	readonly #mode_production = process.env.VUE_APP_MODE === 'production' ;
 
-	get api_key (): string {
-		return this.#api_key;
-	}
+class Env {
+	readonly #app_version = String(import.meta.env.VERSION);
+	readonly #build_date = new Date(import.meta.env.BUILD_DATE);
+	readonly #domain_api = String(import.meta.env.VITE_APP_DOMAIN_API);
+	readonly #domain_static = String(import.meta.env.VITE_APP_DOMAIN_STATIC);
+	readonly #domain_www = String(import.meta.env.VITE_APP_DOMAIN_WWW);
+	readonly #mode_production = import.meta.env.VITE_APP_MODE === 'production' ;
 
 	get app_version (): string {
 		return this.#app_version;
 	}
 
 	get build_date (): string {
-		return this.#build_date;
+		return this.#build_date.toISOString();
 	}
 
 	get domain_api (): string {
@@ -30,10 +25,6 @@ class Env {
 		
 	get domain_www (): string {
 		return this.#domain_www;
-	}
-
-	get github (): string {
-		return this.#github;
 	}
 
 	get mode_production (): boolean {

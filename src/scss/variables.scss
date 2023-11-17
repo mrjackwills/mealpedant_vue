@@ -3,15 +3,18 @@
 	font-family: 'Hammersmith One';
 	font-style: normal;
 	font-weight: 400;
+	font-display: swap;
 	src: local(''),
-	url('~@/assets/fonts/hammersmith-one-v12-latin-regular.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-	url('~@/assets/fonts/hammersmith-one-v12-latin-regular.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+	url('@/assets/fonts/hammersmith-one-v12-latin-regular.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+	url('@/assets/fonts/hammersmith-one-v12-latin-regular.woff') format('woff'); 
 }
 
-$body-font-family: 'Hammersmith One', sans-serif !important;
-$body-font-display: 'swap';
-
 $snackbar-action-margin : 0px!important;
+
+
+html, .v-snackbar__content, [class*='text-']{
+	font-family: 'Hammersmith One', sans-serif !important;
+}
 
 .v-progress-linear__bar__indeterminate--active .short, .v-progress-linear__bar__indeterminate--active .long {
 	animation-duration: 3.8s;
@@ -37,6 +40,12 @@ html{
 	font-size: 7px;
 }
 
+.tooltip {
+	opacity: .90!important;
+	background: black!important;
+	color: white!important;
+}
+
 .tinytext{
 	font-size: 5px;
 }
@@ -44,20 +53,28 @@ html{
 // monospace fontface
 .monospace-font{
 	font-family: 'Courier New', monospace !important;
-	font-display: 'swap';
 }
 
-#titlebar, #ietitlebar{
-	background-color: #212121;
+.dave-header {
+	color: #c6c490 !important;
+}
+.jack-header {
+	color: #7ca1b2 !important;
+}
+
+/* Set text as unselectable*/
+.unselectable {
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	-o-user-select: none;
+	user-select: none;
 }
 
 #mealpedant{
 	background-color: #929892;
 }
 
-#mealpedant{
-	-webkit-user-drag: none;
-}
 
 /* Global pointer class */
 .cl{
