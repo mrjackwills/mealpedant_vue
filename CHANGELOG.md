@@ -4,7 +4,7 @@
 
 ### Features
 + replace vue-use with pinia-plugin-persistedstate, [a24cac54c54099c764864c8f51099dd06fbf4dad]
-
++ full conversion to Vue/Vuetify 3, [74e1ebb150bb220d76d63537217d5913cf73d65b]
 
 # <a href='https://github.com/mrjackwills/mealpedant_vue/releases/tag/v1.0.1'>v1.0.1</a>
 ### 2022-08-12

@@ -7,6 +7,7 @@
 				class='elevation-1 ma-0 pa-0'
 				density='compact'
 				item-key='name'
+				hover
 				hide-default-footer
 				must-sort
 			>
@@ -88,26 +89,26 @@ const personArray = [ 'D' as const, 'J' as const ];
 const categoriesHeaders = [
 	{
 		title: 'Type',
-		align: 'center',
+		align: 'start',
 		key: 'type',
 		sortable: false
 	},
 	{
 		title: 'Total',
-		align: 'center',
+		align: 'start',
 		sortable: false,
 		key: 'total'
 	},
 	{
 		title: 'Dave',
 		key: 'Dave',
-		align: 'center',
+		align: 'start',
 		sortable: false,
 	},
 	{
 		title: 'Jack',
 		key: 'Jack',
-		align: 'center',
+		align: 'start',
 		sortable: false,
 	},
 ] as const;

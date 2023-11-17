@@ -1,14 +1,16 @@
 <template>
 	<v-row justify='center' class='my-0'>
 		<v-col cols='11' md='7' id='headers' class='ma-0 pa-0'>
-			<v-data-table-virtual
+			<v-data-table
 				:footer-props='footerProps'
 				:headers='analysisHeaders'
-				:items='tableData'
 				:height='height'
+				:items='tableData'
+				items-per-page="-1"
 				class='elevation-1'
 				density='compact'
-				item-key='name'
+				item-key='category_name'
+				hover
 			>
 				<template v-slot:item='{ item }'>
 					<tr>
@@ -17,7 +19,7 @@
 						</td>
 						<td class='text-left text-caption' >
 							<v-row align='center' justify='end' class='no-gutters ma-0 pa-0'>
-								<v-spacer />
+								<!-- <v-spacer /> -->
 								<v-col cols='auto' class='ma-0 pa-0 text-mealtype text-right'>
 									<v-row class='no-gutters text-mealtype' align='center' :class='{"smalltext": mdAndDown}'>
 										<v-col cols='auto' class='ma-0 pa-0'>
@@ -25,7 +27,7 @@
 												{{ item.t }}
 											</div>
 										</v-col>
-										<v-spacer />
+										<!-- <v-spacer /> -->
 										<v-col cols='auto' class='ml-2 text-right ma-0 pa-0'>
 											<div class=''>
 												({{ (100 / (filtered_total) * item.t).toFixed(2) }}%)
@@ -63,7 +65,9 @@
 						</td>
 					</tr>
 				</template>
-			</v-data-table-virtual>
+				<template v-slot:bottom>
+				</template>
+			</v-data-table>
 		</v-col>
 	</v-row>
 </template>
@@ -84,6 +88,8 @@ const height = computed(():string => {
 	}
 	return '400';
 });
+
+const key = computed(() => tableData.value.length);
 
 const Jack = computed((): boolean => {
 	return foodModule().Jack;
@@ -147,7 +153,7 @@ const analysisHeaders = [
 		key: 'category_name'
 	},
 	{
-		align: 'center',
+		align: 'end',
 		sortable: true,
 		title: 'Quantity',
 		key: 't',
