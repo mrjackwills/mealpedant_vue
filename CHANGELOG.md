@@ -1,3 +1,6 @@
+### Chores
++ dependencies updated, [51d8201679d65012450a7c976dd3ef3237969e21]
+
 # <a href='https://github.com/mrjackwills/mealpedant_vue/releases/tag/v1.1.0'>v1.1.0</a>
 ### 2023-11-17
 
