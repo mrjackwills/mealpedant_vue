@@ -2,7 +2,6 @@
 	<v-snackbar
 		v-model='visible'
 		app
-		:style='shiftStyle'
 		:bottom='position.y === "bottom"'
 		:color='color'
 		:left='position.x === "left"'
@@ -49,17 +48,11 @@
 <script setup lang='ts'>
 import { mdiClose } from '@mdi/js';
 import type { nu, su, TSnackPosition } from '@/types';
-import { useDisplay, useLayout } from 'vuetify';
+import { useDisplay } from 'vuetify';
 const { mdAndUp } = useDisplay();
 
 const snackbarStore = snackbarModule();
 
-const shiftStyle = computed((): string => {
-	if (mdAndUp.value) {
-		return `margin-left: ${useLayout().mainRect.value.left}px`;
-	}
-	return '';
-});
 const closable = computed((): boolean => {
 	return snackbarStore.closable;
 });
