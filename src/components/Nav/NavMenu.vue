@@ -4,11 +4,12 @@
 		:location='mobile?"right":"left"'
 		:rail='minivariant'
 		:mobile-breakpoint='960'
+		color='navmenu'
 		height='100vh'
+		id='nav_menu'
 		width='175'
 		app
 		touchless
-		color='navmenu'
 	>
 		<v-list v-if='init'>
 			<section v-if='mobile'>

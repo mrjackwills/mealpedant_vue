@@ -9,12 +9,12 @@
 		>
 			<router-view v-slot='{ Component }'>
 				<component :is='Component' />
+				<TheFooter />
+				<SnackBar />
 			</router-view>
 			<TheDialog />
-			<SnackBar />
 		</v-main>
 
-		<TheFooter />
 	</v-app>
 </template>
 
