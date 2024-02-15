@@ -4,7 +4,7 @@ export const resetFilters = async (): Promise<void> => {
 	const LoadingStore = loadingModule();
 	LoadingStore.set_loading(true);
 	await Promise.all([
-		typesModule().$reset,
+		typesModule().$reset(),
 		foodModule().$reset(),
 		selectorsModule().$reset()
 	]);
