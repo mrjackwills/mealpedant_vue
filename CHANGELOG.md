@@ -1,8 +1,11 @@
+# <a href='https://github.com/mrjackwills/mealpedant_vue/releases/tag/v1.1.3'>v1.1.3</a>
+### 2024-02-15
+
 ### Chores
-+ dependencies updated, [c6169e5edcdad40c6ccf6a184f573e3edfca5cec], [46fdbfd0421062ad116460787d6f322327a3dc35]
++ dependencies updated, [c6169e5e](https://github.com/mrjackwills/mealpedant_vue/commit/c6169e5edcdad40c6ccf6a184f573e3edfca5cec), [46fdbfd0](https://github.com/mrjackwills/mealpedant_vue/commit/46fdbfd0421062ad116460787d6f322327a3dc35)
 
 ### Fixes
-+ typo in reset service, [0d7337390727d4f8369306a8c58e017d67cc8610]
++ typo in reset service, [0d733739](https://github.com/mrjackwills/mealpedant_vue/commit/0d7337390727d4f8369306a8c58e017d67cc8610)
 
 # <a href='https://github.com/mrjackwills/mealpedant_vue/releases/tag/v1.1.2'>v1.1.2</a>
 ### 2024-02-11
