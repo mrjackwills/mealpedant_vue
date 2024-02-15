@@ -34,7 +34,7 @@
   },
   "devDependencies": {
     "@mdi/js": "^7.4.47",
-    "@types/node": "^20.11.17",
+    "@types/node": "^20.11.18",
     "@types/prismjs": "^1.26.3",
     "@types/secure-json-parse": "^1.0.5",
     "@vitejs/plugin-vue": "^5.0.4",
