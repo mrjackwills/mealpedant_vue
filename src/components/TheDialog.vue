@@ -262,8 +262,8 @@ const focusMethod = (model: string): void => {
  ** When visible, set a timeout for the button, if params are met
  */
 const mountedTimeout = (): void => {
-	if (!isIntersecting) return ;
-	if (!timeout) return;
+	if (!isIntersecting.value) return ;
+	if (!timeout.value) return;
 	timeoutInterval.value = setInterval(() => {
 		timeout.value = timeout.value > 0 ? timeout.value -= 1: timeout.value;
 		if (timeout.value < 1) clearInterval(timeoutInterval.value);

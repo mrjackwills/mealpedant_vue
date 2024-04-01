@@ -351,7 +351,7 @@ const cancel = async (): PV => {
 const clear = async (): PV => {
 	loading.value = true;
 	if (!meal.value.photo_original || !meal.value.photo_converted) return;
-	if (!editMealHasPhoto) {
+	if (!editMealHasPhoto.value) {
 		axios_adminPhoto.photo_delete({
 			original: meal.value.photo_original,
 			converted: meal.value.photo_converted
