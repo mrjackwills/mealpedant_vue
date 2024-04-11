@@ -49,6 +49,7 @@
 				:category='item.D.c'
 				:date='item.da'
 				:description='item.D.md'
+				:key="`D-${item.da}`"
 				:photo='item.D.p'
 				:restaurant='item.D.r'
 				:takeaway='item.D.t'
@@ -63,6 +64,7 @@
 				:category='item.J.c'
 				:date='item.da'
 				:description='item.J.md'
+				:key="`J-${item.da}`"
 				:photo='item.J.p'
 				:restaurant='item.J.r'
 				:takeaway='item.J.t'
@@ -137,7 +139,8 @@ const headers = computed(() => {
 	);
 	return headers;
 });
-// 		// All Jack meals visible status, set&get
+
+// All Jack meals visible status, set&get
 const Jack = computed({
 	get (): boolean {
 		return foodModule().Jack;
