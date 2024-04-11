@@ -359,8 +359,8 @@ const clear = async (): PV => {
 	}
 	imageToUpload.value = [];
 	imageUrl.value = '';
-	meal.value.photo_converted = '';
-	meal.value.photo_original = '';
+	meal.value.photo_converted = undefined;
+	meal.value.photo_original = undefined;
 	loading.value = false;
 };
 

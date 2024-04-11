@@ -1,7 +1,7 @@
 <template>
 	<v-container container--fluid fill-height>
 		<v-row align='center' justify='center' class='no-gutters'>
-			<v-col class='' cols='12' sm='8' md='6'>
+			<v-col cols='12' sm='8' md='6'>
 				<v-form v-on:submit.prevent >
 
 					<v-col class='pa-0' cols='12'>
@@ -294,9 +294,9 @@ const clear = async (): PV => {
 		imageToUpload.value = [];
 		imageUrl.value = '';
 		// eslint-disable-next-line require-atomic-updates
-		meal.value.photo_converted = '';
+		meal.value.photo_converted = undefined;
 		// eslint-disable-next-line require-atomic-updates
-		meal.value.photo_original = '';
+		meal.value.photo_original = undefined;
 	}
 	loading.value= false;
 };
