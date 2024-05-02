@@ -10,9 +10,9 @@ type ErrorData = {data: { response: string } }
 type AxiosClasses = Admin | AdminMeal | AdminPhoto | AuthenticatedFood | AuthenticatedUser | DownloadPhoto | Incognito
 
 // Allow for longer timeouts when in debug mode
-const get_timeout = ():  number => {
-	return env.mode_production? 7000 : 70000
-}
+const get_timeout = (): number => {
+	return env.mode_production? 7000 : 70000;
+};
 
 const baseAxios: AxiosInstance = Axios.create({
 	baseURL: env.domain_api,
