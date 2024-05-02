@@ -20,7 +20,7 @@
 			]
 		}
 	},
-	"extends": "@vue/tsconfig/tsconfig.dom.json",
+	// "extends": "@vue/tsconfig/tsconfig.dom.json",
 	"types": ["node", "vite-plugin-pwa/client", "vuetify", ],
 	"include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "src/vanillaTS/globalConststs"],
 	"references": [{ "path": "./tsconfig.config.json" }],

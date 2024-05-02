@@ -1,15 +1,12 @@
-// eslint-disable-next-line no-undef
+/* eslint-env node */
+
 module.exports = {
 	root: true,
-	'env': {
-		'es2020': true,
-	},
 	extends: [
 		'@vue/eslint-config-typescript',
 		'@vue/typescript',
 		'eslint:recommended',
 		'plugin:@typescript-eslint/recommended',
-		// 'plugin:@typescript-eslint/recommended-requiring-type-checking',
 		'plugin:vue/vue3-essential',
 		'./.eslintrc-auto-import.json',
 	],
@@ -27,7 +24,7 @@ module.exports = {
 		'arrow-parens': [ 'error', 'always' ],
 		'comma-spacing': [ 'error', { before: false, after: true } ],
 		'generator-star-spacing': 'off',
-		indent: [ 'error', 'tab' ],
+		'indent': [ 'error', 'tab' ],
 		'key-spacing': [ 1, { beforeColon: false, afterColon: true } ],
 		'keyword-spacing': [ 'error', { before: true } ],
 		'max-len': [
@@ -35,10 +32,8 @@ module.exports = {
 			{ code: 222, ignoreComments: true, ignoreTemplateLiterals: true },
 		],
 		'no-await-in-loop': 1,
-		// 'no-console': [ 'error', { allow: [ 'warn', 'error' ] } ],
 		'no-console': 0,
 		'no-constructor-return': 1,
-		// eslint-disable-next-line no-undef
 		'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
 		'no-extra-parens': 1,
 		'no-multi-spaces': [ 'error' ],
@@ -49,9 +44,9 @@ module.exports = {
 		'no-trailing-spaces': [ 'error', { skipBlankLines: true } ],
 		'no-unused-vars': 'off',
 		'object-curly-spacing': [ 'error', 'always' ],
-		quotes: [ 'error', 'single', { allowTemplateLiterals: true } ],
+		'quotes': [ 'error', 'single', { allowTemplateLiterals: true } ],
 		'require-atomic-updates': 1,
-		semi: [ 'error', 'always' ],
+		'semi': [ 'error', 'always' ],
 		'space-before-blocks': [
 			'error',
 			{ functions: 'always', keywords: 'always', classes: 'always' },
@@ -71,6 +66,5 @@ module.exports = {
 		'vue/html-quotes': [ 'error', 'single' ],
 		'vue/mustache-interpolation-spacing': [ 'error', 'always' ],
 		'vue/script-indent': [ 'error', 'tab' ],
-		// "vuetify/no-deprecated-classes": "error",
 	},
 };
