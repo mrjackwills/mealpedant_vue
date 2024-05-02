@@ -2,7 +2,7 @@
 	<v-navigation-drawer
 		v-model='drawer'
 		:location='mobile?"right":"left"'
-		:rail='minivariant'
+		:rail='mini'
 		:mobile-breakpoint='960'
 		color='navmenu'
 		height='100vh'
@@ -58,7 +58,7 @@
 
 				</section>
 
-				<v-list-item class='cl ' @click='minivariant=!minivariant' v-if='!mobile'>
+				<v-list-item class='cl ' @click='mini=!mini' v-if='!mobile'>
 					<template v-slot:prepend  >
 						<v-icon :icon='minivariantIcon'  class='ma-0 pa-0'/>
 					</template>
@@ -78,7 +78,7 @@
 					</template>
 				</v-list-item>
 				
-				<v-row align='center' justify='center' v-if='mobile && !minivariant' class='mt-4'>
+				<v-row align='center' justify='center' v-if='mobile && !mini' class='mt-4'>
 					<v-col >
 						<div class='text-center smalltext'>{{ userEmail }}</div>
 					</v-col>
@@ -130,6 +130,7 @@ const admin = computed((): boolean => {
 const authed = computed((): boolean => {
 	return userStore.authenticated;
 });
+
 const drawer = computed({
 	get (): boolean {
 		return drawStore.open;
@@ -141,7 +142,8 @@ const drawer = computed({
 const init = computed((): boolean => {
 	return browserModule().init;
 });
-const minivariant = computed({
+
+const mini = computed({
 	get (): boolean {
 		return drawStore.mini;
 	},
@@ -149,15 +151,19 @@ const minivariant = computed({
 		drawStore.set_mini(b);
 	}
 });
+
 const minivariantIcon = computed((): string => {
-	return minivariant.value ? mdiChevronRight : mdiChevronLeft;
+	return mini.value ? mdiChevronRight : mdiChevronLeft;
 });
 const userEmail = computed((): su => {
 	return userStore.email;
 });
 
-onMounted(() => {
-	if (!mobile.value && authed.value) drawer.value = true;
+onBeforeMount(() => {
+	if (!mobile.value && authed.value) {
+		drawer.value = true;
+		mini.value = false;
+	}
 });
 
 const drawerLinks = [
@@ -206,14 +212,18 @@ const registerLinks = [
  ** Sign out via pinia
 */
 const signout = async (): Promise<void> => {
-	minivariant.value = false;
+	mini.value = false;
 	await userModule().clientSideSignout();
 	await axios_authenticatedUser.signout_post();
 };
 
-watch(mobile, (b) => {
-	if (b) minivariant.value = false;
+watch(mini, (b) => {
+	console.log(`mini: ${b}`);
 });
+
+// watch(mobile, (b) => {
+// 	if (b) mini.value = false;
+// });
 
 </script>
 
@@ -230,6 +240,10 @@ watch(mobile, (b) => {
 
 .v-list-item__spacer{
 	width: 8px!important;
+}
+
+#nav_menu{
+	min-height: 100vh;
 }
 
 </style>
