@@ -1,6 +1,7 @@
 <template>
 	<v-snackbar
 		v-model='visible'
+		id='snackbar'
 		app
 		:bottom='position.y === "bottom"'
 		:color='color'
@@ -103,3 +104,9 @@ watch(isIntersecting, (i) => {
 }
 );
 </script>
+
+<style>
+#snackbar{
+	padding-bottom:1rem!important;
+}
+</style>
