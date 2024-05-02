@@ -132,7 +132,7 @@ const restartDialog = async (): Promise<void> => {
 const restartServer = async (authObject: TAuthObject): Promise<void> => {
 	loading.value = true;
 	snackSuccess({ message: `Restarting server`, loading: true, type: 'info', timeout: 4000 });
-	pageTimeout.value = setTimeout(() => axios_admin.memory_get(), 5000);
+	pageTimeout.value = window.setTimeout(() => axios_admin.memory_get(), 5000);
 	await axios_admin.restart_put(authObject);
 	loading.value = false;
 };

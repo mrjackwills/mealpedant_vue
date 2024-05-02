@@ -181,7 +181,7 @@ const close = (): void => {
 const copyCodes = (): void => {
 	useClipboard().copy(backupCodes());
 	showTooltip.value = true;
-	tooltipTimeout.value = setTimeout(() => {
+	tooltipTimeout.value = window.setTimeout(() => {
 		showTooltip.value = false;
 	}, 1750);
 };

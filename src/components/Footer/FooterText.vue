@@ -114,7 +114,7 @@ const buildInfo = (): void => {
 	if (!authed.value) return;
 	clearTimeout(buildTimeout.value);
 	showBuild.value = !showBuild.value;
-	buildTimeout.value = setTimeout(() => {
+	buildTimeout.value = window.setTimeout(() => {
 		showBuild.value = false;
 	}, 20000);
 };

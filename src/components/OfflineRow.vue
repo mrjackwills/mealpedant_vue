@@ -54,6 +54,6 @@ const goOnline = async (): Promise<void> => {
 };
 
 onMounted(() => {
-	goOnlineInterval.value = setInterval(() => goOnline(), 10000);
+	goOnlineInterval.value = window.setInterval(() => goOnline(), 10000);
 });
 </script>
