@@ -3,6 +3,7 @@
 		<v-col cols='12' sm='8'>
 			<v-data-table
 				:headers='headers'
+				:mobile='false'
 				:items='backup'
 				class='elevation-1 mt-4'
 				density='compact'

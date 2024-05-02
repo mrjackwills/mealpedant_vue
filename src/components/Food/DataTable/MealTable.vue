@@ -3,6 +3,7 @@
 		v-if='tableData'
 		v-model:items='tableData'
 		:headers='headers'
+		:mobile='false'
 		:items-per-page='25'
 		class='elevation-1'
 		density='compact'
@@ -49,7 +50,7 @@
 				:category='item.D.c'
 				:date='item.da'
 				:description='item.D.md'
-				:key="`D-${item.da}`"
+				:key='`D-${item.da}`'
 				:photo='item.D.p'
 				:restaurant='item.D.r'
 				:takeaway='item.D.t'
@@ -64,7 +65,7 @@
 				:category='item.J.c'
 				:date='item.da'
 				:description='item.J.md'
-				:key="`J-${item.da}`"
+				:key='`J-${item.da}`'
 				:photo='item.J.p'
 				:restaurant='item.J.r'
 				:takeaway='item.J.t'
