@@ -1,15 +1,15 @@
 <template>
 	<v-footer
-		class='abc ma-0 pa-0'
+		class='ma-0 pa-0'
 		color='transparent'
 		id='footer'
 		absolute
-		:order='2'
 		app
+		:order='3'
 	>
 		<v-row justify='center' align='center' class='no-gutters ma-0 pa-0' >
 
-			<v-col cols='auto' class='no-gutters unselectable ma-0 pa-0 my-5'>
+			<v-col cols='auto' class='no-gutters unselectable ma-0 pa-0 my-2'>
 
 				<v-chip
 					:ripple='false'
@@ -64,7 +64,7 @@ const showBuild = ref(false);
 const buildInfo = (): void => {
 	showBuild.value = !showBuild.value;
 	clearTimeout(buildTimeout.value);
-	buildTimeout.value = setTimeout(() => {
+	buildTimeout.value = window.setTimeout(() => {
 		showBuild.value = false;
 	}, 10000);
 };
@@ -77,9 +77,5 @@ const buildInfo = (): void => {
 
 a {
 	color: #000000!important;
-}
-
-.abc{
-	bottom: 0
 }
 </style>

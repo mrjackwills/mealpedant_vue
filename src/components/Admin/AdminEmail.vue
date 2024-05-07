@@ -260,10 +260,10 @@ const sendButton = (): void => {
 	confirm.value = !confirm.value;
 	if (confirm.value) {
 		countdown.value = 5;
-		disabledTimeout.value = setTimeout(()=>{
+		disabledTimeout.value = window.setTimeout(()=>{
 			disabled.value = false;
 		}, 5000);
-		countdownInterval.value = setInterval(()=>{
+		countdownInterval.value = window.setInterval(()=>{
 			if (countdown.value > 0) countdown.value -= 1;
 			if (countdown.value === 0) clearInterval(countdownInterval.value);
 		}, 1000);
