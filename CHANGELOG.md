@@ -3,7 +3,6 @@
 
 ### Features
 + snackbar reduce bottom padding, [dbc227aefe987d09b10619a55c9b2661366de9c4]
-+ all tables set mobile=fase, [080aaaf95f89ca9cd33bd02a23bb58c696f4e778]
 + add longer axios timeout when in dev mode, [12c8e9d84c7598e9e871239c983ef6d46ec7cf76]
 
 ### Fixes
