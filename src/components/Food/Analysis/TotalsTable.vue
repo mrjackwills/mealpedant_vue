@@ -3,7 +3,7 @@
 		<v-col justify='center' cols='12' md='7' class=''>
 			<v-data-table
 				:headers='categoriesHeaders'
-				:mobile='false'
+				
 				:items='computedTypeItems'
 				class='elevation-1 ma-0 pa-0'
 				density='compact'

@@ -3,7 +3,6 @@
 		v-if='tableData'
 		v-model:items='tableData'
 		:headers='headers'
-		:mobile='false'
 		:items-per-page='25'
 		class='elevation-1'
 		density='compact'

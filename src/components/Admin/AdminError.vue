@@ -5,7 +5,6 @@
 				<v-col cols='12' >
 					<v-data-table
 						:headers='headers'
-						:mobile='false'
 						:items='errorLog'
 						:sort-desc='true'
 						class='elevation-1 mt-4'

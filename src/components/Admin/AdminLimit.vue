@@ -3,7 +3,6 @@
 		<v-col cols='12' sm='8' md='6' >
 			<v-data-table
 				:headers='headers'
-				:mobile='false'
 				:items='userLimits'
 				class='elevation-1 mt-2'
 				item-key='users'

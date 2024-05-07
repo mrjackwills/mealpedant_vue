@@ -13,7 +13,6 @@
 			<v-data-table
 				:headers='registeredUsersHeaders'
 				:items='registeredUsers'
-				:mobile='false'
 				:sort-desc='true'
 				class='elevation-1 mt-4'
 				density='compact'

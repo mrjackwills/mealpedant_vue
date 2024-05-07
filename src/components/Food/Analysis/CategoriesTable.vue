@@ -4,7 +4,6 @@
 			<v-data-table
 				:footer-props='footerProps'
 				:headers='analysisHeaders'
-				:mobile='false'
 				:height='height'
 				:items='tableData'
 				items-per-page='-1'
