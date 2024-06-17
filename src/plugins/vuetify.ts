@@ -3,7 +3,6 @@ import '@/scss/variables.scss';
 
 import { aliases, mdi } from 'vuetify/iconsets/mdi-svg';
 import { createVuetify, type ThemeDefinition } from 'vuetify';
-import { nonce } from '@/vanillaTS/globalConst';
 
 const customDarkTheme: ThemeDefinition = {
 	dark: true,
@@ -30,7 +29,6 @@ export default createVuetify({
 	},
 	
 	theme: {
-		cspNonce: nonce,
 		defaultTheme: 'customDarkTheme',
 		themes: {
 			customDarkTheme,
