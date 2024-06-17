@@ -8,7 +8,7 @@ import AutoImport from 'unplugin-auto-import/vite';
 import Components from 'unplugin-vue-components/vite';
 
 // Utilities
-import { defineConfig, loadEnv } from 'vite';
+import { defineConfig } from 'vite';
 import { fileURLToPath, URL } from 'node:url';
 
 const pwaOptions: Partial<VitePWAOptions> = {
@@ -49,14 +49,14 @@ const pwaOptions: Partial<VitePWAOptions> = {
 	// 	navigateFallback: 'index.html',
 	// },
 };
-  
-// https://vitejs.dev/config/
-export default defineConfig(({ mode }) => {
 
-	const env = loadEnv(mode, process.cwd());
+// https://vitejs.dev/config/
+export default defineConfig(({ mode: _mode }) => {
+
+	// const env = loadEnv(mode, process.cwd());
 
 	return {
-	
+
 		plugins: [
 			vue({
 				template: { transformAssetUrls }
@@ -86,10 +86,11 @@ export default defineConfig(({ mode }) => {
 				vueTemplate: false,
 			}),
 			VitePWA(pwaOptions),
-			viteCompression({ algorithm: 'brotliCompress', filter: /\.(js|mjs|json|css)$/i }),
-			viteCompression({ algorithm: 'gzip', filter: /\.(js|mjs|json|css)$/i }),
+			viteCompression({ algorithm: 'brotliCompress' }),
+			viteCompression({ algorithm: 'gzip' }),
 		],
-		define: { 'process.env': {},
+		define: {
+			'process.env': {},
 			'import.meta.env.BUILD_DATE': Date.now(),
 			'import.meta.env.VERSION': JSON.stringify(process.env.npm_package_version),
 		},
@@ -99,11 +100,9 @@ export default defineConfig(({ mode }) => {
 			},
 			extensions: [ '.js', '.json', '.jsx', '.mjs', '.ts', '.tsx', '.vue' ],
 		},
-		html: {
-			cspNonce: env.VITE_CSP_NONCE,
-		},
 		server: {
 			port: 8002,
 			host: '127.0.0.1'
 		},
-	};});
+	};
+});
