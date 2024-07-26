@@ -1,9 +1,10 @@
-### 2024-06-17
+### 2024-07-26
 
 ### Chores
-+ dependencies updated, [2c0e3cffacda6ea7221caf661975604ea1468278], [e325b6bc3a57d7b54673d222ee3b573f32cb6836]
++ .devcontainer updated, [70c55620f6b388ba2110c8f82230391e010049e7]
++ dependencies updated, [b403747cc33c585de81f7f8e84b682ca92b266c9]
 
-### Refactors
-+ dead code removed, [4a2a7b924dab78b8abda20286d2232e539df3a08]
+### Fixes
++ axios increase timeout, [4ceae3b10227a4e4fd6a0af8fdf78225189b5484]
 
 see <a href='https://github.com/mrjackwills/mealpedant_vue/blob/main/CHANGELOG.md'>CHANGELOG.md</a> for more details
