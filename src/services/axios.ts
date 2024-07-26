@@ -11,7 +11,7 @@ type AxiosClasses = Admin | AdminMeal | AdminPhoto | AuthenticatedFood | Authent
 
 // Allow for longer timeouts when in debug mode
 const get_timeout = (): number => {
-	return env.mode_production? 7000 : 70000;
+	return env.mode_production? 15000 : 70000;
 };
 
 const baseAxios: AxiosInstance = Axios.create({
