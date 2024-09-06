@@ -1,3 +1,10 @@
+### Chores
++ dependencies updated, [688b7fd9c81bc7d5b533d771a32fe1211ca85e8f]
++ GitHub workflow dependency, [a6ca93a7db98d14fa4014472aeddbb9262c2beb8]
+
+### Reverts
++ vite config, [7e484d12e388ab7e5b06b2317fff56e29e24d85f]
+
 # <a href='https://github.com/mrjackwills/mealpedant_vue/releases/tag/v1.1.7'>v1.1.7</a>
 ### 2024-07-26
 
