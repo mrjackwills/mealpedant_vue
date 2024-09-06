@@ -10,11 +10,6 @@ export const userModule = defineStore(ModuleName.User, {
 		email: ''
 	}),
 	
-	persist: {
-		storage: localStorage,
-		paths: [ 'authenticated' ],
-	},
-
 	actions: {
 
 		set_authenticated (b: boolean): void {
@@ -39,7 +34,6 @@ export const userModule = defineStore(ModuleName.User, {
 			this.clear_email_admin();
 			this.authenticated = false;
 			getActivePinia()?.router().push('/');
-			// 	if (router.currentRoute.path !== '/') router.push('/');
 			await dexieDB.clear_all();
 			loadingModule().set_loading(false);
 			await Promise.all([
@@ -52,6 +46,11 @@ export const userModule = defineStore(ModuleName.User, {
 				mealsModule().$reset()
 			]);
 		}
-	}
+	},
+	
+	persist: {
+		storage: localStorage,
+		pick: [ 'authenticated' ],
+	},
 
 });
