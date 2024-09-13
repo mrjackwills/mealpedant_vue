@@ -228,7 +228,7 @@ const mealDate = ref(undefined as undefined | string);
 
 const mealTypes = [ 'restaurant' as const, 'takeaway' as const, 'vegetarian' as const ];
 const completed = ref(false);
-const imageToUpload = ref([] as File[]);
+const imageToUpload = ref(undefined as File|undefined);
 const imageUrl = ref('');
 const showDate = ref(false);
 const meal = ref({
@@ -291,7 +291,7 @@ const clear = async (): PV => {
 		converted: meal.value.photo_converted
 	});
 	if (success) {
-		imageToUpload.value = [];
+		imageToUpload.value = undefined;
 		imageUrl.value = '';
 		// eslint-disable-next-line require-atomic-updates
 		meal.value.photo_converted = undefined;
@@ -307,15 +307,15 @@ const fileInserted = async (): PV => {
 	loading.value= true;
 	if (!imageToUpload.value) return clear();
 	if (imageToUpload.value === undefined) return;
-	if (imageToUpload.value[0].size > 10240000) throw { message: 'file too big', status: 400 };
-	const suffix = imageToUpload.value[0].type.split('/');
+	if (imageToUpload.value.size > 10240000) throw { message: 'file too big', status: 400 };
+	const suffix = imageToUpload.value.type.split('/');
 	const fileType = suffix[1]?.toLowerCase();
 	if (!fileType) return;
 	const acceptable = [ 'jpeg', 'jpg' ];
 	if (acceptable.indexOf(fileType) < 0) throw { message: 'JPEGs only', status: 400 };
 	const data = new FormData();
 	const newName = `${meal.value.date}_${meal.value.person.substring(0, 1)}.${fileType}`;
-	data.append('image', imageToUpload.value[0], newName);
+	data.append('image', imageToUpload.value, newName);
 	const response = await axios_adminPhoto.photo_post(data);
 	loading.value= false;
 	if (response) {

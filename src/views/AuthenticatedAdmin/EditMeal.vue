@@ -313,7 +313,7 @@ const completed = ref(false);
 // const converted = ref(false);
 const dataReady = ref(false);
 const editMealHasPhoto = ref(false);
-const imageToUpload = ref([] as File[]);
+const imageToUpload = ref(undefined as File|undefined);
 const imageUrl = ref('');
 const meal = ref({
 	id: '',
@@ -357,7 +357,7 @@ const clear = async (): PV => {
 			converted: meal.value.photo_converted
 		});
 	}
-	imageToUpload.value = [];
+	imageToUpload.value = undefined;
 	imageUrl.value = '';
 	meal.value.photo_converted = undefined;
 	meal.value.photo_original = undefined;
@@ -394,18 +394,18 @@ const deleteMeal_confirm = async (authObject: TAuthObject): PV => {
 */
 const fileInserted = async (): PV => {
 	loading.value= true;
-	if (!imageToUpload.value[0]) {
+	if (!imageToUpload.value) {
 		clear();
 		return;
 	}
-	if (!imageToUpload.value[0] || !meal.value) return;
+	if (!imageToUpload.value || !meal.value) return;
 				
 	// TODO just snack here
-	if (imageToUpload.value[0].size > 10240000) {
+	if (imageToUpload.value.size > 10240000) {
 		snackError({ message: 'File too big' });
 		return;
 	}
-	const suffix = imageToUpload.value[0].type.split('/');
+	const suffix = imageToUpload.value.type.split('/');
 	const fileType = suffix[1]?.toLowerCase();
 	if (!fileType) return;
 
@@ -416,7 +416,7 @@ const fileInserted = async (): PV => {
 	}
 	const data = new FormData();
 	const newName = `${meal.value.date}_${meal.value.person.substring(0, 1)}.${fileType}`;
-	data.append('image', imageToUpload.value[0], newName);
+	data.append('image', imageToUpload.value, newName);
 
 	const response = await axios_adminPhoto.photo_post(data);
 	if (response) {
@@ -424,7 +424,7 @@ const fileInserted = async (): PV => {
 		imageUrl.value = `${env.domain_static}/converted/${meal.value.photo_converted }`;
 	}
 	// eslint-disable-next-line require-atomic-updates
-	imageToUpload.value = [];
+	imageToUpload.value = undefined;
 	loading.value= false;
 } ;
 	
