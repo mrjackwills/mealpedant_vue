@@ -25,7 +25,6 @@ if ! [ -x "$(command -v dialog)" ]; then
 	error_close "dialog is not installed"
 fi
 
-
 # $1 string - question to ask
 # Ask a yes no question, only accepts `y` or `n` as a valid answer, returns 0 for yes, 1 for no
 ask_yn() {
