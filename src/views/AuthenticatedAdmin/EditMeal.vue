@@ -334,10 +334,6 @@ const mealTypes = [ 'restaurant' as const, 'takeaway' as const, 'vegetarian' as 
 // const original = ref(false);
 const original_date = ref('');
 
-// const padding = (i: string): string => {
-// 	return String(i).padStart(2, '0');
-// };
-
 /**
 ** Remove any uploaded photos, go back to meals back
 */
