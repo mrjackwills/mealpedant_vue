@@ -16,7 +16,7 @@
 							{{ bytes_to_mb(Number(index)) }} mb
 						</v-col>
 						<v-col cols='4' class='pa-0 text-left' v-else>
-							{{ secondsToDays(Number(index)) }}
+							{{ secondsToText(Number(index)) }}
 						</v-col>
 						<v-col cols='12' sm='6' class='ma-0 pa-0'>
 							<v-divider />
@@ -62,10 +62,10 @@ import { axios_admin } from '@/services/axios';
 import { bytes_to_mb } from '@/vanillaTS/bytes_to_mb';
 import { dialoger } from '@/services/dialog';
 import { mdiRestartAlert } from '@mdi/js';
-import { secondsToDays } from '@/vanillaTS/secondsToDays';
+import { secondsToText } from '@/vanillaTS/secondsToText';
 import { snackSuccess } from '@/services/snack';
-import type { TAuthObject, TServerStats, u } from '@/types';
 import { useDisplay } from 'vuetify';
+import type { TAuthObject, TServerStats, u } from '@/types';
 const { smAndDown } = useDisplay();
 
 onBeforeUnmount(() => {

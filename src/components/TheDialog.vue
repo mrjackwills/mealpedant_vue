@@ -117,6 +117,7 @@
 import { mdiCellphoneInformation, mdiCheck, mdiClose, mdiEye, mdiEyeOff, mdiLock } from '@mdi/js';
 import type { su, u, TConfirmFunction, TDialogTextField } from '@/types';
 import { useDisplay } from 'vuetify';
+import { zeroPad } from '@/vanillaTS/zeropad';
 const { mdAndUp, smAndDown } = useDisplay();
 
 const dialogStore = dialogModule();
@@ -176,7 +177,7 @@ const timeout = computed({
 
 const timeout_text = computed((): string => {
 	return timeout.value ?
-		`${String(timeout.value).padStart(2, '0')}` : passwordRequired.value && !user.value.password || passwordRequired.value && passwordLength.value < 10
+		`${zeroPad(timeout.value)}` : passwordRequired.value && !user.value.password || passwordRequired.value && passwordLength.value < 10
 			? 'password required ' : passwordRequired.value && twoFA_always_required.value && !user.value.token || passwordRequired.value && twoFA_always_required.value && tokenLength.value <6
 				? 'token required' : confirmButton.value;
 });

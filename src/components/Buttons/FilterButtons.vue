@@ -33,7 +33,7 @@
 				>
 					<v-row align='center' justify='center'>
 						<v-col cols='auto' class='pa-1'>
-							<ButtonIcon :icon='buttonFields[3].icon' :color='disabled("original")?"error":"white"'  margin='' />
+							<ButtonIcon :icon='buttonFields[3].icon' :color='disabled("original")?"error":"white"' margin='' />
 						</v-col>
 						<v-col cols='auto' class='pa-1'>
 							<div >{{ buttonFields[3].text }}</div>

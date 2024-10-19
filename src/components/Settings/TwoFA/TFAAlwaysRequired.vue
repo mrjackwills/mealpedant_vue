@@ -13,7 +13,7 @@
 							density='compact'
 						>
 							<template v-slot:label>
-								<span  class=''>Extra Two-Factor Authentication prompts</span>
+								<span class=''>Extra Two-Factor Authentication prompts</span>
 							</template>
 						</v-switch>
 					</v-col>

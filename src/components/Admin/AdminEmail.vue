@@ -22,7 +22,7 @@
 						>
 						</v-select>
 					</v-col>
-					<v-col cols='auto'  justify='end' class='ma-0 pa-0 mt-4'>
+					<v-col cols='auto' justify='end' class='ma-0 pa-0 mt-4'>
 						<v-switch
 							v-model='all'
 							@change='allToggle()'

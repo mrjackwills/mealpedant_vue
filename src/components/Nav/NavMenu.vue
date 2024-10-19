@@ -25,9 +25,9 @@
 				<v-divider class='mt-2 mb-2' />
 			</section>
 			<section v-if='!authed && mobile' >
-				<v-list-item  v-for='(item, index) in registerLinks' :key='`drt${index}`' router :to='item.route' >
-					<template v-slot:prepend  >
-						<v-icon :icon='item.icon'  class='ma-0 pa-0'/>
+				<v-list-item v-for='(item, index) in registerLinks' :key='`drt${index}`' router :to='item.route' >
+					<template v-slot:prepend >
+						<v-icon :icon='item.icon' class='ma-0 pa-0'/>
 					</template>
 					<template v-slot:title>
 						<span class=''>{{ item.text }}</span>
@@ -37,8 +37,8 @@
 			<section v-if='authed'>
 
 				<v-list-item v-for='(item, index) in drawerLinks' :key='`dr${index}`' router :to='item.route'>
-					<template v-slot:prepend  >
-						<v-icon :icon='item.icon'  class='ma-0 pa-0'/>
+					<template v-slot:prepend >
+						<v-icon :icon='item.icon' class='ma-0 pa-0'/>
 					</template>
 					<template v-slot:title>
 						<span class=''>{{ item.text }}</span>
@@ -48,8 +48,8 @@
 				<section v-if='admin'>
 
 					<v-list-item v-for='(item, index) in adminLinks' :key='`al${index}`' router :to='item.route'>
-						<template v-slot:prepend  >
-							<v-icon :icon='item.icon'  class='ma-0 pa-0'/>
+						<template v-slot:prepend >
+							<v-icon :icon='item.icon' class='ma-0 pa-0'/>
 						</template>
 						<template v-slot:title>
 							<span class=''>{{ item.text }}</span>
@@ -59,8 +59,8 @@
 				</section>
 
 				<v-list-item class='cl ' @click='mini=!mini' v-if='!mobile'>
-					<template v-slot:prepend  >
-						<v-icon :icon='minivariantIcon'  class='ma-0 pa-0'/>
+					<template v-slot:prepend >
+						<v-icon :icon='minivariantIcon' class='ma-0 pa-0'/>
 					</template>
 					<template v-slot:title>
 						<span class=''>minimize</span>
@@ -70,11 +70,11 @@
 				<v-divider :class='{"dividermargin": lgAndUp, "mt-2 mb-2" : mdAndDown}' />
 
 				<v-list-item class='cl' @click='signout'>
-					<template v-slot:prepend  >
+					<template v-slot:prepend >
 						<v-icon :icon='mdiPower' class='ma-0 pa-0'/>
 					</template>
 					<template v-slot:title>
-						<span  class='text-uppercase'>sign-out</span>
+						<span class='text-uppercase'>sign-out</span>
 					</template>
 				</v-list-item>
 				
