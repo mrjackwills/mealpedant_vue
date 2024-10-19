@@ -1,7 +1,8 @@
 #!/bin/bash
 
 # Vue release
-# v0.2.3
+# v0.3.0
+# 2024-10-19
 
 # Colours for echo
 RED='\033[0;31m'
@@ -46,12 +47,6 @@ ask_continue() {
 	if ! ask_yn "continue"; then
 		exit
 	fi
-}
-
-# return user input
-user_input() {
-	read -r data
-	echo "$data"
 }
 
 # semver major update
