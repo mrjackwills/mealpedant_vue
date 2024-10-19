@@ -22,7 +22,7 @@
 	</v-container>
 </template>
 
-<script setup  lang='ts'>
+<script setup lang='ts'>
 import { axios_authenticatedUser } from '@/services/axios';
 
 const backupProcess = computed((): boolean => {

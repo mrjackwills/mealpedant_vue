@@ -18,7 +18,7 @@
 						autocomplete='email'
 					/>
 					<v-row wrap justify='center'>
-						<v-col cols='12'  v-for='(item, index) in textFields' :key='index' class='pa-1'>
+						<v-col cols='12' v-for='(item, index) in textFields' :key='index' class='pa-1'>
 							<v-text-field
 								:value='user[item.model]'
 								@click:append='appendClick(item.model)'

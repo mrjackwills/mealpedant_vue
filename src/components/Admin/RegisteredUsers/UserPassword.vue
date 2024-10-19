@@ -56,7 +56,7 @@
 					:color='withEmail?"mealtype":""'
 				>
 					<template v-slot:label>
-						<span  class='text-overline'>send email</span>
+						<span class='text-overline'>send email</span>
 					</template>
 				</v-switch>
 			</v-col>

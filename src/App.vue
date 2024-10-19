@@ -1,7 +1,7 @@
 <template>
 	<v-app id='mealpedant' class='' ref='swipe'>
 
-		<NavMenu  v-if='init && mdAndDown || init && authenticated' :order='mdAndDown?"1":"2"' />
+		<NavMenu v-if='init && mdAndDown || init && authenticated' :order='mdAndDown?"1":"2"' />
 		<AppBar :order='mdAndDown?"2":"1"'/>
 		<v-main
 			class='d-flex align-center justify-center'

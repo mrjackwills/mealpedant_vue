@@ -11,7 +11,7 @@
 					<InfoBar :message='item.message' :color='item.color'/>
 				</div>
 
-				<section  v-if='lgAndUp'>
+				<section v-if='lgAndUp'>
 					<v-row justify='center' class='no-gutters'>
 						<SelectorButton class='my-0'/>
 					</v-row>
@@ -124,13 +124,13 @@
 
 </template>
 
-<script setup  lang='ts'>
+<script setup lang='ts'>
 import { axios_adminMeal } from '@/services/axios';
 import { dexieDB } from '@/services/dexieDb';
 import { mdiRefresh } from '@mdi/js';
 import { resetFilters } from '@/services/reset';
-import type { TInfobarmessage } from '@/types';
 import { useDisplay } from 'vuetify';
+import type { TInfobarmessage } from '@/types';
 
 const { lgAndUp } = useDisplay();
 
