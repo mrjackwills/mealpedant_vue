@@ -92,7 +92,7 @@ onMounted(() => {
 });
 
 /**
-** Return the value of a name this.param, used in v-for itertions
+** Return the value of a name this.param, used in v-for iterations
 * @param {string} param Valid key from data: () attribute
 */
 const returnThis = (param: TAdminShow | 'emailIcon' | 'errorIcon'| 'limitIcon' | 'memoryIcon' | 'backupIcon' | 'registeredUsersIcon'): boolean|string|void => {

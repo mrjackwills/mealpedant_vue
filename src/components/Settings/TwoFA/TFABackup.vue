@@ -2,7 +2,7 @@
 	<section>
 		<v-row align='center' justify='center' class='ma-0 pa-0' v-if='!backup'>
 			<v-col cols='12' md='8' class='pa-0 mb-4'>
-				Backups enable a user to login to their account in situations where their two factor authentcation app is unavailable.
+				Backups enable a user to login to their account in situations where their two factor authentication app is unavailable.
 				Each backup code can only be used once, and must be safely stored by the user.
 				<br>
 				<br>
