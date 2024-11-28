@@ -1,3 +1,9 @@
+### Chores
++ dependencies updated, [7aa9a044b6c996470acbac377721cbd06dd78275]
+
+### Refactors
++ pwa in onBeforeMount, [e834ca74dd9e1bfc3c40d3dbaf4e5ee06eedbc32]
+
 # <a href='https://github.com/mrjackwills/mealpedant_vue/releases/tag/v1.1.9'>v1.1.9</a>
 ### 2024-10-19
 
