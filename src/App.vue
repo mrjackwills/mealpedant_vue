@@ -30,12 +30,26 @@ import { useSwipe } from '@vueuse/core';
 import { useDisplay } from 'vuetify';
 const { mdAndDown } = useDisplay();
 
+const { updateServiceWorker } = useRegisterSW();
+
+const check_pwa = (): void => {
+	// TODO put this in on mounted?
+	if ('serviceWorker' in navigator) {
+		registerSW({
+			onNeedRefresh () {
+				appUpdate();
+			}
+		});
+	}
+};
+
 onBeforeMount(async () => {
 	loading.value = true;
 	await browserHasIndexedDB();
 	if (authenticated.value) await dexieDB.check_last_id();
 	appReady.value = true;
 	loading.value = false;
+	check_pwa();
 });
 
 const drawStore = drawerModule();
@@ -82,16 +96,6 @@ watch(isSwiping, (i) => {
 		}
 	}
 });
-
-const { updateServiceWorker } = useRegisterSW();
-
-if ('serviceWorker' in navigator) {
-	registerSW({
-		onNeedRefresh () {
-			appUpdate();
-		}
-	});
-}
 
 const title = computed(() => {
 	return browserModule().pageTitle;
