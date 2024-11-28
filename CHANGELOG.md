@@ -1,3 +1,15 @@
+# <a href='https://github.com/mrjackwills/mealpedant_vue/releases/tag/v1.1.10'>v1.1.10</a>
+### 2024-11-28
+
+### Chores
++ dependencies updated, [7aa9a044](https://github.com/mrjackwills/mealpedant_vue/commit/7aa9a044b6c996470acbac377721cbd06dd78275)
+
+### Docs
++ typos, [3f46a547](https://github.com/mrjackwills/mealpedant_vue/commit/3f46a547dd1d228c527a5983c739fa7e571a4db0)
+
+### Refactors
++ pwa in onBeforeMount, [e834ca74](https://github.com/mrjackwills/mealpedant_vue/commit/e834ca74dd9e1bfc3c40d3dbaf4e5ee06eedbc32)
+
 # <a href='https://github.com/mrjackwills/mealpedant_vue/releases/tag/v1.1.9'>v1.1.9</a>
 ### 2024-10-19
 

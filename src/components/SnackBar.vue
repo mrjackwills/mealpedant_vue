@@ -93,7 +93,7 @@ const visible = computed({
 const isIntersecting = ref(false);
 
 /**
-** Calculate if visible, and save into this.isIntersecting
+** Calculate if visible, and save into isIntersecting
 */
 const onIntersect = (is_i: boolean, _entries: Array<IntersectionObserverEntry>, _observer: IntersectionObserver): void => {
 	isIntersecting.value = is_i;
