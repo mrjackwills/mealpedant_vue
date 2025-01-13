@@ -1,12 +1,6 @@
-### 2024-11-28
+### 2025-01-13
 
 ### Chores
-+ dependencies updated, [7aa9a044b6c996470acbac377721cbd06dd78275]
-
-### Docs
-+ typos, [3f46a547dd1d228c527a5983c739fa7e571a4db0]
-
-### Refactors
-+ pwa in onBeforeMount, [e834ca74dd9e1bfc3c40d3dbaf4e5ee06eedbc32]
++ dependencies updated, [6013a5e22260f0f20a29129483009ef3c641a1fa]
 
 see <a href='https://github.com/mrjackwills/mealpedant_vue/blob/main/CHANGELOG.md'>CHANGELOG.md</a> for more details
