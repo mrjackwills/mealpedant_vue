@@ -1,7 +1,7 @@
 <template>
 	<v-container container--fluid fill-height>
 		<v-row align='center' justify='center' class='no-gutters'>
-			<v-col cols='12' sm='8' md='6'>
+			<v-col cols='12' sm='8' >
 				<v-form v-on:submit.prevent >
 
 					<v-col class='pa-0' cols='12'>
@@ -72,12 +72,13 @@
 							v-model.trim='meal.category'
 							@blur='trimCategory'
 							:disabled='completed'
+							:hint="computedSuffix"
 							:prepend-icon='mdiFood'
-							:suffix='computedSuffix'
+							class="cat_hint"
 							label='CATEGORY'
-							variant='underlined'
 							name='category'
 							type='text'
+							variant='underlined'
 						/>
 					</v-col>
 					<v-col class='pa-0' cols='12'>
@@ -206,7 +207,18 @@ const computedSuffix = computed((): string => {
 	let filteredCategories = '';
 	const inputLength = meal.value.category.length;
 	const input = meal.value.category.toUpperCase().substring(0, inputLength);
-	for (const eachCategory of categories.value) if (eachCategory.substring(0, inputLength) === input) filteredCategories += `${eachCategory} `;
+	let index = 0;
+	for (const eachCategory of categories.value) {
+
+		if (eachCategory.substring(0, inputLength) === input) {
+			if (filteredCategories.length ===0 ) {
+				filteredCategories += `${eachCategory}`;
+			}else{
+				filteredCategories += `, ${eachCategory}`;
+			}
+			index +=1;
+		}
+}
 	return filteredCategories;
 });
 
@@ -368,5 +380,9 @@ const v$ = useVuelidate(rules, meal);
 	.v-input--switch .v-label{
 		font-size: 10px;
 	}
+}
+
+.cat_hint .v-messages__message {
+	color: rgb(var(--v-theme-primary)) !important;
 }
 </style>
