@@ -166,7 +166,7 @@ const backupCodes = (): string => {
 	if (!backupArray.value) return '';
 	let output = `Meal Pedant Two-Factor backup tokens\nStore these somewhere secure\n`;
 	for (const [ index, item ] of Object.entries(backupArray.value)) {
-		if (Number(index) +1 === backupArray.value.length) output += `\n${item}`;
+		if (Number(index) + 1 === backupArray.value.length) output += `\n${item}`;
 		else output += `\n${item}\n`;
 	}
 	return output;
@@ -175,6 +175,7 @@ const close = (): void => {
 	backupArray.value = [];
 	twoFAModule().set_backupProcess(false);
 };
+
 /**
 ** Copy the 2fa codes, create multi-line string with description as first line
 */
@@ -185,6 +186,7 @@ const copyCodes = (): void => {
 		showTooltip.value = false;
 	}, 1750);
 };
+
 /**
 ** Download the 2fa codes as .txt, all clientside, create multi-line string with description as first line
 */
@@ -196,7 +198,8 @@ const downloadCodes = (): void => {
 	document.body.appendChild(downloadCodes);
 	downloadCodes.click();
 	document.body.removeChild(downloadCodes);
-} ;
+};
+
 /**
 ** Generate button - dialog warning overwrite if backups already exist, else just generate
 */
@@ -214,6 +217,7 @@ const buttonPress = async (): Promise<void> => {
 		generateBackups();
 	}
 };
+
 /**
 ** Post request to generate new backup tokens
 */
@@ -226,8 +230,7 @@ const generateBackups = async (authObject?: TAuthObject): Promise<void> => {
 	if (backup.value && authObject) {
 		const response = await axios_authenticatedUser.twoFA_patch(authObject);
 		if (response) backupArray.value = response;
-	}
-	else if (!backup.value) {
+	} else if (!backup.value) {
 		const backups = await axios_authenticatedUser.twoFA_post();
 		if (backups) backupArray.value = backups;
 	}

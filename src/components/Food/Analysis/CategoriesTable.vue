@@ -82,9 +82,9 @@ onBeforeMount(async ()=> {
 	originalLength.value = await dexieDB.original_number_meals();
 });
 
-const height = computed(():string => {
+const height = computed((): string => {
 	if (tableData.value.length < 6) {
-		return String((tableData.value.length +1) * 55);
+		return String((tableData.value.length + 1) * 55);
 	}
 	return '400';
 });
@@ -109,16 +109,21 @@ const filtered_total = computed((): number => {
 const footerProps = computed((): TFooterProps =>{
 	return {
 		itemsPerPageOptions: [ 10, 20, 30, -1 ],
-		itemsPerPageText: mdAndUp.value ? 'categories' : 'categories',
+		itemsPerPageText: mdAndUp.value ? 'categories' : 'categories'
 	};
 });
 
 const tableData = computed((): Array<TCategoryTableDate> => {
-	const data = [] ;
+	const data = [];
 	for (const day of meals.value) {
 		if (day.J?.c) {
 			const dataIndex = data.findIndex((item) => item.category_name === day.J?.c);
-			if (dataIndex < 0) data.push({ category_name: day.J.c, j: 1, d: 0, t: 1 });
+			if (dataIndex < 0) data.push({
+				category_name: day.J.c,
+				j: 1,
+				d: 0,
+				t: 1 
+			});
 			else {
 				const x = data[dataIndex];
 				if (x) {
@@ -129,7 +134,12 @@ const tableData = computed((): Array<TCategoryTableDate> => {
 		}
 		if (day.D?.c) {
 			const dataIndex = data.findIndex((item) => item.category_name === day.D?.c);
-			if (dataIndex < 0) data.push({ category_name: day.D.c, j: 0, d: 1, t: 1 });
+			if (dataIndex < 0) data.push({
+				category_name: day.D.c,
+				j: 0,
+				d: 1,
+				t: 1 
+			});
 			else {
 				const x = data[dataIndex];
 				if (x) {
@@ -154,7 +164,7 @@ const analysisHeaders = [
 		align: 'end',
 		sortable: true,
 		title: 'Quantity',
-		key: 't',
-	},
+		key: 't'
+	}
 ] as const;
 </script>

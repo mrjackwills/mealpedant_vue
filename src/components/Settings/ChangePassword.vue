@@ -97,7 +97,7 @@
 
 <script setup lang='ts'>
 import { axios_authenticatedUser } from '@/services/axios';
-import { mdiCached, mdiCellphoneInformation, mdiClose, mdiEye, mdiEyeOff, mdiLock, mdiLockOpenOutline, } from '@mdi/js';
+import { mdiCached, mdiCellphoneInformation, mdiClose, mdiEye, mdiEyeOff, mdiLock, mdiLockOpenOutline } from '@mdi/js';
 import { passwordCheck } from '@/vanillaTS/hibp';
 import useVuelidate from '@vuelidate/core';
 import { minLength, required } from '@vuelidate/validators';
@@ -106,8 +106,8 @@ import type { su, TChangePassword } from '@/types';
 import { useDisplay } from 'vuetify';
 const { lgAndUp, mdAndUp, mdAndDown, smAndDown } = useDisplay();
 
-const buttonSize= computed((): string => {
-	return lgAndUp.value ? 'large': mdAndDown.value ? 'small': '';
+const buttonSize = computed((): string => {
+	return lgAndUp.value ? 'large' : mdAndDown.value ? 'small' : '';
 });
 
 const currentEmail = computed((): su => {
@@ -126,7 +126,7 @@ const disabled = computed((): boolean => {
 		
 });
 const headingSize = computed((): string => {
-	return mdAndDown.value? 'text-h5':'text-h4';
+	return mdAndDown.value ? 'text-h5' : 'text-h4';
 });
 const loading = computed({
 	get (): boolean {
@@ -136,30 +136,30 @@ const loading = computed({
 		loadingModule().set_loading(b);
 	}
 });
-const textFields = computed(() :Array<TChangePassword> => {
+const textFields = computed((): Array<TChangePassword> => {
 	return [
 		{
 			autocomplete: 'new-password',
 			icon: mdiLockOpenOutline,
 			label: 'current password',
 			model: 'current_password' as const,
-			type: current_password_visible.value? 'text' : 'password',
-			appendIcon: current_password_visible.value ? mdiEyeOff : mdiEye,
+			type: current_password_visible.value ? 'text' : 'password',
+			appendIcon: current_password_visible.value ? mdiEyeOff : mdiEye
 		},
 		{
 			autocomplete: 'new-password',
 			icon: mdiLock,
 			label: 'new password',
 			model: 'new_password' as const,
-			type: new_password_visible.value? 'text' : 'password',
-			appendIcon: new_password_visible.value ? mdiEyeOff : mdiEye,
-		},
+			type: new_password_visible.value ? 'text' : 'password',
+			appendIcon: new_password_visible.value ? mdiEyeOff : mdiEye
+		}
 	];
 });
 const twoFA_always_required = computed((): boolean => {
 	return twoFAModule().alwaysRequired;
 });
-const watcher_current_password = computed(() :su => {
+const watcher_current_password = computed((): su => {
 	return user.value.current_password;
 });
 const watcher_new_password = computed((): su => {
@@ -182,13 +182,13 @@ const tokenFields = ref([
 		clearable: true,
 		icon: mdiCellphoneInformation,
 		label: '2FA code',
-		model: 'token' as const,
-	},
+		model: 'token' as const
+	}
 ]);
 const user = ref({
 	current_password: '',
 	new_password: '',
-	token: undefined as su,
+	token: undefined as su
 });
 	
 /**
@@ -198,6 +198,7 @@ const appendClick = (model: string): void => {
 	if (model === 'current_password') current_password_visible.value = !current_password_visible.value;
 	else if (model === 'new_password') new_password_visible.value = !new_password_visible.value;
 };
+
 /**
 ** Reset data, clear form
 */
@@ -213,6 +214,7 @@ const cancel = (): void => {
 	v$.value.user?.$reset();
 
 };
+
 /**
  ** set the this.focus to the currently in focus text field
  ** If the in focus field ISN't the password field, then set current_password_visible to false
@@ -223,6 +225,7 @@ const focusMethod = (model: 'current_password' | 'new_password' | 'token'): void
 	if (model === 'current_password') current_password_visible.value = false;
 	else [ new_password_visible.value, current_password_visible.value ] = [ false, false ];
 };
+
 /**
  ** Instead of v-model, use this to change the value, and also touch the $v object
  * @param {String} model - current model/textfield name
@@ -230,20 +233,21 @@ const focusMethod = (model: 'current_password' | 'new_password' | 'token'): void
  * */
 const valueTouch = (model: 'current_password' | 'new_password' | 'token', value: string): void => {
 	switch (model) {
-	case 'current_password':
-		user.value.current_password = value;
-		v$.value.user?.current_password?.$touch();
-		break;
-	case 'new_password':
-		user.value.new_password = value;
-		v$.value.user?.new_password?.$touch();
-		break;
-	case 'token':
-		user.value.token = value;
-		v$.value.user?.token?.$touch();
-		break;
+		case 'current_password':
+			user.value.current_password = value;
+			v$.value.user?.current_password?.$touch();
+			break;
+		case 'new_password':
+			user.value.new_password = value;
+			v$.value.user?.new_password?.$touch();
+			break;
+		case 'token':
+			user.value.token = value;
+			v$.value.user?.token?.$touch();
+			break;
 	}
 };
+
 /**
  ** store axios request to patch password
  */
@@ -254,12 +258,12 @@ const submit = async (): Promise<void> => {
 	if (!user.value.new_password || !user.value.current_password) return;
 	loading.value = true;
 	[ new_password_visible.value, current_password_visible.value ] = [ false, false ];
-	// eslint-disable-next-line require-atomic-updates
+	 
 	passwordCompromised.value = await passwordCheck(user.value.new_password);
 	if (passwordCompromised.value) {
-		// eslint-disable-next-line require-atomic-updates
+		 
 		errorMessages.value.new_password = 'unsafe password';
-		// eslint-disable-next-line require-atomic-updates
+		 
 		loading.value = false;
 		return;
 	}
@@ -269,7 +273,7 @@ const submit = async (): Promise<void> => {
 		token: user.value.token
 	});
 	if (changed) snackSuccess({ message: 'Password changed' });
-	// eslint-disable-next-line require-atomic-updates
+	 
 	loading.value = false;
 	cancel();
 };
@@ -285,17 +289,15 @@ const watch_password_common = (): void => {
 	else if (!user.value.new_password) {
 		v$.value.user?.new_password?.$reset();
 		new_password_visible.value = false;
-	}
-	else if (currentEmail.value && i?.toLowerCase().includes(currentEmail.value.toLowerCase().trim()) || currentEmail.value && i?.toLowerCase().includes(currentEmail.value.toLowerCase().trim())) {
+	} else if (currentEmail.value && i?.toLowerCase().includes(currentEmail.value.toLowerCase().trim()) || currentEmail.value && i?.toLowerCase().includes(currentEmail.value.toLowerCase().trim())) {
 		errorMessages.value.new_password = 'password cannot contain email';
-	}
-	else if (!v$.value.user?.new_password?.$invalid && !passwordCompromised.value) errorMessages.value.new_password = '';
+	} else if (!v$.value.user?.new_password?.$invalid && !passwordCompromised.value) errorMessages.value.new_password = '';
 	else if (!v$.value.user?.new_password?.$dirty) return;
 	else if (!v$.value.user?.new_password?.required) errorMessages.value.new_password = 'a password is required';
 	else if (!v$.value.user?.new_password.minLen) errorMessages.value.new_password = `${12} characters minimum`;
 };
 
-const rules ={
+const rules = {
 	current_password: {
 		required,
 		minLen: minLength(12)

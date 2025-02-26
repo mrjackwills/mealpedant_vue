@@ -41,7 +41,7 @@ const typeSearch = (): void => {
 	if (!type) return;
 	const newMealArray: Array<TPiniaDateMeal> = [];
 	const filteredTypes: Array<TMealType> = [ selectedTypes.value ];
-	const filteredCategories: Set<TCategory> = new Set();
+	const filteredCategories = new Set<TCategory>();
 	for (const item of mealsModule().meals) {
 		const Dc = item.D?.[type];
 		const Jc = item.J?.[type];

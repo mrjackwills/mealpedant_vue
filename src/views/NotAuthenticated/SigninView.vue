@@ -109,9 +109,10 @@ import { mdiCellphoneLock, mdiClose, mdiEmail, mdiEye, mdiEyeOff, mdiLockOpenOut
 import type { su } from '@/types';
 import useVuelidate from '@vuelidate/core';
 import { minLength, email, required } from '@vuelidate/validators';
-import { FrontEndRoutes } from '@/types/enum_routes';
+import { FrontEndRoutes } from '@/types/const_routes';
 import { useRouter } from 'vue-router';
 import { useDisplay } from 'vuetify';
+import { HttpCode } from '@/types/const_http';
 const { mdAndUp } = useDisplay();
 
 const loading = computed({
@@ -166,11 +167,12 @@ const textFields = computed(() => {
 			icon: mdiLockOpenOutline,
 			model: 'password' as const,
 			label: 'PASSWORD',
-			appendIcon: passwordVisible.value ? mdiEyeOff: mdiEye,
+			appendIcon: passwordVisible.value ? mdiEyeOff : mdiEye,
 			type: passwordVisible.value ? 'text' : 'password',
 			autocomplete: 'password'
 		}
-	];});
+	]; 
+});
 
 const twoFARequired = ref(false);
 
@@ -181,7 +183,7 @@ const user = ref({
 	remember: false
 });
 
-let router = useRouter();
+const router = useRouter();
 
 onMounted(() => {
 	const browserStore = browserModule();
@@ -192,12 +194,18 @@ onMounted(() => {
 const touch = (name: string): void => {
 	v$.value.user?.[name]?.$touch();
 };
+
 /**
 ** On 2fa screen reset user data nad go back to blank signin page
 */
 const cancel = (): void => {
 	twoFARequired.value = false;
-	user.value = { email: '', password: '', token: '', remember: false };
+	user.value = {
+		email: '',
+		password: '',
+		token: '',
+		remember: false 
+	};
 	otpBackupEnabled.value = false;
 };
 
@@ -221,29 +229,27 @@ const signin = async (): Promise<void> => {
 	const authObject = {
 		email: user.value.email.toLowerCase(),
 		password: user.value.password,
-		token: user.value.token? user.value.token.replace(/\s/g, ''): undefined,
+		token: user.value.token ? user.value.token.replace(/\s/g, '') : undefined,
 		remember: user.value.remember
 	};
 	passwordVisible.value = false;
 	const loginRequest = await axios_incognito.signin_post(authObject);
-	if (loginRequest?.status === 200) {
+	if (loginRequest?.status === HttpCode.OK) {
 		authed.value = true;
-		// eslint-disable-next-line require-atomic-updates
+		 
 		user.value.email = '';
-		// eslint-disable-next-line require-atomic-updates
+		 
 		user.value.password = '';
 		snackbarModule().$reset();
 		userModule().set_authenticated(true);
 		await axios_authenticatedUser.authenticated_get();
 		router.push(FrontEndRoutes.BASE);
-	}
-	else if (loginRequest?.status === 202) {
-		// eslint-disable-next-line require-atomic-updates
+	} else if (loginRequest?.status === HttpCode.ACCEPTED) {
+		 
 		twoFARequired.value = true;
 		otpBackupEnabled.value = loginRequest.response.twoFABackup;
 		snackbarModule().$reset();
-	}
-	else {
+	} else {
 		cancel();
 	}
 	loading.value = false;
@@ -252,12 +258,12 @@ const signin = async (): Promise<void> => {
 const rules = {
 	email: {
 		email,
-		required,
+		required
 	},
 	password: {
 		required,
 		minLen: minLength(12)
-	},
+	}
 };
 const v$ = useVuelidate(rules, user);
 

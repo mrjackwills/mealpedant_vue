@@ -72,7 +72,7 @@ import {
 	mdiClose,
 	mdiEmail,
 	mdiLock,
-	mdiKeyboard,
+	mdiKeyboard
 } from '@mdi/js';
 import { passwordCheck } from '@/vanillaTS/hibp';
 import { snackSuccess } from '@/services/snack';
@@ -105,13 +105,13 @@ const errorMessages = ref({
 	email: '',
 	full_name: '',
 	password: '',
-	invite: '',
+	invite: ''
 });
 const errors = ref({
 	email: false,
 	full_name: false,
 	password: false,
-	invite: false,
+	invite: false
 });
 const passNum = ref(false);
 const textFields = computed(() => {
@@ -121,35 +121,36 @@ const textFields = computed(() => {
 			icon: mdiAccount,
 			label: 'FULL NAME',
 			model: 'full_name' as const,
-			type: 'text',
+			type: 'text'
 		},
 		{
 			autocomplete: 'email',
 			icon: mdiEmail,
 			label: 'EMAIL',
 			model: 'email' as const,
-			type: 'text',
+			type: 'text'
 		},
 		{
 			autocomplete: 'new-password',
 			icon: mdiLock,
 			label: 'PASSWORD',
 			model: 'password' as const,
-			type: 'password',
+			type: 'password'
 		},
 		{
 			autocomplete: 'invite',
 			icon: mdiKeyboard,
 			label: 'INVITE',
 			model: 'invite' as const,
-			type: 'text',
-		},
-	];});
+			type: 'text'
+		}
+	]; 
+});
 const user = ref({
 	email: '',
 	full_name: '',
 	invite: '',
-	password: '',
+	password: ''
 });
 
 onMounted(() => {
@@ -177,7 +178,12 @@ const register = async (): Promise<void> => {
 	const registerRequest = await axios_incognito.register_post(user.value);
 	if (registerRequest) {
 		completed.value = true;
-		snackSuccess({ message: registerRequest, timeout: 20000, closable: false, type: 'success' });
+		snackSuccess({
+			message: registerRequest,
+			timeout: 20000,
+			closable: false,
+			type: 'success' 
+		});
 	}
 	loading.value = false;
 };
@@ -185,14 +191,10 @@ const register = async (): Promise<void> => {
 const rules = {
 	email: {
 		email,
-		required,
+		required
 	},
-	full_name: {
-		required,
-	},
-	invite: {
-		required,
-	},
+	full_name: { required },
+	invite: { required },
 	password: {
 		required,
 		minLen: minLength(12)
@@ -229,8 +231,7 @@ watch(watcher_password, () => {
 	else if (user.value.email && user.value.password) {
 		const a = user.value.email.toLowerCase().trim().split('@')[0];
 		if (a && user.value.password.toLowerCase().includes(a)) errors.value.password = true;
-	}
-	else if (!v$.value.user?.password?.$invalid && !passNum.value) errorMessages.value.password = '';
+	} else if (!v$.value.user?.password?.$invalid && !passNum.value) errorMessages.value.password = '';
 	else if (!v$.value.user?.password?.$dirty) return;
 	else if (!v$.value.user?.password?.required) errorMessages.value.password = 'password required';
 	else if (!v$.value.user?.password?.minLength) errorMessages.value.password = '12 characters minimum';

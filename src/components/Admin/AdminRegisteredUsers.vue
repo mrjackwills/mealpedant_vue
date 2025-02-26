@@ -196,11 +196,11 @@
 <script setup lang='ts'>
 import { axios_admin } from '@/services/axios';
 import { mdiClose, mdiChevronDown, mdiChevronUp } from '@mdi/js';
-import { snackError, } from '@/services/snack';
+import { snackError } from '@/services/snack';
 import type { TAdminSession, TAllUserInfo } from '@/types';
 import type { VDataTableRow } from 'vuetify/components/VDataTable';
 
-const expandedEmail = ref(undefined as undefined|string);
+const expandedEmail = ref(undefined as undefined | string);
 const expandedRow = ref(false);
 
 const sessionData = ref([] as Array<TAdminSession>);
@@ -219,7 +219,7 @@ const getSessions = async (email: string): Promise<void> => {
 };
 
 // DataTableItem isn't exported in an easy way, hence this
-type item = NonNullable<VDataTableRow['$props']['item']>
+type item = NonNullable<VDataTableRow['$props']['item']>;
 
 const showRow = async (email: string, fn: (x: item) => void, da: item): Promise<void> => {
 
@@ -229,16 +229,16 @@ const showRow = async (email: string, fn: (x: item) => void, da: item): Promise<
 		expandedRow.value = false;
 	} else if (!expandedEmail.value && !expandedRow.value) {
 		await getSessions(email);
-		// eslint-disable-next-line require-atomic-updates
+		 
 		expandedEmail.value = email;
-		// eslint-disable-next-line require-atomic-updates
+		 
 		expandedRow.value = true;
 		fn(da);
 	} else if (expandedEmail.value !== email && expandedRow.value) {
 		await getSessions(email);
-		// eslint-disable-next-line require-atomic-updates
+		 
 		expandedEmail.value = email;
-		// eslint-disable-next-line require-atomic-updates
+		 
 		expandedRow.value = true;
 
 	}
@@ -266,68 +266,71 @@ const registeredUsersHeaders = [
 		title: 'Active',
 		value: 'active',
 		align: 'start',
-		sortable: true,
+		sortable: true
 		// width: '8%',
 	},
 	{
 		title: 'Email',
 		value: 'email',
 		align: 'start',
-		sortable: true,
+		sortable: true
 		// width: '30%',
 	},
 	{
 		title: 'Admin',
 		value: 'admin',
 		align: 'start',
-		sortable: true,
+		sortable: true
 		// width: '8%',
 	},
 	{
 		title: '2FA',
 		value: 'tfa',
 		align: 'start',
-		sortable: false,
+		sortable: false
 		// width: '8%',
 	},
 	{
 		title: 'Attempts',
 		value: 'login_attempt_number',
 		align: 'start',
-		sortable: false,
+		sortable: false
 		// width: '8%',
 	},
 	{
 		title: 'Last Attempt',
 		value: 'last',
 		align: 'start',
-		sortable: false,
+		sortable: false
 		// width: '10%',
 	},
 	{
 		title: 'Sessions',
 		value: 'sessions',
 		align: 'start',
-		sortable: false,
+		sortable: false
 		// width: '8%',
 	},
 	{
 		title: 'Password Reset',
 		value: 'passwordReset',
 		align: 'start',
-		sortable: false,
-	},
-]as const;
+		sortable: false
+	}
+] as const;
 
 const toggleDrawer = (status: boolean): void => {
 	drawerModule().set_disabled(status);
 };
 
 const activeSessionsIcon = (email: string): string => {
-	return expandedEmail.value === email && expandedRow.value ? mdiChevronUp: mdiChevronDown;
+	return expandedEmail.value === email && expandedRow.value ? mdiChevronUp : mdiChevronDown;
 };
-const resetAttempt = async (email: string) : Promise<void> => {
-	await axios_admin.user_patch({ patch: { attempt: true }, email });
+const resetAttempt = async (email: string): Promise<void> => {
+	await axios_admin.user_patch({
+		patch: { attempt: true },
+		email 
+	});
 	await axios_admin.user_get();
 };
 		

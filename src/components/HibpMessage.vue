@@ -16,7 +16,7 @@ import { useDisplay } from 'vuetify';
 const { mdAndDown } = useDisplay();
 
 const pSize = computed((): string => {
-	return mdAndDown? 'text-caption': 'text-body-2';
-},
+	return mdAndDown ? 'text-caption' : 'text-body-2';
+}
 );
 </script>

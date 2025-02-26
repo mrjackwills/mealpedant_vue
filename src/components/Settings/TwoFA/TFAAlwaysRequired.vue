@@ -73,12 +73,18 @@ const loading = computed({
 
 const confirm_function = async (authObject: TAuthObject): Promise<void> => {
 	loading.value = true;
-	const success = await axios_authenticatedUser.setupTwoFA_patch({ ...authObject, always_required: false });
-	if (success) snackSuccess({ message: 'Extra Two Factor Authentication prompts removed', icon: mdiDeleteCircle });
+	const success = await axios_authenticatedUser.setupTwoFA_patch({
+		...authObject,
+		always_required: false 
+	});
+	if (success) snackSuccess({
+		message: 'Extra Two Factor Authentication prompts removed',
+		icon: mdiDeleteCircle 
+	});
 	loading.value = false;
 };
 
-const show_dialog = ():void => {
+const show_dialog = (): void => {
 
 	dialoger({
 		message: 'Are you sure you want to remove the extra Two Factor Authentication prompts?',

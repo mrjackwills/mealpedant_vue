@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { dexieDB } from '@/services/dexieDb';
-import { ModuleName } from '@/types/enum_module';
+import { ModuleName } from '@/types/const_module';
 import { getActivePinia } from 'pinia';
 
 export const userModule = defineStore(ModuleName.User, {
@@ -50,7 +50,7 @@ export const userModule = defineStore(ModuleName.User, {
 	
 	persist: {
 		storage: localStorage,
-		pick: [ 'authenticated' ],
-	},
+		pick: [ 'authenticated' ]
+	}
 
 });

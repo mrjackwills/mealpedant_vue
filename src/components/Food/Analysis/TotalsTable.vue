@@ -104,14 +104,14 @@ const categoriesHeaders = [
 		title: 'Dave',
 		key: 'Dave',
 		align: 'start',
-		sortable: false,
+		sortable: false
 	},
 	{
 		title: 'Jack',
 		key: 'Jack',
 		align: 'start',
-		sortable: false,
-	},
+		sortable: false
+	}
 ] as const;
 
 const percentage = (Dave: string, Jack: string, person: boolean): string => {
@@ -120,10 +120,10 @@ const percentage = (Dave: string, Jack: string, person: boolean): string => {
 };
 const strikeThroughMethod = (person: 'J' | 'D'): string => {
 	switch (person) {
-	case 'D':
-		return Dave.value ? '' : 'np';
-	case 'J':
-		return Jack.value ? '' : 'np';
+		case 'D':
+			return Dave.value ? '' : 'np';
+		case 'J':
+			return Jack.value ? '' : 'np';
 	}
 };
 
@@ -152,11 +152,10 @@ const computedTypeItems = computed((): TCategoryTotals => {
 			type: 'vegetarian',
 			D: 0,
 			J: 0
-		},
+		}
 	];
 	for (const item of mealsModule().meals) {
 		for (const person of [ 'J' as const, 'D' as const ]) {
-			item[person];
 			for (const t of [ 'r' as const, 't' as const, 'v' as const ]) {
 				if (item?.[person]?.[t]) {
 					const totalsIndex = totals.findIndex((o) => o.type.toLowerCase().startsWith(t));

@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { genesisDate } from '@/vanillaTS/globalConst';
-import { ModuleName } from '@/types/enum_module';
+import { ModuleName } from '@/types/const_module';
 import type { u, su, TPerson } from '@/types';
 
 const date_end = new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 10);
@@ -19,11 +19,11 @@ export const foodModule = defineStore(ModuleName.Food, {
 		dialog: false,
 		Jack: true,
 		original: true,
-		photo_date: <su> undefined,
+		photo_date: undefined as su,
 		photo_disabled: false,
-		photo_person: <u<TPerson>> undefined,
-		photo_url_converted: <su> undefined,
-		photo_url_original: <su> undefined,
+		photo_person: undefined as u<TPerson>,
+		photo_url_converted: undefined as su,
+		photo_url_original: undefined as su
 	}),
 
 	actions: {

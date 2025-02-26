@@ -72,15 +72,20 @@ const browserHasIndexedDB = async (): Promise<void> => {
 	try {
 		const dbname = 'testDb';
 		const test_db = window.indexedDB.open(dbname);
-		test_db.onerror = async () : Promise<void> => {
+		test_db.onerror = async (): Promise<void> => {
 			await userModule().clientSideSignout();
-			snackError({ message: 'IndexDB not available on your browser', closable: false });
+			snackError({
+				message: 'IndexDB not available on your browser',
+				closable: false 
+			});
 			window.indexedDB.deleteDatabase(dbname);
 		};
 		window.indexedDB.deleteDatabase(dbname);
-	}
-	catch (e) {
-		snackError({ message: 'IndexDB error', closable: false });
+	} catch (_e) {
+		snackError({
+			message: 'IndexDB error',
+			closable: false 
+		});
 
 	}
 };
@@ -129,14 +134,17 @@ useHead({
 			}
 		}
 	],
-	link: () => [ { rel: 'canonical', href: `https://www.mealpedant.com${route?.path}` } ]
+	link: () => [ {
+		rel: 'canonical',
+		href: `https://www.mealpedant.com${route?.path}` 
+	} ]
 });
 
 const appUpdate = (): void => {
 	snackSuccess({
 		message: 'Downloading Updates',
 		loading: true,
-		timeout: 4500,
+		timeout: 4500
 	});
 	window.setTimeout(() => updateServiceWorker(), 5000);
 	

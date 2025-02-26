@@ -37,7 +37,7 @@ const categorySearch = (): void => {
 	if (!selectedCategory.value) return;
 	const sc = selectedCategory.value.toUpperCase();
 	const newMealArray: Array<TPiniaDateMeal> = [];
-	const filteredTypes: Set<TMealType> = new Set();
+	const filteredTypes = new Set<TMealType>();
 	for (const item of mealsModule().meals) {
 		const Dc = item.D?.c;
 		const Jc = item.J?.c;

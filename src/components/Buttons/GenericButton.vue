@@ -32,55 +32,53 @@ import { useDisplay } from 'vuetify';
 const { lgAndUp } = useDisplay();
 
 const showHideIcon = computed((): string => {
-	return buttonSection.value ? mdiChevronUp: mdiChevronDown;
+	return buttonSection.value ? mdiChevronUp : mdiChevronDown;
 });
 
-const buttonIcon = computed(() :string => {
+const buttonIcon = computed((): string => {
 	switch (props.buttonName) {
-	case 'analysis':
-		return mdiPoll;
-	case 'date':
-		return mdiCalendarRange;
-	case 'filters':
-		return mdiFilter;
-	default:
-		return mdiMagnify;
+		case 'analysis':
+			return mdiPoll;
+		case 'date':
+			return mdiCalendarRange;
+		case 'filters':
+			return mdiFilter;
+		default:
+			return mdiMagnify;
 	}
 });
 const buttonSection = computed({
 	get (): boolean {
 		switch (props.buttonName) {
-		case 'analysis':
-			return foodModule().button_analysis;
-		case 'date':
-			return foodModule().button_date;
-		case 'filters':
-			return foodModule().button_filters;
-		default:
-			return foodModule().button_search;
+			case 'analysis':
+				return foodModule().button_analysis;
+			case 'date':
+				return foodModule().button_date;
+			case 'filters':
+				return foodModule().button_filters;
+			default:
+				return foodModule().button_search;
 		}
 	},
 	set (b: boolean): void {
 		switch (props.buttonName) {
-		case 'analysis':
-			foodModule().set_button_analysis(b);
-			break;
-		case 'date':
-			foodModule().set_button_date(b);
-			break;
-		case 'filters':
-			foodModule().set_button_filters(b);
-			break;
-		default:
-			foodModule().set_button_search(b);
-			break;
+			case 'analysis':
+				foodModule().set_button_analysis(b);
+				break;
+			case 'date':
+				foodModule().set_button_date(b);
+				break;
+			case 'filters':
+				foodModule().set_button_filters(b);
+				break;
+			default:
+				foodModule().set_button_search(b);
+				break;
 		}
 	}
 });
 
-const props = defineProps<{
-	buttonName: string,
-}>();
+const props = defineProps<{ buttonName: string }>();
 
 </script>
 

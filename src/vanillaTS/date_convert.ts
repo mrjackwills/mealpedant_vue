@@ -1,6 +1,4 @@
-interface Months {
-	[key: string]: string
-  }
+type Months = Record<string, string>;
 const months: Months = {
 	Jan: `01`,
 	Feb: `02`,

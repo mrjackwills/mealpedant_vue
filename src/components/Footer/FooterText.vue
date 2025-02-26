@@ -94,7 +94,7 @@ const buildDate = computed((): string => {
 	return env.build_date;
 });
 const copyrightOrder = computed((): string => {
-	return mdAndUp.value && !authed.value ? '2' : '1' ;
+	return mdAndUp.value && !authed.value ? '2' : '1';
 });
 const copyrightMargin = computed((): string => {
 	return smAndDown.value ? 'mr-1' : 'mx-1';

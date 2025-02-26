@@ -28,8 +28,7 @@ const searchTerm = computed({
 		if (s) {
 			const a = s.replaceAll(/[^a-z ]+/g, '');
 			selectorsModule().set_searchTerm(a.toLowerCase().trim());
-		}
-		else reset();
+		} else reset();
 	}
 });
 
@@ -51,8 +50,8 @@ const textSearch = (): void => {
 	const st = searchTerm.value?.toLowerCase();
 	const currentMealArray = mealsModule().meals;
 	const newMealArray: Array<TPiniaDateMeal> = [];
-	const filteredTypes: Set<TMealType> = new Set();
-	const filteredCategories: Set<TCategory> = new Set();
+	const filteredTypes = new Set<TMealType>();
+	const filteredCategories = new Set<TCategory>();
 	pageTitle.value = `search: ${st}`;
 
 	for (const item of currentMealArray) {
@@ -75,8 +74,7 @@ const textSearch = (): void => {
 			if (item.J?.r || item.D?.r) filteredTypes.add('restaurant');
 			if (item.J?.t || item.D?.t) filteredTypes.add('takeout');
 			if (item.J?.v || item.D?.v) filteredTypes.add('vegetarian');
-		}
-		else if (Dd || Dc) {
+		} else if (Dd || Dc) {
 			newMealArray.push(
 				{
 					da: item.da,
@@ -90,8 +88,7 @@ const textSearch = (): void => {
 			if (item.D?.r) filteredTypes.add('restaurant');
 			if (item.D?.t) filteredTypes.add('takeout');
 			if (item.D?.v) filteredTypes.add('vegetarian');
-		}
-		else if (Jd || Jc) {
+		} else if (Jd || Jc) {
 			newMealArray.push(
 				{
 					da: item.da,

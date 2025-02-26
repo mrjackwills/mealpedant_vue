@@ -33,18 +33,21 @@ import type { TAdminPatch } from '@/types';
 import { mdiContentSave } from '@mdi/js';
 
 const disabled = computed((): boolean => {
-	return props.removeOnly && !props.active ? true: false;
+	return props.removeOnly && !props.active ? true : false;
 });
 const showSave = computed((): boolean => {
 	return props.removeOnly ? !newActive.value && newActive.value !== props.active : newActive.value !== props.active;
 });
 
-const newActive = ref(false as boolean|number);
+const newActive = ref(false as boolean | number);
 
 const save = async (): Promise<void> => {
 	if (props.patchName) {
 		// TODO type error here, not sure why need to cast
-		await axios_admin.user_patch({ patch: { [props.patchName ]: newActive.value }, email: props.email } as TAdminPatch);
+		await axios_admin.user_patch({
+			patch: { [props.patchName ]: newActive.value },
+			email: props.email 
+		} as TAdminPatch);
 		await axios_admin.user_get();
 	}
 };
@@ -55,14 +58,14 @@ onBeforeMount(() => {
 });
 
 const props = withDefaults(defineProps<{
-	active?: boolean,
-	email: string,
-	removeOnly?: boolean,
-	patchName?: 'active' |'two_fa_secret'
-	readOnly?: boolean,
+	active?: boolean;
+	email: string;
+	removeOnly?: boolean;
+	patchName?: 'active' | 'two_fa_secret';
+	readOnly?: boolean;
 }>(), {
 	removeOnly: false,
-	readOnly: false,
+	readOnly: false
 });
 
 </script>

@@ -95,7 +95,7 @@ ask_changelog_update() {
 	RELEASE_BODY_TEXT=$(sed '/# <a href=/Q' CHANGELOG.md)
 	printf "%s" "$RELEASE_BODY_TEXT"
 	printf "\n%s\n" "${STAR_LINE}"
-	if ask_yn "accept release body";then 
+	if ask_yn "accept release body"; then
 		update_release_body_and_changelog "$RELEASE_BODY_TEXT"
 	else
 		exit
@@ -175,7 +175,8 @@ check_tag() {
 			break
 			;;
 		*)
-			error_close "invalid option $REPLY"
+			echo -e "\n\"${REPLY}\" ${RED}- invalid option. Please select 1, 2, or 3.${RESET}"
+			continue
 			;;
 		esac
 	done

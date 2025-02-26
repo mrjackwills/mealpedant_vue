@@ -16,22 +16,18 @@ const customDarkTheme: ThemeDefinition = {
 		dark: '#1e1e1e',
 		navmenu: '#363636',
 		appbar: '#272727'
-	},
+	}
 };
 
 export default createVuetify({
 	icons: {
 		defaultSet: 'mdi',
 		aliases,
-		sets: {
-			mdi,
-		},
+		sets: { mdi }
 	},
 	
 	theme: {
 		defaultTheme: 'customDarkTheme',
-		themes: {
-			customDarkTheme,
-		},
-	},
+		themes: { customDarkTheme }
+	}
 });

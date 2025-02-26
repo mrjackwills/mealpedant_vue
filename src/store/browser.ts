@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { ModuleName } from '@/types/enum_module';
+import { ModuleName } from '@/types/const_module';
 import type { su } from '@/types';
 
 export const browserModule = defineStore(ModuleName.Browser, {
@@ -10,7 +10,7 @@ export const browserModule = defineStore(ModuleName.Browser, {
 		init: false,
 		online: true,
 		pageTitle: '',
-		pwa: false,
+		pwa: false
 	}),
 
 	actions: {
@@ -20,7 +20,7 @@ export const browserModule = defineStore(ModuleName.Browser, {
 		},
 
 		set_description (x: string) {
-			this.description =x;
+			this.description = x;
 		},
 	
 		set_init (x: boolean) {

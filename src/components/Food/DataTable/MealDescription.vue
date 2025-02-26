@@ -36,7 +36,7 @@ import { mdiCamera } from '@mdi/js';
 import type { TPerson, TPhoto, u } from '@/types';
 
 import { useDisplay } from 'vuetify';
-import { FrontEndRoutes } from '@/types/enum_routes';
+import { FrontEndRoutes } from '@/types/const_routes';
 const { mdAndDown } = useDisplay();
 
 const admin = computed((): boolean => {
@@ -46,7 +46,7 @@ const categoryColor = computed((): string => {
 	return props.person === 'D' ? 'text-primary ' : 'text-secondary';
 });
 const computedFont = computed((): string => {
-	return mdAndDown ? '': 'text-body-1';
+	return mdAndDown ? '' : 'text-body-1';
 });
 const photoDate = computed({
 	get (): u<string> {
@@ -86,7 +86,7 @@ const router = useRouter();
 const goToEdit = (): void => {
 	if (admin.value) {
 
-		const person = props.person === 'D'? 'Dave': 'Jack';
+		const person = props.person === 'D' ? 'Dave' : 'Jack';
 		adminModule().set_person(person);
 		adminModule().set_date(props.date);
 		router.push(FrontEndRoutes.EDITMEAL);
@@ -96,20 +96,20 @@ const goToEdit = (): void => {
 const showPhoto = (i: TPhoto, d: string, p: string): void => {
 	foodModule().set_dialog(true);
 	photoDate.value = d;
-	photoPerson.value = p === 'D' ? 'Dave': 'Jack';
+	photoPerson.value = p === 'D' ? 'Dave' : 'Jack';
 	photoUrlConverted.value = `/converted/${i.c}`;
 	photoUrlOriginal.value = `/original/${i.o}`;
 };
 
 const props = withDefaults(defineProps<{
-	category: string,
-	date: string,
-	description: string,
-	person: string,
-	photo?: TPhoto,
-	restaurant?: boolean,
-	takeaway?: boolean,
-	vegetarian?: boolean,
+	category: string;
+	date: string;
+	description: string;
+	person: string;
+	photo?: TPhoto;
+	restaurant?: boolean;
+	takeaway?: boolean;
+	vegetarian?: boolean;
 }>(), {
 	restaurant: false,
 	takeaway: false,

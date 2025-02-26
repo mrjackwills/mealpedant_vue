@@ -76,7 +76,7 @@
 
 <script setup lang='ts'>
 import { axios_incognito } from '@/services/axios';
-import { FrontEndRoutes } from '@/types/enum_routes';
+import { FrontEndRoutes } from '@/types/const_routes';
 import { mdiCached, mdiLock, mdiLockReset, mdiEyeOff, mdiEye, mdiCellphoneInformation } from '@mdi/js';
 import { minLength, required } from '@vuelidate/validators';
 import { passwordCheck } from '@/vanillaTS/hibp';
@@ -96,7 +96,7 @@ const disabled = computed((): boolean => {
 });
 
 const fontSize = computed((): string => {
-	return mdAndDown.value ? 'text-subtitle-1': 'text-h5';
+	return mdAndDown.value ? 'text-subtitle-1' : 'text-h5';
 });
 const loading = computed({
 	get (): boolean {
@@ -106,22 +106,22 @@ const loading = computed({
 		loadingModule().set_loading(b);
 	}
 });
-const resetId = computed((): string|undefined => {
+const resetId = computed((): string | undefined => {
 	return resetPasswordModule().id;
 });
 const twoFA_active = computed((): boolean => {
 	return resetPasswordModule().two_fa_active;
 });
-const textFields = computed(() :Array<TResetPassword> => {
+const textFields = computed((): Array<TResetPassword> => {
 	return [
 		{
 			autocomplete: 'new-password',
 			icon: mdiLock,
 			label: 'new password',
 			model: 'new_password' as const,
-			type: new_passwordVisible.value? 'text' : 'password',
-			appendIcon: new_passwordVisible.value ? mdiEyeOff : mdiEye,
-		},
+			type: new_passwordVisible.value ? 'text' : 'password',
+			appendIcon: new_passwordVisible.value ? mdiEyeOff : mdiEye
+		}
 	];
 });
 const watcher_password = computed((): string =>{
@@ -144,12 +144,12 @@ const tokenFields = ref([
 		clearable: true,
 		icon: mdiCellphoneInformation,
 		label: '2FA code',
-		model: 'token' as const,
-	},
+		model: 'token' as const
+	}
 ]);
 const user = ref({
 	new_password: '',
-	token: undefined as u<string>,
+	token: undefined as u<string>
 });
 
 onMounted(() => {
@@ -184,19 +184,25 @@ const reset = async (): Promise<void> => {
 		token: false,
 		new_password: false
 	};
-	const success = await axios_incognito.reset_patch({ resetId: resetId.value, password: user.value.new_password, token: user.value.token });
+	const success = await axios_incognito.reset_patch({
+		resetId: resetId.value,
+		password: user.value.new_password,
+		token: user.value.token 
+	});
 	loading.value = false;
 	if (success) {
 		completed.value = true;
 		router.push(FrontEndRoutes.SIGNIN);
-		router;
-		snackSuccess({ message: 'Password changed', timeout: 10000, icon: mdiLockReset });
-	}
-	else {
-		// eslint-disable-next-line require-atomic-updates
+		snackSuccess({
+			message: 'Password changed',
+			timeout: 10000,
+			icon: mdiLockReset 
+		});
+	} else {
+		 
 		user.value.new_password = '';
 		if (twoFA_active.value) {
-			// eslint-disable-next-line require-atomic-updates
+			 
 			user.value.token = '';
 			errorMessages.value.token = 'invalid token';
 		}
@@ -212,7 +218,7 @@ watch(watcher_password, () => {
 	else if (!v$.value.user?.new_password?.minLength) errorMessages.value.new_password = '12 characters minimum';
 });
 	
-const rules ={
+const rules = {
 	new_password: {
 		required,
 		minLen: minLength(12)

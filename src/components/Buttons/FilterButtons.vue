@@ -77,7 +77,7 @@ const original = computed({
 	}
 });
 const personDisabled = computed((): boolean => {
-	return Dave.value && Jack.value? false: true;
+	return Dave.value && Jack.value ? false : true;
 });
 const photoDisabled = computed({
 	get (): boolean {
@@ -104,7 +104,7 @@ const buttonFields = computed(() => {
 			icon: mdiAccountOutline,
 			text: 'Dave',
 			color: 'primary',
-			variant: Dave.value ? 'flat': 'outlined'
+			variant: Dave.value ? 'flat' : 'outlined'
 		},
 		{
 			disabled: 'personDisabled' as TFilterDisabled,
@@ -112,7 +112,7 @@ const buttonFields = computed(() => {
 			icon: mdiAccountOutline,
 			text: 'Jack',
 			color: 'secondary',
-			variant: Jack.value ? 'flat': 'outlined'
+			variant: Jack.value ? 'flat' : 'outlined'
 		},
 		{
 			disabled: 'original' as TFilterDisabled,
@@ -121,7 +121,7 @@ const buttonFields = computed(() => {
 			text: 'reset',
 			// color: Jack.value? 'secondary':''
 			color: 'error',
-			variant: disabled('original')? 'outlined' :'flat'
+			variant: disabled('original') ? 'outlined' : 'flat'
 		}
 	] as const;
 });
@@ -130,30 +130,30 @@ const buttonFields = computed(() => {
 // 	methods: {
 const disabled = (x: TFilterDisabled): boolean => {
 	switch (x) {
-	case 'original':
-		return original.value;
-	case 'photoDisabled':
-		return photoDisabled.value;
-	case 'personDisabled':
-		return personDisabled.value;
+		case 'original':
+			return original.value;
+		case 'photoDisabled':
+			return photoDisabled.value;
+		case 'personDisabled':
+			return personDisabled.value;
 	}
 };
 const click = (x: TFilterClick): void => {
 	switch (x) {
-	case 'reset':
-		resetFilters();
-		break;
-	case 'removeDave':
-		removeDave();
-		break;
-	case 'removeJack':
-		removeJack();
-		break;
-	case 'removePhotos':
-		removePhotos();
-		break;
-	default:
-		break;
+		case 'reset':
+			resetFilters();
+			break;
+		case 'removeDave':
+			removeDave();
+			break;
+		case 'removeJack':
+			removeJack();
+			break;
+		case 'removePhotos':
+			removePhotos();
+			break;
+		default:
+			break;
 	}
 };
 const removeJack = (): void => {
@@ -165,8 +165,8 @@ const removeDave = (): void => {
 
 const removePerson = (person: 'Jack' | 'Dave'): void => {
 	const newMealArray: Array<TPiniaDateMeal> = [];
-	const filteredTypes: Set<TMealType> = new Set();
-	const filteredCategories: Set<TCategory> = new Set();
+	const filteredTypes = new Set<TMealType>();
+	const filteredCategories = new Set<TCategory>();
 	const personFirstLetter = person.substring(0, 1) as 'J' | 'D';
 
 	for (const item of mealsModule().meals) {
@@ -194,8 +194,8 @@ const removePerson = (person: 'Jack' | 'Dave'): void => {
 };
 const removePhotos = (): void => {
 	const newMealArray: Array<TPiniaDateMeal> = [];
-	const filteredTypes: Set<TMealType> = new Set();
-	const filteredCategories: Set<TCategory> = new Set();
+	const filteredTypes = new Set<TMealType>();
+	const filteredCategories = new Set<TCategory>();
 
 	for (const item of mealsModule().meals) {
 		if (item.D?.p && item.J?.p) {
@@ -213,8 +213,7 @@ const removePhotos = (): void => {
 			if (item.J?.r || item.D?.r) filteredTypes.add('restaurant');
 			if (item.J?.t || item.D?.t) filteredTypes.add('takeout');
 			if (item.J?.v || item.D?.v) filteredTypes.add('vegetarian');
-		}
-		else if (item.D?.p) {
+		} else if (item.D?.p) {
 			newMealArray.push(
 				{
 					da: item.da,
@@ -228,8 +227,7 @@ const removePhotos = (): void => {
 			if (item.D?.r) filteredTypes.add('restaurant');
 			if (item.D?.t) filteredTypes.add('takeout');
 			if (item.D?.v) filteredTypes.add('vegetarian');
-		}
-		else if (item.J?.p) {
+		} else if (item.J?.p) {
 			newMealArray.push(
 				{
 					da: item.da,

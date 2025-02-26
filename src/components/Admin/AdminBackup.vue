@@ -96,14 +96,14 @@ const headers = [
 		align: 'end',
 		sortable: true,
 		value: 'file_size',
-		width: '15%',
+		width: '15%'
 	},
 	{
 		title: 'delete',
 		align: 'end',
 		sortable: false,
 		width: '15%'
-	},
+	}
 ] as const;
 const localLoading = ref(false);
 const withPhotos = ref(true);
@@ -117,11 +117,15 @@ const createBackup = async (): Promise<void> => {
 	const response = await axios_admin.backup_post(withPhotos.value);
 	if (response) {
 		await axios_admin.backup_get();
-		snackSuccess({ message: 'New backup created', icon: mdiCloudCheck });
+		snackSuccess({
+			message: 'New backup created',
+			icon: mdiCloudCheck 
+		});
 	}
 	loading.value = false;
 	localLoading.value = false;
 };
+
 /**
 ** Request to delete selected backupfile, automatically refreshes backup file list
 * @param {string} filename valid filename of format /^mealpedant_\d{4}-\d{2}-\d{2}_\d{2}\.\d{2}\.\d{2}_(PHOTOS_)?SQL_REDIS_LOGS_[0-9a-fA-F]{8}\.tar\.gpg$/
@@ -132,11 +136,15 @@ const deleteFile = async (fileName: string): Promise<void> => {
 	const response = await axios_admin.backup_delete(fileName);
 	if (response) {
 		await axios_admin.backup_get();
-		snackSuccess({ message: `DELETED: ${fileName}`, icon: mdiDeleteCircleOutline });
+		snackSuccess({
+			message: `DELETED: ${fileName}`,
+			icon: mdiDeleteCircleOutline 
+		});
 	}
-	// eslint-disable-next-line require-atomic-updates
+	 
 	loading.value = false;
-} ;
+};
+
 /*
 ** Add href to body of backup link, then click to download
 * @param {string} filename valid filename of format /^mealpedant_\d{4}-\d{2}-\d{2}_\d{2}\.\d{2}\.\d{2}_(PHOTOS_)?SQL_REDIS_LOGS_[0-9a-fA-F]{8}\.tar\.gpg$/

@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { ModuleName } from '@/types/enum_module';
+import { ModuleName } from '@/types/const_module';
 import type { su } from '@/types';
 
 export const twoFAModule = defineStore(ModuleName.TwoFa, {
@@ -10,7 +10,7 @@ export const twoFAModule = defineStore(ModuleName.TwoFa, {
 		backupProcess: false,
 		backup_count: 0,
 		secret: undefined as su,
-		setupProcessStarted: false,
+		setupProcessStarted: false
 
 	}),
 

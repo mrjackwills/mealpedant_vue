@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { ModuleName } from '@/types/enum_module';
+import { ModuleName } from '@/types/const_module';
 import type { su } from '@/types';
 
 export const resetPasswordModule = defineStore(ModuleName.ResetPassword, {
@@ -7,7 +7,7 @@ export const resetPasswordModule = defineStore(ModuleName.ResetPassword, {
 	state: () => ({
 		id: undefined as su,
 		two_fa_active: false,
-		two_fa_backup: 0,
+		two_fa_backup: 0
 	}),
 
 	actions: {

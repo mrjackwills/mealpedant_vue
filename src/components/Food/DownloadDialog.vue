@@ -52,7 +52,7 @@ import { useDisplay } from 'vuetify';
 const { lgAndUp, mdAndDown, mdAndUp } = useDisplay();
 
 const maxWidth = computed((): string => {
-	return 	mdAndUp.value? '60vw' : '100vw';
+	return 	mdAndUp.value ? '60vw' : '100vw';
 });
 
 const dialog = computed({
@@ -80,7 +80,7 @@ const photoUrlOriginal = computed((): su => {
 	return foodModule().photo_url_original;
 });
 const iconSize = computed((): string => {
-	return lgAndUp.value ? 'large' : mdAndDown.value? 'small' :'';
+	return lgAndUp.value ? 'large' : mdAndDown.value ? 'small' : '';
 });
 const spinnerSize = computed((): string => {
 	return mdAndDown.value ? '16' : '32';
@@ -89,7 +89,7 @@ const spinnerWidth = computed((): string => {
 	return mdAndDown.value ? '2' : '4';
 });
 const textColor = computed((): string => {
-	return photoPerson.value ==='Dave' ? 'primary': 'secondary';
+	return photoPerson.value === 'Dave' ? 'primary' : 'secondary';
 });
 const textColorClass = computed((): string => {
 	return textColor.value === 'primary' ? 'black--text' : '';
@@ -114,14 +114,14 @@ const localLoading = ref(false);
 
 const click = (x: 'closeDialog' | 'downloadOriginalFromStatic'): void => {
 	switch (x) {
-	case 'closeDialog':
-		closeDialog();
-		break;
-	case 'downloadOriginalFromStatic':
-		downloadOriginalFromStatic();
-		break;
+		case 'closeDialog':
+			closeDialog();
+			break;
+		case 'downloadOriginalFromStatic':
+			downloadOriginalFromStatic();
+			break;
 	}
-} ;
+};
 
 const closeDialog = (): void => {
 	dialog.value = false;

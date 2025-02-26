@@ -104,6 +104,7 @@ const clearTimeouts = (): void => {
 	clearInterval(secondsInterval.value);
 	clearTimeout(pageTimeout.value);
 };
+
 /**
 ** Execute named method, used in v-for iterations
 * @param {string} method Valid method name in this component
@@ -125,13 +126,19 @@ const restartDialog = async (): Promise<void> => {
 
 	});
 };
+
 /**
 ** Send axios request to restart app, if no error, refresh memory stats with snack
 * @param {Object} AuthObject - {password: string, token?:string, twoFABackup?:boolean}
 */
 const restartServer = async (authObject: TAuthObject): Promise<void> => {
 	loading.value = true;
-	snackSuccess({ message: `Restarting server`, loading: true, type: 'info', timeout: 4000 });
+	snackSuccess({
+		message: `Restarting server`,
+		loading: true,
+		type: 'info',
+		timeout: 4000 
+	});
 	pageTimeout.value = window.setTimeout(() => axios_admin.memory_get(), 5000);
 	await axios_admin.restart_put(authObject);
 	loading.value = false;

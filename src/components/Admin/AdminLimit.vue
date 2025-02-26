@@ -50,8 +50,8 @@ const headers = [
 	{
 		title: 'clear',
 		align: 'end',
-		sortable: false,
-	},
+		sortable: false
+	}
 ] as const;
 
 const clearLimit = async (key: string): Promise<void> => {

@@ -1,11 +1,9 @@
 import { defineStore } from 'pinia';
-import { ModuleName } from '@/types/enum_module';
+import { ModuleName } from '@/types/const_module';
 import type { TInfobarmessage } from '@/types';
 
 export const infobarModule = defineStore(ModuleName.Infobar, {
-	state: () => ({
-		messages: [] as Array<TInfobarmessage>
-	}),
+	state: () => ({ messages: [] as Array<TInfobarmessage> }),
 
 	actions: {
 		add_message (x: TInfobarmessage) {

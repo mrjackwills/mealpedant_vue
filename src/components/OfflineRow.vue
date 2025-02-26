@@ -43,7 +43,7 @@ const goOnline = async (): Promise<void> => {
 			axios_authenticatedUser.authenticated_get(),
 			axios_authenticatedFood.last_get(),
 			axios_authenticatedFood.all_get(),
-			axios_authenticatedFood.category_get(),
+			axios_authenticatedFood.category_get()
 		]);
 	} catch (e) {
 		const message = e instanceof Error ? e.message : 'ERROR';

@@ -15,7 +15,7 @@
 </template>
 
 <script setup lang='ts'>
-import { FrontEndRoutes } from '@/types/enum_routes';
+import { FrontEndRoutes } from '@/types/const_routes';
 const rows = [
 	{
 		class: 'text-h5',

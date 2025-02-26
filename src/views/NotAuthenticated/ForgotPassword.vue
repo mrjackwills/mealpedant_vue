@@ -84,20 +84,19 @@ const send_disabled = computed(() => {
 const emailErrors = computed((): Array<string> => {
 	const errors: Array<string> = [];
 	if (!v$.value.user?.email?.$dirty) return errors;
-	!v$.value.user?.email?.$dirty && errors.push('email invalid');
-	!v$.value.email?.required && errors.push('email required');
+	if (!v$.value.user?.email?.$dirty) errors.push('email invalid');
+	if (!v$.value.email?.required) errors.push('email required');
 	return errors;
 });
+
 const fontSize = computed((): string => {
-	return mdAndDown? 'text-subtitle-1': 'text-h5';
+	return mdAndDown ? 'text-subtitle-1' : 'text-h5';
 });
 
 const completed = ref(false);
-const user = ref({
-	email: '',
-});
+const user = ref({ email: '' });
 
-let router = useRouter();
+const router = useRouter();
 const touch = (): void => {
 	v$.value.user?.email?.$touch();
 };
@@ -113,7 +112,12 @@ const forgot = async (): Promise<void> => {
 	if (v$.value.$invalid) return;
 	loading.value = true;
 	const resetRequest = await axios_incognito.resetPassword_post(user.value.email);
-	if (resetRequest) snackSuccess({ message: resetRequest, icon: mdiEmail, type: 'success', timeout: 15000 });
+	if (resetRequest) snackSuccess({
+		message: resetRequest,
+		icon: mdiEmail,
+		type: 'success',
+		timeout: 15000 
+	});
 	completed.value = true;
 	loading.value = false;
 };
@@ -127,8 +131,8 @@ onMounted(() => {
 const rules = {
 	email: {
 		email,
-		required,
-	},
+		required
+	}
 };
 const v$ = useVuelidate(rules, user);
 

@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { ModuleName } from '@/types/enum_module';
+import { ModuleName } from '@/types/const_module';
 import type { u, TServerStats, TBackup, TLimit, TAllUserInfo, TLogs } from '@/types';
 
 export const adminModule = defineStore(ModuleName.Admin, {
@@ -12,7 +12,7 @@ export const adminModule = defineStore(ModuleName.Admin, {
 		memory: undefined as u<TServerStats>,
 		registeredUsers: [] as TAllUserInfo,
 		date: '',
-		person: '',
+		person: ''
 	}),
 
 	actions: {
@@ -25,7 +25,7 @@ export const adminModule = defineStore(ModuleName.Admin, {
 		},
 
 		set_email (b: Array<string>) {
-			this.email =b;
+			this.email = b;
 		},
 			
 		set_logs (b: Array<TLogs>) {

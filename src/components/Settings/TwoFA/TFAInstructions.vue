@@ -141,15 +141,14 @@ const cancel = (): void => {
 	Promise.all([
 		axios_authenticatedUser.setupTwoFA_delete(),
 		twoFAModule().set_secret(undefined),
-		twoFAModule().set_setupProcessStarted(false),
+		twoFAModule().set_setupProcessStarted(false)
 	]);
 };
 const verify = async (): Promise<void> => {
 	if (!userToken.value) {
 		errorMessage.value = 'code required';
 		return;
-	}
-	else if (!(/^[0-9]{6}$/).test(userToken.value.replace(/\s/g, ''))) {
+	} else if (!(/^[0-9]{6}$/).test(userToken.value.replace(/\s/g, ''))) {
 		errorMessage.value = 'code invalid';
 		return;
 	}
@@ -159,7 +158,7 @@ const verify = async (): Promise<void> => {
 			axios_authenticatedUser.setupTwoFA_delete(),
 			twoFAModule().set_active(true),
 			twoFAModule().set_secret(undefined),
-			twoFAModule().set_setupProcessStarted(false),
+			twoFAModule().set_setupProcessStarted(false)
 		]);
 		snackSuccess({ message: 'Two Factor Authentication activated' });
 	}

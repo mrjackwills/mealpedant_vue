@@ -1,11 +1,9 @@
 import { defineStore } from 'pinia';
-import { ModuleName } from '@/types/enum_module';
+import { ModuleName } from '@/types/const_module';
 import type { TPiniaDateMeal } from '@/types';
 
 export const mealsModule = defineStore(ModuleName.Meals, {
-	state: () => ({
-		meals: [] as Array<TPiniaDateMeal>,
-	}),
+	state: () => ({ meals: [] as Array<TPiniaDateMeal> }),
 
 	getters: {
 		meals_length (): number {

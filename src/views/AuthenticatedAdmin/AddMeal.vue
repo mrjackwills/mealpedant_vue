@@ -72,9 +72,9 @@
 							v-model.trim='meal.category'
 							@blur='trimCategory'
 							:disabled='completed'
-							:hint="computedSuffix"
+							:hint='computedSuffix'
 							:prepend-icon='mdiFood'
-							class="cat_hint"
+							class='cat_hint'
 							label='CATEGORY'
 							name='category'
 							type='text'
@@ -174,7 +174,7 @@ import type { PV, TPerson } from '@/types';
 import { snackSuccess } from '@/services/snack';
 import useVuelidate from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
-import { FrontEndRoutes } from '@/types/enum_routes';
+import { FrontEndRoutes } from '@/types/const_routes';
 import { genesisDate } from '@/vanillaTS/globalConst';
 import { convert_date } from '@/vanillaTS/date_convert';
 import { useDisplay } from 'vuetify';
@@ -189,6 +189,7 @@ onBeforeUnmount(async ()=> {
 const categories = computed((): Array<string> => {
 	return categoriesModule().sorted_categories_names;
 });
+
 /**
  ** Add suffix to date box label
  */
@@ -197,8 +198,9 @@ const computedDateLabel = computed((): string => {
 	const today = today_long.toISOString().slice(0, 10);
 	const yesterday = new Date(today_long.setDate(today_long.getDate() - 1)).toISOString().substring(0, 10);
 	const text = 'Choose date';
-	return meal.value.date === today ? `${text} - today`: meal.value.date === yesterday ? `${text} - yesterday` : text;
+	return meal.value.date === today ? `${text} - today` : meal.value.date === yesterday ? `${text} - yesterday` : text;
 });
+
 /**
  ** Category name in text field
  **/
@@ -207,18 +209,16 @@ const computedSuffix = computed((): string => {
 	let filteredCategories = '';
 	const inputLength = meal.value.category.length;
 	const input = meal.value.category.toUpperCase().substring(0, inputLength);
-	let index = 0;
 	for (const eachCategory of categories.value) {
 
 		if (eachCategory.substring(0, inputLength) === input) {
-			if (filteredCategories.length ===0 ) {
+			if (filteredCategories.length === 0 ) {
 				filteredCategories += `${eachCategory}`;
-			}else{
+			} else {
 				filteredCategories += `, ${eachCategory}`;
 			}
-			index +=1;
 		}
-}
+	}
 	return filteredCategories;
 });
 
@@ -240,7 +240,7 @@ const mealDate = ref(undefined as undefined | string);
 
 const mealTypes = [ 'restaurant' as const, 'takeaway' as const, 'vegetarian' as const ];
 const completed = ref(false);
-const imageToUpload = ref(undefined as File|undefined);
+const imageToUpload = ref(undefined as File | undefined);
 const imageUrl = ref('');
 const showDate = ref(false);
 const meal = ref({
@@ -248,11 +248,11 @@ const meal = ref({
 	date: new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 10),
 	description: '',
 	person: '' as TPerson,
-	photo_converted: undefined as undefined|string,
-	photo_original: undefined as undefined|string,
+	photo_converted: undefined as undefined | string,
+	photo_original: undefined as undefined | string,
 	restaurant: false,
 	takeaway: false,
-	vegetarian: false,
+	vegetarian: false
 });
 
 watch(mealDate, (i) => {
@@ -262,7 +262,7 @@ watch(mealDate, (i) => {
 	}
 });
 
-const minDate= new Date(genesisDate).toISOString().slice(0, 10);
+const minDate = new Date(genesisDate).toISOString().slice(0, 10);
 
 /**
 ** Add new meal to db
@@ -274,7 +274,11 @@ const addMeal = async (): PV => {
 	const response = await axios_adminMeal.meal_post(meal.value);
 	if (response) {
 		infobarModule().remove_message(infobarMessage);
-		snackSuccess({ message: 'New meal added', type: 'success', icon: mdiPlusCircle });
+		snackSuccess({
+			message: 'New meal added',
+			type: 'success',
+			icon: mdiPlusCircle 
+		});
 		completed.value = true;
 		await router.push(FrontEndRoutes.MEALS);
 	}
@@ -287,15 +291,15 @@ const addMeal = async (): PV => {
 const cancel = async (): PV => {
 	await clear();
 	await router.push(FrontEndRoutes.MEALS);
-} ;
+};
 
 /**
 	 ** When image removed from file input, send a request to delete file from sever
 	 */
 const clear = async (): PV => {
-	loading.value= true;
+	loading.value = true;
 	if (!meal.value.photo_original || !meal.value.photo_converted) {
-		loading.value= false;
+		loading.value = false;
 		return;
 	}
 	const success = await axios_adminPhoto.photo_delete({
@@ -305,36 +309,44 @@ const clear = async (): PV => {
 	if (success) {
 		imageToUpload.value = undefined;
 		imageUrl.value = '';
-		// eslint-disable-next-line require-atomic-updates
+		 
 		meal.value.photo_converted = undefined;
-		// eslint-disable-next-line require-atomic-updates
+		 
 		meal.value.photo_original = undefined;
 	}
-	loading.value= false;
+	loading.value = false;
 };
+
 /**
  ** Upload image to db, return {o: file_name, c:file_name}
  */
 const fileInserted = async (): PV => {
-	loading.value= true;
+	loading.value = true;
 	if (!imageToUpload.value) return clear();
 	if (imageToUpload.value === undefined) return;
-	if (imageToUpload.value.size > 10240000) throw { message: 'file too big', status: 400 };
+	if (imageToUpload.value.size > 10240000) throw {
+		message: 'file too big',
+		status: 400 
+	};
 	const suffix = imageToUpload.value.type.split('/');
 	const fileType = suffix[1]?.toLowerCase();
 	if (!fileType) return;
 	const acceptable = [ 'jpeg', 'jpg' ];
-	if (acceptable.indexOf(fileType) < 0) throw { message: 'JPEGs only', status: 400 };
+	if (acceptable.indexOf(fileType) < 0) throw {
+		message: 'JPEGs only',
+		status: 400 
+	};
 	const data = new FormData();
 	const newName = `${meal.value.date}_${meal.value.person.substring(0, 1)}.${fileType}`;
 	data.append('image', imageToUpload.value, newName);
 	const response = await axios_adminPhoto.photo_post(data);
-	loading.value= false;
+	loading.value = false;
 	if (response) {
 		[ meal.value.photo_original, meal.value.photo_converted ] = [ response.original, response.converted ];
 		imageUrl.value = `${env.domain_static}/converted/${meal.value.photo_converted }`;
 	}
 };
+
 /**
  ** Remove whitespace from end of category, when input has been blurred
  */
@@ -345,25 +357,17 @@ const trimCategory = (): void => {
 const previous = (): void => {
 	if (meal.value.date) {
 		const d = new Date(meal.value.date);
-		d.setDate(d.getDate() -1);
+		d.setDate(d.getDate() - 1);
 		meal.value.date = d.toISOString().slice(0, 10);
 	}
 };
 // },
 
-const rules ={
-	category: {
-		required
-	},
-	date: {
-		required
-	},
-	description: {
-		required
-	},
-	person: {
-		required
-	},
+const rules = {
+	category: { required },
+	date: { required },
+	description: { required },
+	person: { required }
 };
 const v$ = useVuelidate(rules, meal);
 

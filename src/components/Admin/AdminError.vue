@@ -57,7 +57,7 @@ const headers = [
 		align: 'start',
 		sortable: true,
 		value: 'fields'
-	},
+	}
 ] as const;
 
 </script>

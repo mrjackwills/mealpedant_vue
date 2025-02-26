@@ -103,9 +103,9 @@
 							v-model='meal.category'
 							@blur='trimCategory'
 							:disabled='completed'
-							:hint="computedSuffix"
+							:hint='computedSuffix'
 							:prepend-icon='mdiFood'
-							class="cat_hint"
+							class='cat_hint'
 							label='CATEGORY'
 							name='category'
 							variant='underlined'
@@ -218,7 +218,7 @@ import { axios_adminMeal, axios_adminPhoto } from '@/services/axios';
 import { convert_date } from '@/vanillaTS/date_convert';
 import { dialoger } from '@/services/dialog';
 import { env } from '@/vanillaTS/env';
-import { FrontEndRoutes } from '@/types/enum_routes';
+import { FrontEndRoutes } from '@/types/const_routes';
 import { genesisDate } from '@/vanillaTS/globalConst';
 import { mdiAttachment, mdiCalendar, mdiClose, mdiDeleteForever, mdiFood, mdiMessageText, mdiRestore, mdiDatabaseEdit } from '@mdi/js';
 import { required } from '@vuelidate/validators';
@@ -243,16 +243,25 @@ onBeforeUnmount(async () => {
 */
 onBeforeMount(async () => {
 	loading.value = true;
-	let person = adminModule().person as TPerson;
-	let date = adminModule().date;
-	router.replace({ path: route.path, query: { person, date } });
-	const validated = await axios_adminMeal.singleMeal_get({ date, person });
-	loading.value= false;
+	const person = adminModule().person as TPerson;
+	const date = adminModule().date;
+	router.replace({
+		path: route.path,
+		query: {
+			person,
+			date 
+		} 
+	});
+	const validated = await axios_adminMeal.singleMeal_get({
+		date,
+		person 
+	});
+	loading.value = false;
 	if (validated) {
 		original_date.value = validated.date;
 		editMealHasPhoto.value = validated.photo_original ? true : false;
 		meal.value = validated;
-		imageUrl.value = validated.photo_converted ? `${env.domain_static}/converted/${validated.photo_converted}`: '';
+		imageUrl.value = validated.photo_converted ? `${env.domain_static}/converted/${validated.photo_converted}` : '';
 		dataReady.value = true;
 		const browserStore = browserModule();
 		browserStore.set_pageTitle(`Edit meal: ${person} ${date}`);
@@ -272,7 +281,7 @@ const computedDateLabel = computed((): string =>{
 	const today = today_long.toISOString().slice(0, 10);
 	const yesterday = new Date(today_long.setDate(today_long.getDate() - 1)).toISOString().substring(0, 10);
 	const text = 'Choose date';
-	return meal.value.date === today ? `${text} - today`: meal.value.date === yesterday ? `${text} - yesterday` : text;
+	return meal.value.date === today ? `${text} - today` : meal.value.date === yesterday ? `${text} - yesterday` : text;
 });
 
 const categories = computed((): Array<string> => {
@@ -284,18 +293,15 @@ const computedSuffix = computed((): string => {
 	let filteredCategories = '';
 	const inputLength = meal.value.category.length;
 	const input = meal.value.category.toUpperCase().substring(0, inputLength);
-	let index = 0;
 	for (const eachCategory of categories.value) {
-
 		if (eachCategory.substring(0, inputLength) === input) {
-			if (filteredCategories.length ===0 ) {
+			if (filteredCategories.length === 0 ) {
 				filteredCategories += `${eachCategory}`;
-			}else{
+			} else {
 				filteredCategories += `, ${eachCategory}`;
 			}
-			index +=1;
 		}
-}
+	}
 	return filteredCategories;
 });
 const loading = computed({
@@ -315,13 +321,13 @@ watch(mealDate, (i) => {
 		meal.value.date = convert_date(String(i));
 	}
 });
-const minDate= new Date(genesisDate).toISOString().slice(0, 10);
+const minDate = new Date(genesisDate).toISOString().slice(0, 10);
 
 const completed = ref(false);
 // const converted = ref(false);
 const dataReady = ref(false);
 const editMealHasPhoto = ref(false);
-const imageToUpload = ref(undefined as File|undefined);
+const imageToUpload = ref(undefined as File | undefined);
 const imageUrl = ref('');
 const meal = ref({
 	id: '',
@@ -349,6 +355,7 @@ const cancel = async (): PV => {
 	await clear();
 	router.push(FrontEndRoutes.MEALS);
 };
+
 /**
 ** When image removed from file input, send a request to delete file from sever
 */
@@ -377,27 +384,36 @@ const deleteMeal = (): void => {
 		passwordRequired: true,
 		confirmFunction: deleteMeal_confirm
 	});
-} ;
+};
 
 /**
 *Delete meal completely
 * @param {Object} AuthObject - {password: string, token?:string, twoFABackup?:boolean}
 */
 const deleteMeal_confirm = async (authObject: TAuthObject): PV => {
-	loading.value= true;
+	loading.value = true;
 	if (!meal.value) return;
-	const success = await axios_adminMeal.meal_delete({ person: meal.value.person, date: original_date.value, auth: authObject });
+	const success = await axios_adminMeal.meal_delete({
+		person: meal.value.person,
+		date: original_date.value,
+		auth: authObject 
+	});
 	if (success) {
-		snackSuccess({ message: 'Meal deleted', type: 'success', icon: mdiDeleteForever });
+		snackSuccess({
+			message: 'Meal deleted',
+			type: 'success',
+			icon: mdiDeleteForever 
+		});
 		await router.push(FrontEndRoutes.MEALS);
 	}
-	loading.value= false;
+	loading.value = false;
 };
+
 /**
 ** Upload image to db, return {o: file_name, c:file_name}
 */
 const fileInserted = async (): PV => {
-	loading.value= true;
+	loading.value = true;
 	if (!imageToUpload.value) {
 		clear();
 		return;
@@ -427,10 +443,10 @@ const fileInserted = async (): PV => {
 		[ meal.value.photo_original, meal.value.photo_converted ] = [ response.original, response.converted ];
 		imageUrl.value = `${env.domain_static}/converted/${meal.value.photo_converted }`;
 	}
-	// eslint-disable-next-line require-atomic-updates
+	 
 	imageToUpload.value = undefined;
-	loading.value= false;
-} ;
+	loading.value = false;
+};
 	
 /**
 		 ** Remove whitespace from end of category, when input has been blurred
@@ -451,15 +467,22 @@ const updateMeal = (): void => {
 };
 const updateMeal_confirm = async (): PV => {
 	if (v$.value.$invalid) return;
-	loading.value= true;
+	loading.value = true;
 
 	if (!meal.value.photo_original) meal.value.photo_original = undefined;
 	if (!meal.value.photo_converted) meal.value.photo_converted = undefined;
-	const success = await axios_adminMeal.meal_patch({ meal: meal.value, original_date: original_date.value });
+	const success = await axios_adminMeal.meal_patch({
+		meal: meal.value,
+		original_date: original_date.value 
+	});
 	if (success) {
 		const infobarMessage = `${meal.value.date} missing for ${meal.value.person}`;
 		infobarModule().remove_message(infobarMessage);
-		snackSuccess({ message: 'Meal edited', type: 'success', icon: mdiDatabaseEdit });
+		snackSuccess({
+			message: 'Meal edited',
+			type: 'success',
+			icon: mdiDatabaseEdit 
+		});
 		completed.value = true;
 		await router.push(FrontEndRoutes.MEALS);
 	}
@@ -468,24 +491,16 @@ const updateMeal_confirm = async (): PV => {
 const previous = (): void => {
 	if (meal.value.date) {
 		const d = new Date(meal.value.date);
-		d.setDate(d.getDate() -1);
+		d.setDate(d.getDate() - 1);
 		meal.value.date = d.toISOString().slice(0, 10);
 	}
 };
 
 const rules = {
-	person: {
-		required
-	},
-	category: {
-		required
-	},
-	date: {
-		required
-	},
-	description: {
-		required
-	},
+	person: { required },
+	category: { required },
+	date: { required },
+	description: { required }
 };
 const v$ = useVuelidate(rules, meal);
 </script>

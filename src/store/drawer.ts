@@ -1,12 +1,12 @@
 import { defineStore } from 'pinia';
-import { ModuleName } from '@/types/enum_module';
+import { ModuleName } from '@/types/const_module';
 
 export const drawerModule = defineStore(ModuleName.Drawer, {
 
 	state: () => ({
 		disabled: false,
 		mini: false,
-		open: false,
+		open: false
 	}),
 
 	actions: {

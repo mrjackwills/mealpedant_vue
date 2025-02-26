@@ -194,6 +194,13 @@ const foodDate = computed((): boolean => {
 });
 
 const pageReady = ref(false);
-const buttonFields = [ { disabled: 'original', click: 'reset', icon: mdiRefresh, text: 'reset', color: 'error', flat: true } ];
+const buttonFields = [ {
+	disabled: 'original',
+	click: 'reset',
+	icon: mdiRefresh,
+	text: 'reset',
+	color: 'error',
+	flat: true 
+} ];
 		
 </script>

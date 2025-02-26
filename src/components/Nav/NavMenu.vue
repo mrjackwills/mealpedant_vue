@@ -111,16 +111,16 @@ import {
 	mdiFormatListBulleted,
 	mdiLogin,
 	mdiPlusCircle,
-	mdiPower,
+	mdiPower
 } from '@mdi/js';
 import type { su } from '@/types';
 import { useDisplay } from 'vuetify';
-import { FrontEndRoutes } from '@/types/enum_routes';
+import { FrontEndRoutes } from '@/types/const_routes';
 const { lgAndUp, mdAndDown } = useDisplay();
 
 const [ drawStore, userStore ] = [ drawerModule(), userModule() ];
 
-const mobile = computed(() : boolean => {
+const mobile = computed((): boolean => {
 	return mdAndDown.value;
 });
 
@@ -176,7 +176,7 @@ const drawerLinks = [
 		icon: mdiAccountCircle,
 		text: 'settings',
 		route: FrontEndRoutes.SETTINGS
-	},
+	}
 ];
 const adminLinks = [
 	{
@@ -192,8 +192,8 @@ const adminLinks = [
 	{
 		icon: mdiDeleteSweep,
 		text: 'flush cache',
-		route: FrontEndRoutes.FLUSH_CACHE,
-	},
+		route: FrontEndRoutes.FLUSH_CACHE
+	}
 ];
 const registerLinks = [
 	{
@@ -205,7 +205,7 @@ const registerLinks = [
 		icon: mdiLogin,
 		text: 'sign-in',
 		route: FrontEndRoutes.SIGNIN
-	},
+	}
 ];
 
 /**
@@ -216,14 +216,6 @@ const signout = async (): Promise<void> => {
 	await userModule().clientSideSignout();
 	await axios_authenticatedUser.signout_post();
 };
-
-watch(mini, (b) => {
-	console.log(`mini: ${b}`);
-});
-
-// watch(mobile, (b) => {
-// 	if (b) mini.value = false;
-// });
 
 </script>
 

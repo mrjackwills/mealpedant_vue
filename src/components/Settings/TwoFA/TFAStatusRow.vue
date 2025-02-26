@@ -43,7 +43,7 @@ import { useDisplay } from 'vuetify';
 const { smAndDown, mdAndUp } = useDisplay();
 
 const icon = computed((): string => {
-	return props.active ? mdiCheckCircle: mdiAlertCircle;
+	return props.active ? mdiCheckCircle : mdiAlertCircle;
 });
 const iconColor = computed((): string => {
 	return props.active ? 'white' : 'error';
@@ -59,8 +59,8 @@ const click = (): void => {
 };
 
 const props = defineProps<{
-	active: boolean,
-	text: string
+	active: boolean;
+	text: string;
 }>();
 
 </script>

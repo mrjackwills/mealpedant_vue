@@ -76,16 +76,16 @@
 <script setup lang='ts'>
 
 import type { su } from '@/types';
-import { FrontEndRoutes } from '@/types/enum_routes';
+import { FrontEndRoutes } from '@/types/const_routes';
 import { mdiAccountPlus, mdiLogin, mdiMenu } from '@mdi/js';
 import { useDisplay } from 'vuetify';
 const { mdAndDown, smAndDown } = useDisplay();
 
 const alert_class = computed((): string => {
-	return smAndDown.value? 'alert-bottom' : 'alert-top';
+	return smAndDown.value ? 'alert-bottom' : 'alert-top';
 });
 
-const mobile = computed(() : boolean => {
+const mobile = computed((): boolean => {
 	return mdAndDown.value;
 });
 
@@ -98,8 +98,8 @@ const drawer = computed({
 	}
 });
 
-let router = useRouter();
-let route = useRoute();
+const router = useRouter();
+const route = useRoute();
 
 const online = computed((): boolean => {
 	return browserModule().online;
@@ -121,8 +121,16 @@ const userEmail = computed((): su => {
 });
 
 const registerLinks = [
-	{ icon: mdiAccountPlus, text: 'register', route: '/register' },
-	{ icon: mdiLogin, text: 'sign-in', route: '/signin' },
+	{
+		icon: mdiAccountPlus,
+		text: 'register',
+		route: '/register' 
+	},
+	{
+		icon: mdiLogin,
+		text: 'sign-in',
+		route: '/signin' 
+	}
 ];
 
 /**

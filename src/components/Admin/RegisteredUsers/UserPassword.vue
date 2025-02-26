@@ -81,23 +81,29 @@ const copyString = (): void => {
 };
 const force = async (): Promise<void> => {
 	if (!props.password_reset_id) {
-		await axios_admin.user_patch({ patch: { reset: true }, email: props.email });
+		await axios_admin.user_patch({
+			patch: { reset: true },
+			email: props.email 
+		});
 		await axios_admin.user_get();
 	}
 };
 const revoke = async (): Promise<void> => {
 	if (props.password_reset_id) {
-		await axios_admin.user_patch({ patch: { password_reset_id: props.password_reset_id }, email: props.email });
+		await axios_admin.user_patch({
+			patch: { password_reset_id: props.password_reset_id },
+			email: props.email 
+		});
 		await axios_admin.user_get();
 	}
 };
 
 const props = defineProps<{
-	passwordResetDate?: string
-	password_reset_id?: number
-	password_creation_ip?: string
-	reset_string?: string,
-	email: string
+	passwordResetDate?: string;
+	password_reset_id?: number;
+	password_creation_ip?: string;
+	reset_string?: string;
+	email: string;
 }>();
 
 </script>

@@ -104,13 +104,13 @@ onBeforeUnmount(() => {
 // COMPUTED
 
 const buttonAndLink = computed((): boolean => {
-	return email.value.button_text && email.value.link || !email.value.button_text && !email.value.link? false : true;
+	return email.value.button_text && email.value.link || !email.value.button_text && !email.value.link ? false : true;
 });
 const computedSendColor = computed((): string => {
 	return confirm.value ? 'error' : 'secondary';
 });
 const computedSendIcon = computed((): string => {
-	return confirm.value ? mdiClose: mdiEmail;
+	return confirm.value ? mdiClose : mdiEmail;
 });
 const computedSendtext = computed((): string => {
 	return confirm.value ? 'cancel' : 'send';
@@ -160,7 +160,7 @@ const email = ref({
 	line_one: '',
 	line_two: undefined as su,
 	button_text: undefined as su,
-	link: undefined as su,
+	link: undefined as su
 });
 // const emailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
@@ -170,7 +170,7 @@ const errorMessages = ref({
 	line_one: undefined as su,
 	line_two: undefined as su,
 	button_text: undefined as su,
-	link: undefined as su,
+	link: undefined as su
 });
 const errors = ref({
 	emails: false,
@@ -178,7 +178,7 @@ const errors = ref({
 	line_one: false,
 	line_two: false,
 	button_text: false,
-	link: false,
+	link: false
 });
 const disabled = ref(true);
 const disabledTimeout = ref(0);
@@ -189,7 +189,7 @@ const lineRows = [
 		name: 'title' as const,
 		hint: 'title' as const,
 		label: 'email title' as const,
-		type: 'text',
+		type: 'text'
 	},
 	{
 		icon: mdiCommentTextOutline,
@@ -197,7 +197,7 @@ const lineRows = [
 		name: 'line_one' as const,
 		hint: 'line one' as const,
 		label: 'line one' as const,
-		type: 'text',
+		type: 'text'
 	},
 	{
 		icon: mdiCommentTextMultipleOutline,
@@ -205,7 +205,7 @@ const lineRows = [
 		name: 'line_two' as const,
 		hint: 'line two' as const,
 		label: 'line two' as const,
-		type: 'text',
+		type: 'text'
 	},
 	{
 		icon: mdiTagTextOutline,
@@ -213,7 +213,7 @@ const lineRows = [
 		name: 'button_text' as const,
 		hint: 'button text' as const,
 		label: 'button text' as const,
-		type: 'text',
+		type: 'text'
 	},
 	{
 		icon: mdiLink,
@@ -221,8 +221,8 @@ const lineRows = [
 		name: 'link' as const,
 		hint: 'button link' as const,
 		label: 'button hyperlink' as const,
-		type: 'text',
-	},
+		type: 'text'
+	}
 ] as const;
 const localLoading = ref(false);
 
@@ -241,7 +241,11 @@ const confirmButton = async (): Promise<void> => {
 	const response = await axios_admin.email_post(email.value);
 	if (response) {
 		const emailPlural = email.value.emails.length > 1 ? 's have' : ' has';
-		snackSuccess({ message: `The email${emailPlural} been sent`, icon: mdiEmail, type: 'success' });
+		snackSuccess({
+			message: `The email${emailPlural} been sent`,
+			icon: mdiEmail,
+			type: 'success' 
+		});
 		v$.value.$reset();
 		email.value = {
 			emails: [],
@@ -249,7 +253,7 @@ const confirmButton = async (): Promise<void> => {
 			line_one: '',
 			line_two: undefined,
 			button_text: undefined,
-			link: undefined,
+			link: undefined
 		};
 	}
 	[ loading.value, localLoading.value, confirm.value, disabled.value ] = [ false, false, false, false ];
@@ -279,9 +283,7 @@ const touch = (name: string): void => {
 };
 
 const rules = {
-	emails: {
-		required
-	},
+	emails: { required },
 	line_one: {
 		required,
 		minLen: minLength(10)
@@ -308,8 +310,7 @@ watch(watcher_button_text, (i) => {
 		delete errorMessages.value.button_text;
 		delete errorMessages.value.link;
 		return;
-	}
-	else if (i && !email.value.link) errorMessages.value.link = 'Link required';
+	} else if (i && !email.value.link) errorMessages.value.link = 'Link required';
 	else if (!i && email.value.link) errorMessages.value.button_text = 'Button text required';
 	else if (i) {
 		if (errorMessages.value.link === 'Button text required') {

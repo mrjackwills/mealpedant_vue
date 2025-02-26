@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { ModuleName } from '@/types/enum_module';
+import { ModuleName } from '@/types/const_module';
 import type { su, TConfirmFunction, u, TDialogTitle, TButtonText } from '@/types';
 
 export const dialogModule = defineStore(ModuleName.Dialog, {
@@ -12,7 +12,7 @@ export const dialogModule = defineStore(ModuleName.Dialog, {
 		passwordRequired: false,
 		timeout: 0,
 		title: undefined as u<TDialogTitle>,
-		visible: false,
+		visible: false
 	}),
 
 	actions: {
@@ -46,7 +46,7 @@ export const dialogModule = defineStore(ModuleName.Dialog, {
 		
 		set_visible (x: boolean) {
 			this.visible = x;
-		},
+		}
 	}
 
 });

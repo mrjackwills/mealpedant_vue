@@ -34,9 +34,7 @@ const infoClose = (): void => {
 };
 
 const props = withDefaults(defineProps<{
-	message: string,
-	color?: string,
-}>(), {
-	color: 'secondary',
-});
+	message: string;
+	color?: string;
+}>(), { color: 'secondary' });
 </script>

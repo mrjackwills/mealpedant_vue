@@ -2,7 +2,7 @@ import { axios_admin, axios_authenticatedFood, axios_authenticatedUser, axios_in
 import type { PV } from '@/types';
 import Home from '@/views/HomeView.vue';
 import { createRouter, createWebHistory, type NavigationGuardNext, type RouteLocationNormalized, type RouteRecordRaw } from 'vue-router';
-import { FrontEndNames, FrontEndRoutes } from '@/types/enum_routes';
+import { FrontEndNames, FrontEndRoutes } from '@/types/const_routes';
 import EmptyComponent from '@/components/EmptyComponent.vue';
 import { snackError, snackSuccess } from '@/services/snack';
 
@@ -18,6 +18,7 @@ const init_check = async (): PV => {
 			const isAdmin = userModule().admin;
 			if (isAdmin) await axios_admin.admin_get();
 		} catch (e) {
+			// eslint-disable-next-line no-console
 			console.log(e);
 		}
 	}
@@ -29,7 +30,11 @@ const init_check = async (): PV => {
 const adminBefore = async (_to: RouteLocationNormalized, _from: RouteLocationNormalized, next: NavigationGuardNext): PV => {
 	await init_check();
 	const isAuthenticated = !!userModule().admin && !!userModule().authenticated;
-	isAuthenticated ? next(): next(FrontEndRoutes.BASE);
+	if (isAuthenticated) {
+		next(); 
+	} else {
+		next(FrontEndRoutes.BASE);
+	}
 };
 
 const adminCache = async (_to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext): PV=> {
@@ -43,20 +48,19 @@ const adminCache = async (_to: RouteLocationNormalized, from: RouteLocationNorma
 	}
 };
 
-const adminEditMeal = async (to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) : PV => {
+const adminEditMeal = async (to: RouteLocationNormalized, _from: RouteLocationNormalized, next: NavigationGuardNext): PV => {
 	try {
 		const dateRegex = /([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))/;
 
 		if (to.query.date && to.query.person) {
-			const personValid = to.query.person.toString() === 'Jack' || to.query.person.toString()=== 'Dave';
+			const personValid = to.query.person.toString() === 'Jack' || to.query.person.toString() === 'Dave';
 			const dateValid = dateRegex.test(to.query.date.toString());
 		
 			if (personValid && dateValid) {
 				adminModule().set_date(to.query.date.toString());
 				adminModule().set_person(to.query.person.toString());
 				next();
-			}
-			else next(FrontEndRoutes.ERROR);
+			} else next(FrontEndRoutes.ERROR);
 		} else {
 
 			const personValid = adminModule().person === 'Jack' || adminModule().person === 'Dave';
@@ -64,7 +68,7 @@ const adminEditMeal = async (to: RouteLocationNormalized, from: RouteLocationNor
 			if (personValid && dateValid) next();
 			else next(FrontEndRoutes.ERROR);
 		}
-	} catch (e) {
+	} catch (_e) {
 		next(FrontEndRoutes.BASE);
 	}
 };
@@ -101,12 +105,12 @@ const authedRoutes: Array<RouteRecordRaw> = [
 	{
 		path: FrontEndRoutes.MEALS,
 		name: FrontEndRoutes.MEALS,
-		component: () => import('@/views/Authenticated/MealView.vue'),
+		component: () => import('@/views/Authenticated/MealView.vue')
 	},
 	{
 		path: FrontEndRoutes.SETTINGS,
 		name: FrontEndRoutes.SETTINGS,
-		component: () => import('@/views/Authenticated/SettingsView.vue'),
+		component: () => import('@/views/Authenticated/SettingsView.vue')
 	}
 ];
 
@@ -114,20 +118,29 @@ for (const route of authedRoutes) {
 	route.beforeEnter = async (_to, _from, next): PV => {
 		await init_check();
 		const isAuthenticated = userModule().authenticated;
-		isAuthenticated ? next(): next(FrontEndRoutes.BASE);
+		if (isAuthenticated) {
+			next(); 
+		} else {
+			next(FrontEndRoutes.BASE);
+		}
 	};
 }
 
-const notAuthedBefore = async (_to: RouteLocationNormalized, _from: RouteLocationNormalized, next: NavigationGuardNext):PV => {
+const notAuthedBefore = async (_to: RouteLocationNormalized, _from: RouteLocationNormalized, next: NavigationGuardNext): PV => {
 	try {
 		await init_check();
 	} finally {
 		const isAuthenticated = userModule().authenticated;
-		isAuthenticated ? next(FrontEndRoutes.BASE) : next();
+		if (isAuthenticated) {
+			next(FrontEndRoutes.BASE);
+		} else {
+			next();
+
+		} 
 	}
 
 };
-const hexPasswordReset = async (to: RouteLocationNormalized, _from: RouteLocationNormalized, next: NavigationGuardNext) : PV => {
+const hexPasswordReset = async (to: RouteLocationNormalized, _from: RouteLocationNormalized, next: NavigationGuardNext): PV => {
 	const secret = String(to.params?.id);
 	if (!secret || secret.length !== 128) {
 		snackError({ message: 'Invalid verification data' });
@@ -146,7 +159,7 @@ const hexPasswordReset = async (to: RouteLocationNormalized, _from: RouteLocatio
 	}
 };
 
-const hexReset = async (_to: RouteLocationNormalized, _from: RouteLocationNormalized, next: NavigationGuardNext) : PV => {
+const hexReset = async (_to: RouteLocationNormalized, _from: RouteLocationNormalized, next: NavigationGuardNext): PV => {
 	if (! resetPasswordModule().id) {
 		next(FrontEndRoutes.ERROR);
 	} else {
@@ -154,7 +167,7 @@ const hexReset = async (_to: RouteLocationNormalized, _from: RouteLocationNormal
 	}
 };
 
-const hexRegister = async (to: RouteLocationNormalized, _from: RouteLocationNormalized, next: NavigationGuardNext) : PV => {
+const hexRegister = async (to: RouteLocationNormalized, _from: RouteLocationNormalized, next: NavigationGuardNext): PV => {
 	if (to.params.id?.length !== 128) snackError({ message: 'Invalid verification data' });
 	const success = await axios_incognito.verify_get(String(to.params.id));
 	if (success) {
@@ -180,6 +193,7 @@ const hexRoutes: Array<RouteRecordRaw> = [
 		
 	},
 	{
+
 		/** Verify user after successful register - componentless */
 		path: FrontEndRoutes.USER_VERIFY_param_ID,
 		name: FrontEndNames.USER_VERIFY_param_ID,
@@ -206,10 +220,10 @@ const notAuthedRoutes: Array<RouteRecordRaw> = [
 		name: FrontEndNames.FORGOTPASSWORD,
 		component: () => import('@/views/NotAuthenticated/ForgotPassword.vue'),
 		beforeEnter: [ notAuthedBefore ]
-	},
+	}
 ];
 
-const baseBefore = async (_to: RouteLocationNormalized, _from: RouteLocationNormalized, next: NavigationGuardNext):PV => {
+const baseBefore = async (_to: RouteLocationNormalized, _from: RouteLocationNormalized, next: NavigationGuardNext): PV => {
 	try {
 		await init_check();
 	} finally {
@@ -217,7 +231,7 @@ const baseBefore = async (_to: RouteLocationNormalized, _from: RouteLocationNorm
 	}
 };
 
-const baseMealBefore = async (_to: RouteLocationNormalized, _from: RouteLocationNormalized, next: NavigationGuardNext):PV => {
+const baseMealBefore = async (_to: RouteLocationNormalized, _from: RouteLocationNormalized, next: NavigationGuardNext): PV => {
 	const isAuthenticated = userModule().authenticated;
 	if (isAuthenticated) {
 		next(FrontEndRoutes.MEALS);
@@ -241,8 +255,8 @@ const baseRoutes: Array<RouteRecordRaw> = [
 	},
 	{
 		path: FrontEndRoutes.CATCH_ALL,
-		redirect: { name: FrontEndNames.ERROR },
-	},
+		redirect: { name: FrontEndNames.ERROR }
+	}
 ];
 
 const allRoutes = [ ...adminRoutes, ...authedRoutes, ...notAuthedRoutes, ...hexRoutes, ...baseRoutes ];

@@ -71,16 +71,16 @@ import { genesisDate } from '@/vanillaTS/globalConst';
 import { useRouter } from 'vue-router';
 import { convert_date } from '@/vanillaTS/date_convert';
 
-let router = useRouter();
-let route = useRoute();
+const router = useRouter();
+const route = useRoute();
 const endModel = ref(undefined);
 const startModel = ref([]);
 
-const resetEndDate = () : void=> {
+const resetEndDate = (): void=> {
 	endDate.value = new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 10);
 };
 
-const resetStartDate = () : void=> {
+const resetStartDate = (): void=> {
 	startDate.value = new Date(genesisDate).toISOString().slice(0, 10);
 };
 watch(startModel, (i) => {
@@ -124,7 +124,10 @@ const endDate = computed({
 		const queries = route.query;
 		const query = queries?.endDate;
 		if (s && s !== query) {
-			router.replace({ path: route.path, query: { endDate: s } });
+			router.replace({
+				path: route.path,
+				query: { endDate: s } 
+			});
 		}
 		foodModule().set_date_end(s);
 	}
@@ -142,11 +145,11 @@ const original = computed({
 const filterDate = (): void => {
 	if (startDate.value >= endDate.value) {
 		snackError({ message: 'Start date must be before end date' });
-		return ;
+		return;
 	}
 	const newMealArray: Array<TPiniaDateMeal> = [];
-	const filteredTypes: Set<TMealType> = new Set();
-	const filteredCategories: Set<TCategory> = new Set();
+	const filteredTypes = new Set<TMealType>();
+	const filteredCategories = new Set<TCategory>();
 
 	for (const item of mealsModule().meals) {
 		if (item.da >= startDate.value && item.da <= endDate.value) {

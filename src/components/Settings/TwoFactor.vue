@@ -38,7 +38,7 @@ onBeforeMount(async () => {
 	const promiseList = [
 		twoFAStore.set_secret(undefined),
 		twoFAStore.set_setupProcessStarted(false),
-		twoFAStore.set_backupProcess(false),
+		twoFAStore.set_backupProcess(false)
 	];
 	await Promise.all(promiseList);
 	if (setupProcessStarted.value) await axios_authenticatedUser.setupTwoFA_delete();
@@ -58,7 +58,7 @@ const backupProcess = computed((): boolean => {
 	return twoFAStore.backupProcess;
 });
 const headingSize = computed((): string => {
-	return mdAndDown.value? 'text-h5':'text-h4';
+	return mdAndDown.value ? 'text-h5' : 'text-h4';
 });
 const loading = computed({
 	get (): boolean {

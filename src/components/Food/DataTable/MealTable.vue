@@ -83,11 +83,11 @@ import { useDisplay } from 'vuetify';
 const { mdAndDown } = useDisplay();
 
 const computedDateFont = computed((): string => {
-	return mdAndDown.value ? 'smallesttext': 'smalltext';
+	return mdAndDown.value ? 'smallesttext' : 'smalltext';
 });
 // Padding shrink on small screens - used for date cell
 const computedPadding = computed((): string => {
-	return mdAndDown.value ? 'pa-1': 'pa-2';
+	return mdAndDown.value ? 'pa-1' : 'pa-2';
 });
 // All Dave meals visible status, set&get
 const Dave = computed({
@@ -99,8 +99,8 @@ const Dave = computed({
 	}
 });
 
-const headerClass = (x: string |undefined): string => {
-	return x === 'Dave' ? 'dave-header': x=== 'Jack' ? 'jack-header' : '';
+const headerClass = (x: string | undefined): string => {
+	return x === 'Dave' ? 'dave-header' : x === 'Jack' ? 'jack-header' : '';
 };
 
 const headers = computed(() => {
@@ -113,7 +113,7 @@ const headers = computed(() => {
 			title: 'Date',
 			key: 'da',
 			width: '10%'
-		},
+		}
 	);
 	if (Dave.value) headers.push(
 		{
@@ -122,7 +122,7 @@ const headers = computed(() => {
 			sortable: false,
 			title: 'Dave',
 			key: 'D',
-			width: Jack.value ? '45%' : '90%',
+			width: Jack.value ? '45%' : '90%'
 
 		}
 	);
