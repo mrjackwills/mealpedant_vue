@@ -177,7 +177,7 @@ const filteredYear = (a: string): string => {
 }
 
 td {
-    vertical-align: top;
+	vertical-align: top;
 }
 /* .v-table > .v-table__wrapper > table {
 	width: auto!important;

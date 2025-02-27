@@ -224,18 +224,14 @@ const signout = async (): Promise<void> => {
 .minivariantmargintop {
 	margin-top: 5rem;
 }
-
 .dividermargin {
 	margin-top: 2.5rem;
 	margin-bottom: 2.5rem;
 }
-
 .v-list-item__spacer{
 	width: 8px!important;
 }
-
 #nav_menu{
 	min-height: 100vh;
 }
-
 </style>

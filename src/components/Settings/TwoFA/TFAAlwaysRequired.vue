@@ -48,7 +48,6 @@ const always_required = computed({
 	set (b: boolean): void {
 		twoFAModule().set_alwaysRequired(b);
 	}
-
 });
 
 watch(always_required, (_) => {

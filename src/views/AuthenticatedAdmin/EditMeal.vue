@@ -250,7 +250,7 @@ onBeforeMount(async () => {
 		query: {
 			person,
 			date 
-		} 
+		}
 	});
 	const validated = await axios_adminMeal.singleMeal_get({
 		date,

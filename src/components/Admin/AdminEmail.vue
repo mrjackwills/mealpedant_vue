@@ -337,7 +337,6 @@ watch(watcher_link, (i) => {
 		errorMessages.value.button_text = 'Link required';
 		return;
 	}
-
 	const domainRegex = /^http(s)?:\/\/([a-zA-Z0-9-_]+\.)*[a-zA-Z0-9][a-zA-Z0-9-_]+\.[a-zA-Z]{2,11}(\/.*)?$/;
 	if (!i) return;
 	const regexTest = domainRegex.test(i);

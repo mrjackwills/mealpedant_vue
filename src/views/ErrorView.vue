@@ -29,7 +29,6 @@ const rows = [
 		class: 'text-h5',
 		text: 'return to home page'
 	}
-
 ];
 
 onMounted(() => {

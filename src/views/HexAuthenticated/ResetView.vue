@@ -174,7 +174,6 @@ const reset = async (): Promise<void> => {
 		loading.value = false;
 		return;
 	}
-
 	// This is rubbish
 	errorMessages.value = {
 		token: '',

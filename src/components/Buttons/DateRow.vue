@@ -126,7 +126,7 @@ const endDate = computed({
 		if (s && s !== query) {
 			router.replace({
 				path: route.path,
-				query: { endDate: s } 
+				query: { endDate: s }
 			});
 		}
 		foodModule().set_date_end(s);
