@@ -1,71 +1,41 @@
 <template>
-	<v-select
-		v-model.lazy='selectedCategory'
-		@update:modelValue='categorySearch'
-		@click:clear='reset'
-		:items='categories'
-		:menu-props='{ maxHeight: "800" }'
-		hint='select a category'
-		label='Category'
-		clearable
-		variant='underlined'
-		persistent-hint
-	/>
+	<v-select v-model.lazy='selected_category' @click:clear='reset' @update:model-value='update_categories'
+		:prepend-inner-icon='mdiFormatListBulletedType'
+		:disabled='disabled'
+		:items='category_names' :menu-props='{ maxHeight: max_height }' :label='label'
+		variant='underlined' clearable />
 </template>
 
 <script setup lang='ts'>
-import { resetFilters } from '@/services/reset';
-import type { su, TMealType, TPiniaDateMeal } from '@/types';
+import { formatCategoryName } from '@/vanillaTS/helpers';
+import { useDisplay } from 'vuetify';
+import { mdiFormatListBulletedType } from '@mdi/js';
 
-const categories = computed((): Array<string> => {
-	return categoriesModule().sorted_categories_names;
-});
-const selectedCategory = computed({
-	get (): su {
-		return selectorsModule().category;
-	},
-	set (s: su): void {
-		selectorsModule().set_category(s);
-	}
-});
-	
-// 	methods: {
-const reset = async (): Promise<void> => {
-	await resetFilters();
+const selected_category = ref(undefined as undefined | string);
+const mealStore = mealModule();
+
+const categories = computed(() => mealStore.get_all_categories_sorted_alpha);
+
+const update_categories = (): void => {
+	if (selected_category.value) mealStore.set_search_by_category(selected_category.value.toUpperCase());
 };
-const categorySearch = (): void => {
-	if (!selectedCategory.value) return;
-	const sc = selectedCategory.value.toUpperCase();
-	const newMealArray: Array<TPiniaDateMeal> = [];
-	const filteredTypes: Set<TMealType> = new Set();
-	for (const item of mealsModule().meals) {
-		const Dc = item.D?.c;
-		const Jc = item.J?.c;
-		if (Dc && Dc.toUpperCase() === sc && Jc && Jc.toUpperCase() === sc) {
-			newMealArray.push(item);
-			if (item.J?.r || item.D?.r) filteredTypes.add('restaurant');
-			if (item.J?.t || item.D?.t) filteredTypes.add('takeout');
-			if (item.J?.v || item.D?.v) filteredTypes.add('vegetarian');
-		} else if (Dc && Dc.toLocaleUpperCase() === sc) {
-			newMealArray.push({
-				da: item.da,
-				D: item.D
-			});
-			if (item.D?.r) filteredTypes.add('restaurant');
-			if (item.D?.t) filteredTypes.add('takeout');
-			if (item.D?.v) filteredTypes.add('vegetarian');
-		} else if (Jc && Jc.toUpperCase() === sc) {
-			newMealArray.push({
-				da: item.da,
-				J: item.J
-			});
-			if (item.J?.r) filteredTypes.add('restaurant');
-			if (item.J?.t) filteredTypes.add('takeout');
-			if (item.J?.v) filteredTypes.add('vegetarian');
-		}
-	}
-	foodModule().set_original(false);
-	mealsModule().set_meals(newMealArray);
-	typesModule().set_types([ ...filteredTypes ]);
+
+/// The reset can get called from other modules, so need to watch then reset
+const is_filtered = computed(() => mealStore.is_filtered);
+watch(is_filtered, (i) => {
+	if (!i) selected_category.value = undefined;
+});
+
+const disabled = computed(() => categories.value.length === 0);
+const label = computed(() => disabled.value ? 'no match' : 'category');
+
+const category_names = computed(() => categories.value.map(i => formatCategoryName(i[1])));
+
+const reset = (): void => {
+	mealStore.clear_all_filters();
+	selected_category.value = undefined;
 };
+
+const max_height = computed(() => `${useDisplay().height.value * .66}px`);
+
 </script>

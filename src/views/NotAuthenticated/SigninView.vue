@@ -1,100 +1,68 @@
-
 <template>
-	<v-container fluid class='fill-height' >
-		<v-row align='center' justify='center' wrap v-if='!authed'>
+	<v-container fluid class='fill-height'>
+		<v-row align='center' justify='center'>
 			<v-col cols='12' sm='8' md='4'>
-				<v-form
-					v-if='!twoFARequired'
-					v-on:submit.prevent
-					method='post'
-				>
-					<div v-for='(item, index) in textFields' :key='index'>
-						<v-text-field
-							v-model='user[item.model]'
-							v-on:keyup.enter='signin'
-							@blur='touch(item.model)'
-							@click:append-inner='appendClick()'
-							@input='touch(item.model)'
-							:append-inner-icon='item.appendIcon'
-							:disabled='loading || twoFARequired'
-							:autocomplete='item.autocomplete'
-							:error-messages='errorMessages[item.model]'
-							:label='item.label'
-							:prepend-inner-icon='item.icon'
-							:type='item.type'
-							variant='underlined'
-						>
-						</v-text-field>
-					</div>
-					<v-col cols='12' class='pa-0' v-if='!pwa'>
-						<v-row justify='center' >
-							<v-col cols='auto' class='pa-0'>
-								<div class='text-center'>
-									<v-checkbox
-										v-model='user.remember'
-										:disabled='loading || twoFARequired'
-										class='mt-0'
-										color='primary'
-										label='stay signed in'
-									>
-									</v-checkbox>
-								</div>
-							</v-col>
-						</v-row>
-					</v-col>
+				<v-form v-if='!twoFARequired' v-on:submit.prevent method='post'>
+					<v-text-field v-for='(item, index) in textFields' :key='index'
+						v-model='user[item.model]' v-on:keyup.enter='signin' @blur='touch(item.model)'
+						@click:append-inner='appendClick()' @input='touch(item.model)'
+						:append-inner-icon='item.appendIcon' :disabled='loading || twoFARequired'
+						:autocomplete='item.autocomplete' :error-messages='errorMessages[item.model]'
+						:label='item.label' :prepend-inner-icon='item.icon' :type='item.type' 
+						variant='underlined'
+					/>
 				</v-form>
 
 				<v-expand-transition>
-					<div class='text-center mb-5' v-if='twoFARequired'>
-						<v-row justify='center' >
-							<v-col cols='12' md='9'>
-								<v-text-field
-									v-model='user.token'
-									v-on:keyup.enter='signin'
-									:autofocus='mdAndUp'
-									:disabled='loading'
-									:hint='"Your 2FA code is required to sign in"'
-									:prepend-icon='mdiCellphoneLock'
-									inputmode='numeric'
-									label='2FA code'
-									variant='underlined'
-									pattern='[0-9]*'
-									persistent-hint
-								>
-								</v-text-field>
-							</v-col>
-						</v-row>
-					</div>
+					<v-row class='ma-0 pa-0' justify='center' v-if='twoFARequired'>
+						<v-col class='ma-0 pa-0' cols='12' md='9'>
+							<v-text-field v-model='user.token' v-on:keyup.enter='signin' :autofocus='mdAndUp'
+								:disabled='loading' :hint='"Your 2FA code is required to sign in"'
+								:prepend-inner-icon='mdiCellphoneLock' inputmode='numeric' label='2FA code'
+								variant='underlined'
+								pattern='[0-9]*' persistent-hint>
+							</v-text-field>
+						</v-col>
+					</v-row>
 				</v-expand-transition>
-				
-				<div class='text-center mt-3'>
-					<v-btn
-						v-if='twoFARequired'
-						@click='cancel'
-						:class='{"elevation-0": loading}'
-						:disabled='loading'
-						class='elevation-2 mr-4'
-						color='error'
-						dark
-						large
-					>
-						<ButtonIcon :icon='mdiClose' />
-						cancel
-					</v-btn>
-					<v-btn
-						@click='signin'
-						:class='{"elevation-0": signin_disabled}'
-						:disabled='signin_disabled'
-						class='elevation-2'
-						:variant='signin_disabled?"outlined":"flat"'
-						large
-						:color='signin_disabled?"":"secondary"'
-					>
-						<ButtonIcon :icon='mdiLogin' />
-						sign-in
-					</v-btn>
-				</div>
-				<p class='cl text-center mt-4' v-if='!twoFARequired' @click='goforgot'>forgot password</p>
+
+				<v-row justify='space-around' align='center' class='ma-0 pa-0' :class='twoFARequired?"mt-4":"mt-n4"'>
+
+					<v-col class='ma-0 pa-0 text-center' cols='auto'>
+						<v-btn v-if='twoFARequired' @click='cancel' 
+							:disabled='loading'
+							class='' flat color='error' vairant='flat' rounded
+						>
+							<ButtonIcon :icon='mdiClose' />
+							cancel
+						</v-btn>
+						<v-checkbox v-else v-model='user.remember'
+							:disabled='loading || twoFARequired'
+							density='compact'
+							class='mt-4' 
+							color='primary'
+							label='remember me'
+						/>
+
+					</v-col>
+
+					<v-col class='ma-0 pa-0 text-center' cols='auto'>
+						<v-btn @click='signin' :disabled='signin_disabled'
+							:variant='signin_disabled ? "outlined" : "flat"' large
+							rounded 
+							:color='signin_disabled ? "" : "secondary"'>
+							<ButtonIcon :icon='mdiLogin' />
+							sign-in
+						</v-btn>
+					</v-col>
+
+					<v-col cols='12' class='text-center ma-0 pa-0' v-if='!twoFARequired'>
+						<router-link class='text-white text-right text-body-2 text-decoration-underline'
+							:to='localLoading?"":FrontEndRoutes.FORGOTPASSWORD'>
+							forgot password
+						</router-link>
+					</v-col>
+				</v-row>
 			</v-col>
 		</v-row>
 	</v-container>
@@ -102,16 +70,15 @@
 
 <script setup lang='ts'>
 
-// let loadingStore = loadingModule();
-
 import { axios_incognito, axios_authenticatedUser } from '@/services/axios';
 import { mdiCellphoneLock, mdiClose, mdiEmail, mdiEye, mdiEyeOff, mdiLockOpenOutline, mdiLogin } from '@mdi/js';
-import type { su } from '@/types';
+import type { PV, su } from '@/types';
 import useVuelidate from '@vuelidate/core';
 import { minLength, email, required } from '@vuelidate/validators';
-import { FrontEndRoutes } from '@/types/enum_routes';
+import { FrontEndRoutes } from '@/types/const_routes';
 import { useRouter } from 'vue-router';
 import { useDisplay } from 'vuetify';
+import { HttpCode } from '@/types/const_http';
 const { mdAndUp } = useDisplay();
 
 const loading = computed({
@@ -122,31 +89,19 @@ const loading = computed({
 		loadingModule().set_loading(b);
 	}
 });
-const pwa = computed((): boolean => {
-	return browserModule().pwa;
-});
-const watcher_email = computed((): su => {
-	return user.value.email;
-});
-const watcher_password = computed((): su => {
-	return user.value.password;
-});
-
-const signin_disabled = computed((): boolean => {
-	return loading.value || v$.value.$invalid || twoFARequired.value && !user.value.token;
-});
+const pwa = computed(() => browserModule().pwa);
+const watcher_email = computed(() => user.value.email);
+const watcher_password = computed(() => user.value.password);
+const signin_disabled = computed(() => loading.value || v$.value.$invalid || twoFARequired.value && !user.value.token);
 
 const passwordVisible = ref(false);
 
-/**
-** Set the password visible
-**/
+/// Set the password visible
 const appendClick = (): void => {
 	if (loading.value) return;
 	passwordVisible.value = !passwordVisible.value;
 };
 
-const authed = ref(false);
 const errorMessages = ref({
 	email: undefined as su,
 	password: undefined as su
@@ -157,7 +112,7 @@ const textFields = computed(() => {
 		{
 			icon: mdiEmail,
 			model: 'email' as const,
-			label: 'EMAIL',
+			label: 'email',
 			type: 'email',
 			appendIcon: '',
 			autocomplete: 'username'
@@ -165,12 +120,13 @@ const textFields = computed(() => {
 		{
 			icon: mdiLockOpenOutline,
 			model: 'password' as const,
-			label: 'PASSWORD',
-			appendIcon: passwordVisible.value ? mdiEyeOff: mdiEye,
+			label: 'password',
+			appendIcon: passwordVisible.value ? mdiEyeOff : mdiEye,
 			type: passwordVisible.value ? 'text' : 'password',
 			autocomplete: 'password'
 		}
-	];});
+	];
+});
 
 const twoFARequired = ref(false);
 
@@ -181,7 +137,7 @@ const user = ref({
 	remember: false
 });
 
-let router = useRouter();
+const router = useRouter();
 
 onMounted(() => {
 	const browserStore = browserModule();
@@ -192,78 +148,75 @@ onMounted(() => {
 const touch = (name: string): void => {
 	v$.value.user?.[name]?.$touch();
 };
-/**
-** On 2fa screen reset user data nad go back to blank signin page
-*/
+
+/// On 2fa screen reset user data nad go back to blank signin page
 const cancel = (): void => {
 	twoFARequired.value = false;
-	user.value = { email: '', password: '', token: '', remember: false };
+	user.value = {
+		email: '',
+		password: '',
+		token: '',
+		remember: false
+	};
 	otpBackupEnabled.value = false;
 };
+const localLoading = ref(false);
 
-/**
-** go to forgotpassword page
-*/
-const goforgot = (): void => {
-	router.push(FrontEndRoutes.FORGOTPASSWORD);
-};
-
-/**
-** axios method to sign in user, works with both 2fa and non 2fa users
-*/
-const signin = async (): Promise<void> => {
-	if (v$.value.$invalid) return;
-	if (!user.value.email) return;
-	if (!user.value.password) return;
-	if (twoFARequired.value && !user.value.token) return;
+/// axios method to sign in user, works with both 2fa and non 2fa users
+const signin = async (): PV => {
+	if (v$.value.$invalid || !user.value.email || !user.value.password || twoFARequired.value && !user.value.token) return;
 	if (pwa.value) user.value.remember = true;
+	localLoading.value = true;
 	loading.value = true;
 	const authObject = {
 		email: user.value.email.toLowerCase(),
 		password: user.value.password,
-		token: user.value.token? user.value.token.replace(/\s/g, ''): undefined,
+		token: user.value.token ? user.value.token.replace(/\s/g, '') : undefined,
 		remember: user.value.remember
 	};
 	passwordVisible.value = false;
 	const loginRequest = await axios_incognito.signin_post(authObject);
-	if (loginRequest?.status === 200) {
-		authed.value = true;
-		// eslint-disable-next-line require-atomic-updates
-		user.value.email = '';
-		// eslint-disable-next-line require-atomic-updates
-		user.value.password = '';
+	if (loginRequest?.status === HttpCode.OK) {
+		userModule().set_authenticated(true); 
 		snackbarModule().$reset();
-		userModule().set_authenticated(true);
+		infobarModule().$reset();
+		mealModule().$reset();
+		mealStorage.delete();
 		await axios_authenticatedUser.authenticated_get();
-		router.push(FrontEndRoutes.BASE);
-	}
-	else if (loginRequest?.status === 202) {
-		// eslint-disable-next-line require-atomic-updates
+		await mealStorage.seed_meal_pinia();
+		user.value = {
+			email: '',
+			password: '', 
+			token: '',
+			remember: false
+		};
+		router.push(FrontEndRoutes.MEALS);
+	} else if (loginRequest?.status === HttpCode.ACCEPTED) {
 		twoFARequired.value = true;
 		otpBackupEnabled.value = loginRequest.response.twoFABackup;
 		snackbarModule().$reset();
-	}
-	else {
+	} else {
 		cancel();
 	}
 	loading.value = false;
+	localLoading.value = false;
 };
 
 const rules = {
 	email: {
 		email,
-		required,
+		required
 	},
 	password: {
 		required,
 		minLen: minLength(12)
-	},
+	}
 };
 const v$ = useVuelidate(rules, user);
 
 watch(watcher_email, () => {
 	if (!user.value.email) {
-		[ twoFARequired.value, user.value.password ] = [ false, '' ];
+		[twoFARequired.value, user.value.password] = [false, ''];
 		v$.value.user?.email?.$reset();
 		return;
 	}

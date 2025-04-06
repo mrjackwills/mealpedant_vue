@@ -1,62 +1,28 @@
 <template>
-	<v-row justify='center' class='my-0'>
-		<v-col cols='12'>
-		</v-col>
-		<v-col cols='5' class=''>
-
-			<v-text-field
-				v-model='startDate'
-				:hint='hintStartDate'
-				:prepend-icon='mdiCalendarBlank'
-				@click='showStartDate=!showStartDate'
-				@click:clear='resetStartDate'
-				:clearable='true'
-				label='Start Date'
-				persistent-hint
-				readonly
-				variant='underlined'
+	<v-row justify='space-around' class='ma-0 pa-0'>
+		<v-col cols='12' sm='7' md='3' class='ma-0 pa-0 mt-md-8'>
+			<v-text-field v-model='startDate' :hint='hintStartDate' :prepend-inner-icon='mdiCalendarStart'
+				@click='showStartDate = !showStartDate' :clearable='false' label='start'
+				variant='underlined' persistent-hint readonly
+				density='comfortable'
 			>
-				<v-menu
-					v-model='showStartDate'
-					activator='parent'
-					:close-on-content-click='false'
-				>
-					<!-- v-model='startModel' -->
-					<v-date-picker
-						first-day-of-week='1'
-						@click:cancel='showStartDate=!showStartDate'
-						@click:save='showStartDate=!showStartDate'
-						:min='startDate'
-						:max='endDate'
-					/>
+				<v-menu v-model='showStartDate' activator='parent' :close-on-content-click='false'>
+
+					<v-date-picker v-model='startModel' first-day-of-week='1' :min='genesisDateString()'
+						:max='todayDateString()' />
+
 				</v-menu>
 			</v-text-field>
 		</v-col>
-		<v-col cols='5' class=''>
 
-			<v-text-field
-				v-model='endDate'
-				:hint='hintEndDate'
-				:prepend-icon='mdiCalendarToday'
-				@click='showEndDate=!showEndDate'
-				@click:clear='resetEndDate'
-				:clearable='true'
-				label='End Date'
-				persistent-hint
-				readonly
-				variant='underlined'
-			>
-				<v-menu
-					v-model='showEndDate'
-					activator='parent'
-					:close-on-content-click='false'
-				>
-					<v-date-picker
-						v-model='endModel'
-						first-day-of-week='1'
-						@click:cancel='showEndDate=!showEndDate'
-						@click:save='showEndDate=!showEndDate'
-					/>
+		<v-col cols='12' sm='7' md='3' class='ma-0 pa-0 mt-md-8'>
+			<v-text-field v-model='endDate' :hint='hintEndDate' :prepend-inner-icon='mdiCalendarEnd'
+				@click='showEndDate = !showEndDate' :clearable='false' label='end'
+				variant='underlined' persistent-hint readonly
+				density='comfortable'>
+				<v-menu v-model='showEndDate' activator='parent' :close-on-content-click='false'>
+					<v-date-picker v-model='endModel' first-day-of-week='1' :min='genesisDateString()'
+						:max='todayDateString()' />
 				</v-menu>
 			</v-text-field>
 		</v-col>
@@ -64,111 +30,56 @@
 </template>
 
 <script setup lang='ts'>
-import { mdiCalendarBlank, mdiCalendarToday } from '@mdi/js';
+import { mdiCalendarStart, mdiCalendarEnd } from '@mdi/js';
+import { convert_date, todayDateString, genesisDateString } from '@/vanillaTS/helpers';
 import { snackError } from '@/services/snack';
-import type { TCategory, TMealType, TPiniaDateMeal } from '@/types';
-import { genesisDate } from '@/vanillaTS/globalConst';
-import { useRouter } from 'vue-router';
-import { convert_date } from '@/vanillaTS/date_convert';
 
-let router = useRouter();
-let route = useRoute();
-const endModel = ref(undefined);
-const startModel = ref([]);
+const startModel = ref(undefined as undefined | Date);
+const showStartDate = ref(false);
 
-const resetEndDate = () : void=> {
-	endDate.value = new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 10);
-};
+const endModel = ref(undefined as undefined | Date);
+const showEndDate = ref(false);
+const mealStore = mealModule();
 
-const resetStartDate = () : void=> {
-	startDate.value = new Date(genesisDate).toISOString().slice(0, 10);
-};
+onMounted(() => {
+	if (mealStore.search_by.start_date) startModel.value = new Date(mealStore.search_by.start_date);
+	if (mealStore.search_by.end_date) endModel.value = new Date(mealStore.search_by.end_date);
+});
+
 watch(startModel, (i) => {
 	if (i) {
 		startDate.value = convert_date(String(i));
-		filterDate();
+		if (endModel.value && i < endModel.value ) {
+			mealStore.set_search_by_start_date(startDate.value);
+			showStartDate.value = false;
+		} else {
+			snackError({ message: 'Invalid start date' });
+		}
 	}
 });
 
 watch(endModel, (i) => {
 	if (i) {
-		endDate.value = convert_date(String(i));
-		filterDate();
-	}
-}, { deep: true });
-
-const showStartDate = ref(false);
-const showEndDate = ref(false);
-
-const hintStartDate = computed((): string =>{
-	return startDate.value === new Date(genesisDate).toISOString().slice(0, 10) ? 'Meal Pedant genesis' : '';
-});
-const hintEndDate = computed((): string =>{
-	return endDate.value === new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 10) ? 'Today' : '';
-});
-
-const startDate = computed({
-	get (): string {
-		return foodModule().date_start;
-	},
-	set (x: string): void {
-		foodModule().set_date_start(x);
+		if (startModel.value && i > startModel.value) {
+			endDate.value = convert_date(String(i));
+			mealStore.set_search_by_end_date(endDate.value);
+			showEndDate.value = false;
+		} else snackError({ message: 'Invalid end date' });
 	}
 });
 
-const endDate = computed({
-	get (): string {
-		return foodModule().date_end;
-	},
-	set (s: string): void {
-		const queries = route.query;
-		const query = queries?.endDate;
-		if (s && s !== query) {
-			router.replace({ path: route.path, query: { endDate: s } });
-		}
-		foodModule().set_date_end(s);
+const startDate = ref(genesisDateString());
+const endDate = ref(todayDateString());
+
+const is_filtered = computed(() => mealStore.is_filtered);
+watch(is_filtered, (i) => {
+	if (!i) {
+		endDate.value = todayDateString();
+		startDate.value = genesisDateString();
 	}
 });
 
-const original = computed({
-	get (): boolean {
-		return foodModule().original;
-	},
-	set (b: boolean): void {
-		foodModule().set_original(b);
-	}
-});
-	
-const filterDate = (): void => {
-	if (startDate.value >= endDate.value) {
-		snackError({ message: 'Start date must be before end date' });
-		return ;
-	}
-	const newMealArray: Array<TPiniaDateMeal> = [];
-	const filteredTypes: Set<TMealType> = new Set();
-	const filteredCategories: Set<TCategory> = new Set();
+const hintStartDate = computed(() => startDate.value === genesisDateString() ? 'Meal Pedant genesis' : '');
+const hintEndDate = computed(() => endDate.value === todayDateString() ? 'Today' : '');
 
-	for (const item of mealsModule().meals) {
-		if (item.da >= startDate.value && item.da <= endDate.value) {
-			newMealArray.push(item);
-			if (item.D?.c) {
-				const y = categoriesModule().categories.findIndex((i) => i.c === item.D?.c);
-				const x = categoriesModule().categories[y];
-				if (x) filteredCategories.add(x);
-			}
-			if (item.J?.c) {
-				const y = categoriesModule().categories.findIndex((i) => i.c === item.J?.c);
-				const x = categoriesModule().categories[y];
-				if (x) filteredCategories.add(x);
-			}
-			if (item.J?.r || item.D?.r) filteredTypes.add('restaurant');
-			if (item.J?.t || item.D?.t) filteredTypes.add('takeout');
-			if (item.J?.v || item.D?.v) filteredTypes.add('vegetarian');
-		}
-	}
-	mealsModule().set_meals(newMealArray);
-	typesModule().set_types([ ...filteredTypes ]);
-	categoriesModule().set_categories([ ...filteredCategories ]);
-	original.value = false;
-};
 </script>

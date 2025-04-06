@@ -12,18 +12,15 @@
 </template>
 
 <script setup lang='ts'>
-import { axios_authenticatedFood, axios_authenticatedUser, axios_incognito } from '@/services/axios';
+import { axios_adminMeal, axios_incognito } from '@/services/axios';
 import { mdiWifiStrengthAlertOutline } from '@mdi/js';
 import { snackError } from '@/services/snack';
 
 onBeforeUnmount(() => {
 	clearInterval(goOnlineInterval.value);
-
 });
 
-const authenticated = computed((): boolean=> {
-	return userModule().authenticated;
-});
+const authenticated = computed(() => userModule().authenticated);
 
 const loading = computed({
 	get (): boolean {
@@ -39,12 +36,13 @@ const goOnline = async (): Promise<void> => {
 	try {
 		loading.value = true;
 		await axios_incognito.online_get();
-		if (authenticated.value) await Promise.all([
-			axios_authenticatedUser.authenticated_get(),
-			axios_authenticatedFood.last_get(),
-			axios_authenticatedFood.all_get(),
-			axios_authenticatedFood.category_get(),
-		]);
+		if (authenticated.value) {
+			mealStorage.delete();
+			infobarModule().$reset();
+			mealModule().clear_all_filters();
+			await mealStorage.seed_meal_pinia();
+			if (userModule().admin) await axios_adminMeal.missing_get();
+		}
 	} catch (e) {
 		const message = e instanceof Error ? e.message : 'ERROR';
 		snackError({ message });
@@ -54,6 +52,6 @@ const goOnline = async (): Promise<void> => {
 };
 
 onMounted(() => {
-	goOnlineInterval.value = window.setInterval(() => goOnline(), 10000);
+	goOnlineInterval.value = window.setInterval(async () => await goOnline(), 10000);
 });
 </script>

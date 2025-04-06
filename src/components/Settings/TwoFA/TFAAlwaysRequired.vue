@@ -4,14 +4,8 @@
 			<v-col cols='12' md='8' class='ma-0 pa-0'>
 				<v-row class='ma-0 pa-0' align='center' justify='center'>
 					<v-col cols='auto' class='ma-0 pa-0' @click='toggle'>
-						<v-switch
-							v-model='arVal'
-							:disabled='backupProcess'
-							class='ma-0 pa-0'
-							label=''
-							color='primary'
-							density='compact'
-						>
+						<v-switch v-model='arVal' :disabled='backupProcess' class='ma-0 pa-0' label='' color='primary'
+							density='compact'>
 							<template v-slot:label>
 								<span class=''>Extra Two-Factor Authentication prompts</span>
 							</template>
@@ -20,7 +14,9 @@
 				</v-row>
 				<v-row class='ma-0 pa-0 mt-n4' align='center' justify='center'>
 					<v-col cols='12' class='ma-0 pa-0'>
-						When enabled, a Two Factor Authentication token will be required at all password prompts. Otherwise, a Two Factor Authentication token will only be required at login.
+						When enabled, a Two Factor Authentication token will be required at all password prompts.
+						Otherwise, a Two
+						Factor Authentication token will only be required at login.
 					</v-col>
 				</v-row>
 			</v-col>
@@ -33,7 +29,7 @@ import { axios_authenticatedUser } from '@/services/axios';
 import { dialoger } from '@/services/dialog';
 import { mdiDeleteCircle } from '@mdi/js';
 import { snackSuccess } from '@/services/snack';
-import type { TAuthObject } from '@/types';
+import type { PV, TAuthObject } from '@/types';
 
 const arVal = ref(false);
 
@@ -48,7 +44,6 @@ const always_required = computed({
 	set (b: boolean): void {
 		twoFAModule().set_alwaysRequired(b);
 	}
-
 });
 
 watch(always_required, (_) => {
@@ -59,9 +54,7 @@ watch(arVal, (_) => {
 	arVal.value = always_required.value;
 });
 
-const backupProcess = computed((): boolean => {
-	return twoFAModule().backupProcess;
-});
+const backupProcess = computed(() => twoFAModule().backupProcess);
 const loading = computed({
 	get (): boolean {
 		return loadingModule().loading;
@@ -71,28 +64,35 @@ const loading = computed({
 	}
 });
 
-const confirm_function = async (authObject: TAuthObject): Promise<void> => {
+const confirm_function = async (authObject: TAuthObject): PV => {
 	loading.value = true;
-	const success = await axios_authenticatedUser.setupTwoFA_patch({ ...authObject, always_required: false });
-	if (success) snackSuccess({ message: 'Extra Two Factor Authentication prompts removed', icon: mdiDeleteCircle });
+	const success = await axios_authenticatedUser.setupTwoFA_patch({
+		...authObject,
+		always_required: false
+	});
+	if (success) snackSuccess({
+		message: 'extra two-factor authentication prompts removed',
+		icon: mdiDeleteCircle
+	});
 	loading.value = false;
 };
 
-const show_dialog = ():void => {
+const show_dialog = (): void => {
 
 	dialoger({
-		message: 'Are you sure you want to remove the extra Two Factor Authentication prompts?',
+		message: 'are you sure you want to remove the extra two-factor authentication prompts?',
 		buttonText: 'confirm',
 		title: 'Confirm',
 		passwordRequired: true,
 		confirmFunction: confirm_function
 	});
 };
-const toggle = async (): Promise<void> => {
+
+const toggle = async (): PV => {
 	if (!always_required.value) {
 		loading.value = true;
 		const success = await axios_authenticatedUser.setupTwoFA_patch({ always_required: true });
-		if (success) snackSuccess({ message: 'Extra Two Factor Authentication prompts enabled' });
+		if (success) snackSuccess({ message: 'extra two-factor authentication prompts enabled' });
 		loading.value = false;
 
 	} else {

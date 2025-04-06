@@ -17,10 +17,10 @@
 </p>
 
 <hr>
-<p align="center"><em>Since May 9th 2015, two transatlantic friends have pedantically exchanged information on every evening meal that they have consumed. This is a comprehensive chronicling of that pedantry.</em></p>
+<p align="center"><em>Since May 9th 2015, two friends have pedantically exchanged information on every evening meal that they have consumed. This is a comprehensive chronicling of that pedantry.</em></p>
 <p align="center">
-	<a href="https://raw.githubusercontent.com/mrjackwills/mealpedant_vue/main/.github/screenshot.png" target='_blank' rel='noopener noreferrer'>
-		<img src='./.github/screenshot.png' width='100%'/>
+	<a href="https://raw.githubusercontent.com/mrjackwills/mealpedant_vue/main/.github/screenshot.jpg" target='_blank' rel='noopener noreferrer'>
+		<img src='./.github/screenshot.jpg' width='100%'/>
 	</a>
 </p>
 <hr>
@@ -31,20 +31,19 @@
 	<li>PWA with Desktop & Mobile layout</li>
 	<li>Brotli & Gzipped compressed output</li>
 	<li>Weak password resolution & rejection, powered by <a href='https://haveibeenpwned.com/' target='_blank' rel='noopener noreferrer'>hibp</a></li>
-	<li>IndexedDB storage, using <a href="https://dexie.org" target='_blank' rel='noopener noreferrer'>Dexie</a></li>
 	<li><a href="https://pinia.vuejs.org/" target='_blank' rel='noopener noreferrer'>Pinia</a> for local data storage</li>
 	<li>Client side routing with <a href="https://router.vuejs.org/" target='_blank' rel='noopener noreferrer'>Vue Router</a></li>
 	<li>Restricted (server side validated) User & Admin User areas</li>
 	<li>Form validation with <a href="https://vuelidate.js.org/" target='_blank' rel='noopener noreferrer'>Vuelidate</a></li>
+	<li>Client side meal filtering</li>
 	<li>QR code creation</li>
 	<li>Github release workflow</li>
 </ul>
 
-
 ## Todo
 <ul>
-	<li>Convert from Vue 2 to Vue 3</li>
-	<li>Switch from webpack to Vite</li>
+	<li><del>Convert from Vue 2 to Vue 3</del></li>
+	<li><del>Switch from webpack to Vite</del></li>
 	<li>testing - zero tests so far :( </li>
 	<li>Refactor duplicate code</li>
 </ul>
@@ -67,7 +66,8 @@ Use docker dev container (found in ./.devcontainer)
 
 1) Install all required packages ```npm install```
 
-2) Run locally ```npm run serve```
+2) Run locally ```npm run serve``` *or* ```npm run build; npx serve ./dist -p 8002```
+
 
 ## Build step
 

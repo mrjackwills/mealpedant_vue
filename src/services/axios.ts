@@ -1,24 +1,22 @@
 import { env } from '@/vanillaTS/env';
-import { isId } from '@/types/userGuards';
+import { isHttpCode } from '@/types/typeGuards';
 import { snackError } from './snack';
 import * as types from '@/types';
 import Axios, { type AxiosInstance, AxiosError } from 'axios';
-import { HttpCode } from '@/types/enum_http';
+import { HttpCode } from '@/types/const_http';
 
-type ErrorData = {data: { response: string } }
+type ErrorData = { data: { response: string } };
 
-type AxiosClasses = Admin | AdminMeal | AdminPhoto | AuthenticatedFood | AuthenticatedUser | DownloadPhoto | Incognito
+type AxiosClasses = Admin | AdminMeal | AdminPhoto | AuthenticatedFood | AuthenticatedUser | DownloadPhoto | Incognito;
 
 // Allow for longer timeouts when in debug mode
-const get_timeout = (): number => {
-	return env.mode_production? 15000 : 70000;
-};
+const get_timeout = (): number => env.mode_production ? 15000 : 30000;
 
 const baseAxios: AxiosInstance = Axios.create({
 	baseURL: env.domain_api,
 	withCredentials: true,
 	headers: {
-		'Accept': 'application/json',
+		Accept: 'application/json',
 		'Content-Type': 'application/json; charset=utf-8',
 		'Cache-control': 'no-cache'
 	},
@@ -28,17 +26,17 @@ const baseAxios: AxiosInstance = Axios.create({
 const staticAxios: AxiosInstance = Axios.create({
 	baseURL: env.domain_static,
 	withCredentials: true,
-	responseType: 'arraybuffer',
+	responseType: 'arraybuffer'
 });
 
-for (const i of [ baseAxios, staticAxios ]) {
+for (const i of [baseAxios, staticAxios]) {
 	i.interceptors.response.use(
 		(config) => Promise.resolve(config),
 		(error) => !error.response ? Promise.reject(new Error('offline')) : Promise.reject(error)
 	);
 }
 
-const isAuthenticated = <T> () => {
+const isAuthenticated = <T>() => {
 	return function (_target: AxiosClasses, _propertyKey: string, descriptor: PropertyDescriptor): void {
 		const original = descriptor.value;
 		descriptor.value = async function (t: T): Promise<unknown> {
@@ -46,14 +44,13 @@ const isAuthenticated = <T> () => {
 			if (authenticated) {
 				const result = await original.call(this, t);
 				return result;
-			}
-			else snackError({ message: 'Invalid Authentication' });
+			} else snackError({ message: 'invalid authentication' });
 			return;
 		};
 	};
 };
 
-const isNotAuthenticated = <T> () => {
+const isNotAuthenticated = <T>() => {
 	return function (_target: AxiosClasses, _propertyKey: string, descriptor: PropertyDescriptor): void {
 		const original = descriptor.value;
 		descriptor.value = async function (t: T): Promise<unknown> {
@@ -61,14 +58,13 @@ const isNotAuthenticated = <T> () => {
 			if (!authenticated) {
 				const result = await original.call(this, t);
 				return result;
-			}
-			else snackError({ message: 'Invalid Authentication' });
+			} else snackError({ message: 'invalid authentication' });
 			return;
 		};
 	};
 };
 
-const isAdmin = <T> () => {
+const isAdmin = <T>() => {
 	return function (_target: AxiosClasses, _propertyKey: string, descriptor: PropertyDescriptor): void {
 		const original = descriptor.value;
 		descriptor.value = async function (t: T): Promise<unknown> {
@@ -76,43 +72,39 @@ const isAdmin = <T> () => {
 			if (admin) {
 				const result = await original.call(this, t);
 				return result;
-			}
-			else snackError({ message: 'Invalid Authentication' });
+			} else snackError({ message: 'invalid authentication' });
 			return;
 		};
 	};
 };
 
-const wrap = <T> () => {
+const wrap = <T>() => {
 	return function (_target: AxiosClasses, _propertyKey: string, descriptor: PropertyDescriptor): void {
 		const original = descriptor.value;
-		descriptor.value = async function (t: T):Promise<unknown> {
+		descriptor.value = async function (t: T): Promise<unknown> {
 			try {
 				const result = await original.call(this, t);
 				return result;
 			} catch (err) {
 				loadingModule().set_loading(false);
-				const e = <AxiosError>err;
+				const e = err as AxiosError;
 				if (e.message === 'offline') {
 					const BrowserStore = browserModule();
-					if (BrowserStore.online) snackError({ message: 'Server offline' });
+					if (BrowserStore.online) snackError({ message: 'server offline' });
 					BrowserStore.set_online(false);
 					return;
-				}
-				else if (e.response?.status === HttpCode.FORBIDDEN) {
+				} else if (e.response?.status === HttpCode.FORBIDDEN) {
 					userModule().clear_email_admin();
-					await userModule().clientSideSignout();
-					snackError({ message: 'You have been signed out' });
+					userModule().clientSideSignout();
+					snackError({ message: 'you have been signed out' });
 					return;
-				}
-				else if (e.response?.status === HttpCode.TOO_MANY_REQUESTS) {
-					const p = <ErrorData>e.response;
+				} else if (e.response?.status === HttpCode.TOO_MANY_REQUESTS) {
+					const p = e.response as ErrorData;
 					snackError({ message: p.data.response });
 					return;
-				}
-				else {
-					const p = <ErrorData>e?.response;
-					const eeee = p.data?.response ?? 'Unable to access server';
+				} else {
+					const p = e?.response as ErrorData;
+					const eeee = p.data?.response ?? 'unable to access server';
 					snackError({ message: eeee });
 				}
 				return;
@@ -132,7 +124,7 @@ class Incognito {
 		BrowserStore.set_api_version(response.data.response.api_version);
 		return true;
 	}
-	
+
 	@wrap<types.TRegisterUser>()
 	@isNotAuthenticated<types.TRegisterUser>()
 	async register_post (registerObject: types.TRegisterUser): Promise<string> {
@@ -154,7 +146,10 @@ class Incognito {
 	@wrap<types.TPasswordPatch>()
 	@isNotAuthenticated()
 	async reset_patch ({ resetId, password, token }: types.TPasswordPatch): types.PB {
-		await baseAxios.patch(`${this.#url}/reset/${resetId}`, { password, token: token ?? undefined });
+		await baseAxios.patch(`${this.#url}/reset/${resetId}`, {
+			password,
+			token: token ?? undefined
+		});
 		return true;
 	}
 
@@ -169,7 +164,23 @@ class Incognito {
 	@isNotAuthenticated<types.TSignin>()
 	async signin_post (authObject: types.TSignin): Promise<types.u<types.TSigninResponse>> {
 		const response = await baseAxios.post(`${this.#url}/signin`, authObject);
-		return { response: response.data.response, status: response.status };
+		if (isHttpCode(response.status)) {
+			return {
+				response: response.data.response,
+				status: response.status
+			};
+		}
+	}
+
+	@wrap()
+	async meals_get (): Promise<types.c_MealInfo> {
+		const response = await baseAxios.get(`${this.#url}/meals`);
+		return response.data.response;
+	}
+
+	async mealhash_get (): Promise<string> {
+		const response = await baseAxios.get(`${this.#url}/hash`);
+		return response.data.response;
 	}
 
 	@wrap()
@@ -182,7 +193,7 @@ class Incognito {
 
 class AuthenticatedUser {
 	readonly #url = 'user';
-	
+
 	@wrap()
 	async signout_post (): types.PV {
 		await baseAxios.post(`${this.#url}/signout`);
@@ -199,7 +210,7 @@ class AuthenticatedUser {
 			UserStore.set_admin(response.data.response.admin),
 			TwoFAStore.set_backup_count(response.data.response.two_fa_count),
 			TwoFAStore.set_alwaysRequired(response.data.response.two_fa_always_required),
-			TwoFAStore.set_active(response.data.response.two_fa_active),
+			TwoFAStore.set_active(response.data.response.two_fa_active)
 		]);
 	}
 
@@ -209,7 +220,7 @@ class AuthenticatedUser {
 		await baseAxios.patch(`${this.#url}/password`, passwordObject);
 		return true;
 	}
-	
+
 	@wrap()
 	@isAuthenticated<types.TAuthObject>()
 	async twoFA_delete (authObject: types.TAuthObject): types.PB {
@@ -220,7 +231,7 @@ class AuthenticatedUser {
 
 	@wrap<types.TAuthObject>()
 	@isAuthenticated<types.TAuthObject>()
-	async twoFA_patch (authObject: types.TAuthObject): Promise<Array<string>|undefined> {
+	async twoFA_patch (authObject: types.TAuthObject): Promise<Array<string> | undefined> {
 		const response = await baseAxios.patch(`${this.#url}/twofa`, authObject);
 		return response?.data?.response?.backups as Array<string>;
 	}
@@ -246,7 +257,7 @@ class AuthenticatedUser {
 		const response = await baseAxios.get(`${this.#url}/setup/twofa`);
 		return response.data.response.secret as string;
 	}
-	
+
 	@wrap()
 	@isAuthenticated()
 	async setupTwoFA_delete (): types.PV {
@@ -274,30 +285,16 @@ class AuthenticatedFood {
 
 	@wrap()
 	@isAuthenticated()
-	async all_get (): Promise<Array<types.TIndexDBDateMeal>> {
+	async all_get (): Promise<types.c_MealInfo> {
 		const response = await baseAxios.get(`${this.#url}/all`);
 		return response.data.response;
 	}
-	
-	@wrap()
-	@isAuthenticated()
-	async cache_delete (): types.PV {
-		await baseAxios.delete(`${this.#url}/cache`);
-	}
 
 	@wrap()
 	@isAuthenticated()
-	async category_get (): Promise<Array<types.TCategory>> {
-		const response = await baseAxios.get(`${this.#url}/category`);
-		return response.data.response.categories;
-	}
-
-	@wrap()
-	@isAuthenticated()
-	async last_get (): Promise<undefined|types.B_lastId> {
-		const response = await baseAxios.get(`${this.#url}/last`);
-		const id = response.data.response.last_id;
-		return isId<types.B_lastId>(id)? id : undefined;
+	async mealhash_get (): Promise<string> {
+		const response = await baseAxios.get(`${this.#url}/hash`);
+		return response.data.response;
 	}
 }
 
@@ -331,6 +328,12 @@ class Admin {
 	}
 
 	@wrap()
+	@isAuthenticated()
+	async cache_delete (): types.PV {
+		await baseAxios.delete(`${this.#url}/cache`);
+	}
+
+	@wrap()
 	@isAdmin()
 	async email_get (): types.PB {
 		const response = await baseAxios.get(`${this.#url}/email`);
@@ -342,7 +345,7 @@ class Admin {
 	@isAdmin()
 	async email_post (emailData: types.TSendEmail): types.PB {
 		await baseAxios.post(`${this.#url}/email`, emailData);
-		return true ;
+		return true;
 	}
 
 	@wrap()
@@ -379,6 +382,19 @@ class Admin {
 
 	@wrap()
 	@isAdmin()
+	async photo_get (): types.PV {
+		const response = await baseAxios.get(`${this.#url}/photo`);
+		adminModule().set_all_photos(response.data.response);
+	}
+
+	@wrap()
+	@isAdmin()
+	async photo_delete (name: string): types.PV {
+		await baseAxios.delete(`${this.#url}/photo/${name}`);
+	}
+
+	@wrap()
+	@isAdmin()
 	async restart_put (authObject: types.TAuthObject): types.PV {
 		await baseAxios.put(`${this.#url}/restart`, authObject);
 	}
@@ -394,16 +410,17 @@ class Admin {
 	@isAdmin()
 	async session_delete (uuid: string): types.PV {
 		await baseAxios.delete(`${this.#url}/session/${uuid}`);
-		
 	}
 
 	@wrap()
 	@isAdmin()
 	async user_get (): types.PV {
 		const response = await baseAxios.get(`${this.#url}/user`);
-		for (const i of response.data.response) i.meta = { expanded: undefined, sessions: undefined };
+		for (const i of response.data.response) i.meta = {
+			expanded: undefined,
+			sessions: undefined
+		};
 		adminModule().set_registeredUsers(response.data.response);
-		
 	}
 
 	@wrap()
@@ -421,12 +438,15 @@ class AdminMeal {
 	@isAdmin()
 	async missing_get (): types.PV {
 		const response = await baseAxios.get(`${this.#url}/missing`);
-		for (const i of response.data.response) infobarModule().add_message({ message: `${`${i.date}`.substring(0, 10)} missing for ${i.person}`, color: 'infobar' });
+		for (const i of response.data.response) infobarModule().add_message({
+			message: `${`${i.date}`.substring(0, 10)} missing for ${i.person}`,
+			color: 'infobar'
+		});
 	}
 
 	@wrap()
 	@isAdmin()
-	async singleMeal_get (data: types.TSingleMeal): Promise<undefined|types.TMealDatePerson> {
+	async singleMeal_get (data: types.TSingleMeal): Promise<undefined | types.TMealDatePerson> {
 		const response = await baseAxios.get(`${this.#url}/${data.date}/${data.person}`);
 		return response?.data?.response?.meal;
 	}
@@ -447,7 +467,7 @@ class AdminMeal {
 
 	@wrap()
 	@isAdmin()
-	async meal_post (meal:types.TInsertMeal): types.PB {
+	async meal_post (meal: types.TMealDatePerson): types.PB {
 		await baseAxios.post(this.#url, { ...meal });
 		return true;
 	}
@@ -465,12 +485,12 @@ export class AdminPhoto {
 
 	@wrap()
 	@isAdmin()
-	async photo_post (photoData: FormData): Promise<types.TPhotoLong|undefined> {
+	async photo_post (photoData: FormData): Promise<types.TPhotoLong | undefined> {
 		const response = await baseAxios.post(this.#url, photoData, {
 			headers: {
 				'Content-Type': 'multipart/form-data',
 				'Cache-control': 'no-cache'
-			},
+			}
 		});
 		return response.data.response;
 	}

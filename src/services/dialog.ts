@@ -9,5 +9,5 @@ export const dialoger = (data: TDialogData): void => {
 	dialog_store.set_confirmFunction(data.confirmFunction);
 	dialog_store.set_title(data.title);
 	if (data.timeout) dialog_store.set_timeout(data.timeout);
-	dialog_store.set_visible(data.visible??true);
+	dialog_store.set_visible(data.visible ?? true);
 };

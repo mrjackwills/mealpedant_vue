@@ -1,5 +1,5 @@
 <template>
-	<section >
-		<div class='text-center error--text font-weight-medium'>Your password cannot contain your email address.</div>
+	<section class='text-center text-error font-weight-medium'>
+		Your password cannot contain your email address
 	</section>
 </template>

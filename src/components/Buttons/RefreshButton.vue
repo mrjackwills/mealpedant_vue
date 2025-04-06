@@ -1,32 +1,28 @@
 <template>
-	<v-row
-		align='center'
-		justify='center'>
-		<v-col cols='auto' class='cl'>
-			<v-btn
-				@click='refresh'
-				variant='flat'
-				color='infobar'
-				small
-
-			>
-				<ButtonIcon
-					:icon='mdiDatabaseRefresh'
-					:small='true'
-				/>
-				force data refresh
+	<v-row align='center' justify='center' class='ma-0 pa-0 mt-1 mt-md-4'>
+		<v-col cols='auto' class='cl ma-0 pa-0'>
+			<v-btn @click='refresh' variant='flat' color='infobar' size='small' density='compact' rounded>
+				<ButtonIcon :icon='mdiDatabaseRefresh' :small='true' />
+				re-download meal data
 			</v-btn>
 		</v-col>
 	</v-row>
 </template>
 
 <script setup lang='ts'>
-import { dexieDB } from '@/services/dexieDb';
 import { mdiDatabaseRefresh } from '@mdi/js';
-import { resetFilters } from '@/services/reset';
+import { axios_adminMeal } from '@/services/axios';
+
+/// Refresh the meal data, clear filters, and if admin, check for missing meals
 const refresh = async (): Promise<void> => {
-	await dexieDB.clear_all();
-	await dexieDB.check_last_id();
-	await resetFilters();
+	mealStorage.delete();
+	infobarModule().$reset();
+	mealModule().clear_all_filters();
+	await mealStorage.seed_meal_pinia();
+	if (userModule().admin) await axios_adminMeal.missing_get();
+	window.scrollTo({
+		top: 0,
+		behavior: 'smooth'
+	});
 };
 </script>

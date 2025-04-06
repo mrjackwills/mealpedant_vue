@@ -1,24 +1,18 @@
 <template>
-	<v-row justify='center' class='my-2'>
+	<v-row justify='center' class='ma-0 pa-0 mb-1'>
 		<v-col cols='12' sm='6' lg='3' xl='2' class='pa-0 my-0'>
-			<v-btn
-				@click='buttonSection=!buttonSection'
-				block
-				variant='text'
-			>
-				<v-row align='center' justify='space-between' class='ma-0 pa-0' >
-					<v-col cols='auto' class='ma-0 pa-0 '>
-						<v-icon class='mr-1' style='vertical-align: middle;' medium :icon='buttonIcon '/>
+			<v-btn @click='buttonSection = !buttonSection' block variant='text'>
+				<v-row align='center' justify='space-between' class='ma-0 pa-0'>
+					<v-col cols='auto' class='ma-0 pa-0'>
+						<v-icon class='mr-1' style='vertical-align: middle;' medium :icon='buttonIcon' />
 					</v-col>
 					<v-col cols='auto' class='ma-0 pa-0'>
-						<div>
-							<span v-if='buttonSection && lgAndUp'>hide</span>
-							<span v-if='!buttonSection && lgAndUp'>show</span>
-							{{ buttonName }}
-						</div>
+						<span v-if='buttonSection && lgAndUp'>hide</span>
+						<span v-if='!buttonSection && lgAndUp'>show</span>
+						{{ buttonName }}
 					</v-col>
 					<v-col cols='auto' class='ma-0 pa-0'>
-						<v-icon class='mr-1' style='vertical-align: middle;' medium >{{ showHideIcon }}</v-icon>
+						<v-icon class='mr-1' style='vertical-align: middle;' medium>{{ showHideIcon }}</v-icon>
 					</v-col>
 				</v-row>
 			</v-btn>
@@ -31,60 +25,57 @@ import { mdiChevronDown, mdiChevronUp, mdiFilter, mdiMagnify, mdiCalendarRange, 
 import { useDisplay } from 'vuetify';
 const { lgAndUp } = useDisplay();
 
-const showHideIcon = computed((): string => {
-	return buttonSection.value ? mdiChevronUp: mdiChevronDown;
-});
+const showHideIcon = computed(() => buttonSection.value ? mdiChevronUp : mdiChevronDown);
 
-const buttonIcon = computed(() :string => {
+const buttonIcon = computed((): string => {
 	switch (props.buttonName) {
-	case 'analysis':
-		return mdiPoll;
-	case 'date':
-		return mdiCalendarRange;
-	case 'filters':
-		return mdiFilter;
-	default:
-		return mdiMagnify;
+		case 'analysis':
+			return mdiPoll;
+		case 'date':
+			return mdiCalendarRange;
+		case 'filters':
+			return mdiFilter;
+		default:
+			return mdiMagnify;
 	}
 });
 const buttonSection = computed({
 	get (): boolean {
 		switch (props.buttonName) {
-		case 'analysis':
-			return foodModule().button_analysis;
-		case 'date':
-			return foodModule().button_date;
-		case 'filters':
-			return foodModule().button_filters;
-		default:
-			return foodModule().button_search;
+			case 'analysis':
+				return mealViewModule().button_analysis;
+			case 'date':
+				return mealViewModule().button_date;
+			case 'filters':
+				return mealViewModule().button_filters;
+			default:
+				return mealViewModule().button_search;
 		}
 	},
 	set (b: boolean): void {
 		switch (props.buttonName) {
-		case 'analysis':
-			foodModule().set_button_analysis(b);
-			break;
-		case 'date':
-			foodModule().set_button_date(b);
-			break;
-		case 'filters':
-			foodModule().set_button_filters(b);
-			break;
-		default:
-			foodModule().set_button_search(b);
-			break;
+			case 'analysis':
+				mealViewModule().set_button_analysis(b);
+				break;
+			case 'date':
+				mealViewModule().set_button_date(b);
+				break;
+			case 'filters':
+				mealViewModule().set_button_filters(b);
+				break;
+			default:
+				mealViewModule().set_button_search(b);
+				break;
 		}
 	}
 });
 
-const props = defineProps<{
-	buttonName: string,
-}>();
+const props = defineProps<{ buttonName: string }>();
 
 </script>
 
 <style>
-.v-btn__content{
-	width:100%
-}</style>
+.v-btn__content {
+	width: 100%
+}
+</style>
