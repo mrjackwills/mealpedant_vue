@@ -25,8 +25,6 @@ declare module 'pinia' {
 	}
 }
 
-// adapt this based on where your router is
-
 const pinia = createPinia();
 pinia.use(({ store }) => {
 	store.router = markRaw(router);
@@ -38,6 +36,6 @@ pinia.use(piniaPluginPersistedstate);
 app
 	.use(head)
 	.use(router)
-	.use(pinia)
 	.use(vuetify)
-	.mount('#MealPedant_app');
+	.use(pinia)
+	.mount('#mealpedant_app');

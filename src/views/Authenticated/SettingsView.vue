@@ -1,9 +1,5 @@
 <template>
-	<v-container
-		v-if='pageInit'
-		container--fluid
-		fill-height
-	>
+	<v-container v-if='pageInit' fluid class='fill-height'>
 		<v-row class='ma-0 pa-0' align='center' justify='center'>
 			<v-col cols='11' class='ma-0 pa-0'>
 				<TwoFactor />
@@ -25,9 +21,7 @@
 <script setup lang='ts'>
 import { axios_authenticatedUser } from '@/services/axios';
 
-const backupProcess = computed((): boolean => {
-	return twoFAModule().backupProcess;
-});
+const backupProcess = computed(() => twoFAModule().backupProcess);
 const loading = computed({
 	get (): boolean {
 		return loadingModule().loading;
@@ -36,9 +30,7 @@ const loading = computed({
 		loadingModule().set_loading(b);
 	}
 });
-const setupProcessStarted = computed((): boolean => {
-	return twoFAModule().setupProcessStarted;
-});
+const setupProcessStarted = computed(() => twoFAModule().setupProcessStarted);
 const pageInit = ref(false);
 
 onBeforeMount(async () => {

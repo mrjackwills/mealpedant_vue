@@ -1,24 +1,16 @@
 <template>
 	<v-row align='center' justify='center' class='pa-0 ma-0'>
-		<v-col cols='12' sm='7' md='4' class='pa-0 ma-1'>
-			<v-alert
-				class='pa-0 ma-0 py-2'
-				:color='color'
-			>
-				<v-row justify='space-around' align='center' class='ma-0 pa-0'>
-					<v-col cols='auto' class='pa-0 ma-0'>
+		<v-col cols='12' md='6' class='pa-0 ma-1'>
+			<v-alert class='pa-0 ma-0 pa-3' :color='color'>
+				<v-row justify='space-between' align='center' class='ma-0 pa-0'>
+					<v-col cols='1' lg='auto' class='pa-0 ma-0'>
 						<v-icon small color='white' :icon='mdiInformation' />
 					</v-col>
-					<v-col cols='auto' class='white--text pa-0 ma-0 px-2' >
-						<div class='text-overline'>{{ message }}</div>
+					<v-col cols='10' lg='auto' class='text-white pa-0 ma-0 text-center text-overline'>
+						{{ message }}
 					</v-col>
-					<v-col cols='auto' class='pa-0 ma-0'>
-						<v-icon
-							@click='infoClose'
-							:icon='mdiClose'
-							color='white'
-							small
-						/>
+					<v-col cols='1' lg='auto' class='pa-0 ma-0'>
+						<v-icon @click='infoClose' :icon='mdiClose' color='white' small />
 					</v-col>
 				</v-row>
 			</v-alert>

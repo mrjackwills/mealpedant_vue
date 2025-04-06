@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { ModuleName } from '@/types/const_module';
-import type { u, TServerStats, TBackup, TLimit, TAllUserInfo, TLogs } from '@/types';
+import type { u, TServerStats, TBackup, TLimit, TAllUserInfo, TLogs, TAdminPhoto } from '@/types';
 
 export const adminModule = defineStore(ModuleName.Admin, {
 
@@ -11,11 +11,15 @@ export const adminModule = defineStore(ModuleName.Admin, {
 		logs: [] as Array<TLogs>,
 		memory: undefined as u<TServerStats>,
 		registeredUsers: [] as TAllUserInfo,
+		allPhotos: [] as Array<TAdminPhoto>,
 		date: '',
 		person: ''
 	}),
 
 	actions: {
+		set_all_photos (a: Array<TAdminPhoto>) {
+			this.allPhotos = a;
+		},
 		set_date (x: string) {
 			this.date = x;
 		},
@@ -27,23 +31,23 @@ export const adminModule = defineStore(ModuleName.Admin, {
 		set_email (b: Array<string>) {
 			this.email = b;
 		},
-			
+
 		set_logs (b: Array<TLogs>) {
 			this.logs = b;
 		},
-			
+
 		set_backup (b: TBackup) {
 			this.backup = b;
 		},
-			
+
 		set_limit (b: TLimit) {
 			this.limit = b;
 		},
-			
+
 		set_memory (b: TServerStats) {
 			this.memory = b;
 		},
-			
+
 		set_registeredUsers (b: TAllUserInfo) {
 			this.registeredUsers = b;
 		}

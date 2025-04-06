@@ -14,7 +14,7 @@ export const browserModule = defineStore(ModuleName.Browser, {
 	}),
 
 	actions: {
-		
+
 		set_api_version (x: su) {
 			this.api_version = x;
 		},
@@ -22,15 +22,15 @@ export const browserModule = defineStore(ModuleName.Browser, {
 		set_description (x: string) {
 			this.description = x;
 		},
-	
+
 		set_init (x: boolean) {
 			this.init = x;
 		},
-	
+
 		set_online (x: boolean) {
 			this.online = x;
 		},
-	
+
 		set_pageTitle (x: string) {
 			this.pageTitle = x;
 		},

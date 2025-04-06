@@ -1,18 +1,7 @@
 <template>
-	<transition
-		name='fade'
-		mode='out-in'
-	>
-		<v-btn
-			v-if='scrolled'
-			@click='goToTop'
-			color='error'
-			class='mr-1 cl up_arrow'
-			position='fixed'
-			size='small'
-			:icon='mdiArrowCollapseUp'
-			dark
-		/>
+	<transition name='fade' mode='out-in'>
+		<v-btn v-if='scrolled' @click='goToTop' color='error' class='mr-1 cl up_arrow' position='fixed' size='small'
+			v-tooltip:top='"Scroll to top"' :icon='mdiArrowCollapseUp' dark />
 	</transition>
 </template>
 
@@ -34,13 +23,15 @@ const scrollEvent = (): void => {
 };
 
 const goToTop = (): void => {
-	document.body.scrollTop = 0;
-	document.documentElement.scrollTop = 0;
+	window.scrollTo({
+		top: 0,
+		behavior: 'smooth'
+	});
 };
 </script>
 
 <style scoped>
-.up_arrow{
+.up_arrow {
 	/* inset: 0 1rem 1rem 0; */
 	right: 1rem;
 	bottom: 1rem;

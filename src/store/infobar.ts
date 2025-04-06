@@ -17,6 +17,5 @@ export const infobarModule = defineStore(ModuleName.Infobar, {
 			if (messageIndex < 0) return;
 			this.messages.splice(messageIndex, 1);
 		}
-
 	}
 });

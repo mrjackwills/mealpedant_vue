@@ -2,6 +2,9 @@
  * Original source - https://gist.github.com/scokmen/f813c904ef79022e84ab2409574d1b45
  * Hypertext Transfer Protocol (HTTP) response status codes.
  */
+
+import { ConstT } from '@/types';
+
 export const HttpCode = {
 	CONTINUE: 100 as const,
 	SWITCHING_PROTOCOLS: 101 as const,
@@ -66,4 +69,4 @@ export const HttpCode = {
 	NETWORK_AUTHENTICATION_REQUIRED: 511 as const
 };
 
-export type HttpCode = (typeof HttpCode)[keyof typeof HttpCode]; 
+export type HttpCode = ConstT<typeof HttpCode>;

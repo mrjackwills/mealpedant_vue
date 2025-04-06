@@ -1,53 +1,24 @@
 <template>
 	<v-row justify='center'>
 		<v-col cols='12' sm='8' md='6' grow>
-			<v-form
-				v-on:submit.prevent>
+			<v-form v-on:submit.prevent>
 				<v-row wrap justify='space-between' class='no-gutters'>
 					<v-col cols='9' class='ma-0 pa-0'>
-						<v-select
-							v-model='email.emails'
-							@blur='touch(`emails`)'
-							@input='touch(`emails`)'
-							:disabled='confirm'
-							:error-messages='errorMessages.emails'
-							:items='emailAddresses'
-							:prepend-icon='mdiEmail'
-							hint='send to'
-							label='email address'
-							variant='underlined'
-							chips
-							clearable
-							multiple
-						>
+						<v-select v-model='email.emails' @blur='touch(`emails`)' @input='touch(`emails`)'
+							:disabled='confirm' :error-messages='errorMessages.emails' :items='emailAddresses'
+							:prepend-inner-icon='mdiEmail' hint='send to' label='email address' variant='underlined' chips
+							clearable multiple>
 						</v-select>
 					</v-col>
 					<v-col cols='auto' justify='end' class='ma-0 pa-0 mt-4'>
-						<v-switch
-							v-model='all'
-							@change='allToggle()'
-							:disabled='confirm'
-							density='compact'
-							color='primary'
-							label='all'
-						/>
+						<v-switch v-model='all' @change='allToggle()' :disabled='confirm' density='compact'
+							color='primary' label='all' />
 					</v-col>
 					<v-col cols='12' v-for='(item, index) in lineRows' :key='index' class='ma-0 pa-0'>
-						<v-textarea
-							v-model='email[item.model]'
-							@blur='touch(item.name)'
-							@input='touch(item.name)'
-							:auto-grow='true'
-							:disabled='confirm'
-							:error='errors[item.name]'
-							:error-messages='errorMessages[item.name]'
-							:label='item.label'
-							:name='item.name'
-							:prepend-icon='item.icon'
-							variant='underlined'
-							rows='1'
-							clearable
-						/>
+						<v-textarea v-model='email[item.model]' @blur='touch(item.name)' @input='touch(item.name)'
+							:auto-grow='true' :disabled='confirm' :error='errors[item.name]'
+							:error-messages='errorMessages[item.name]' :label='item.label' :name='item.name'
+							:prepend-inner-icon='item.icon' variant='underlined' rows='1' clearable />
 					</v-col>
 				</v-row>
 			</v-form>
@@ -55,31 +26,33 @@
 			<v-row justify='space-around'>
 				<v-col cols='auto' class='mt-3'>
 					<div class='text-center'>
-						<v-btn
-							@click='sendButton'
-							:disabled='localLoading || errors.button_text || errors.link || buttonAndLink || v$.$invalid '
-							:class='{"elevation-0": localLoading || v$.$invalid || errors.button_text || errors.link || buttonAndLink}'
-							:color='localLoading || errors.button_text || errors.link || buttonAndLink || v$.$invalid? "black": computedSendColor'
-							:variant='localLoading || errors.button_text || errors.link || buttonAndLink || v$.$invalid?"outlined":"flat"'
+						<v-btn @click='sendButton'
+					
+							:disabled='localLoading || errors.button_text || errors.link || buttonAndLink || v$.$invalid'
+							:color='localLoading || errors.button_text || errors.link || buttonAndLink || v$.$invalid ? "black" : computedSendColor'
+							:variant='localLoading || errors.button_text || errors.link || buttonAndLink || v$.$invalid ? "outlined" : "flat"'
+							class='elevation-0'
 							size='large'
+							rounded
 						>
-							<ButtonIcon :icon='computedSendIcon' :color='localLoading || errors.button_text || errors.link || buttonAndLink || v$.$invalid?"black":""' />
+							<ButtonIcon :icon='computedSendIcon'
+								:color='localLoading || errors.button_text || errors.link || buttonAndLink || v$.$invalid ? "black" : ""' />
 							{{ computedSendtext }}
 						</v-btn>
 					</div>
 				</v-col>
 				<v-col cols='auto' class='mt-3' v-if='confirm'>
 					<div class='text-center'>
-						<v-btn
-							@click='confirmButton'
-							:class='{"elevation-0": localLoading || disabled || errors.button_text || errors.link || buttonAndLink }'
+						<v-btn @click='confirmButton'
 							:disabled='localLoading || disabled || errors.button_text || errors.link || buttonAndLink'
-							:color='localLoading || disabled || errors.button_text || errors.link || buttonAndLink? "black": "primary"'
-							:variant='localLoading || disabled || errors.button_text || errors.link || buttonAndLink?"outlined":"flat"'
+							:color='localLoading || disabled || errors.button_text || errors.link || buttonAndLink ? "black" : "primary"'
+							:variant='localLoading || disabled || errors.button_text || errors.link || buttonAndLink ? "outlined" : "flat"'
+							class='elevation-0'
 							size='large'
+							rounded
 						>
-							<ButtonIcon v-if='!countdown' :icon='mdiEmail' color='black'/>
-							<span v-if='countdown' class='mr-1 monospace-font'>({{ countdown }})</span> Confirm
+							<ButtonIcon v-if='!countdown' :icon='mdiEmail' color='black' />
+							<span v-if='countdown' class='mr-1 monospacetext'>({{ countdown }})</span> Confirm
 						</v-btn>
 					</div>
 				</v-col>
@@ -92,7 +65,7 @@
 import { axios_admin } from '@/services/axios';
 import { mdiClose, mdiCommentTextOutline, mdiCommentTextMultipleOutline, mdiEmail, mdiFormatTitle, mdiLink, mdiTagTextOutline } from '@mdi/js';
 import { snackSuccess } from '@/services/snack';
-import type { su } from '@/types';
+import type { PV, su } from '@/types';
 import useVuelidate from '@vuelidate/core';
 import { minLength, required } from '@vuelidate/validators';
 
@@ -101,29 +74,11 @@ onBeforeUnmount(() => {
 	clearInterval(countdownInterval.value);
 });
 
-// COMPUTED
-
-const buttonAndLink = computed((): boolean => {
-	return email.value.button_text && email.value.link || !email.value.button_text && !email.value.link ? false : true;
-});
-const computedSendColor = computed((): string => {
-	return confirm.value ? 'error' : 'secondary';
-});
-const computedSendIcon = computed((): string => {
-	return confirm.value ? mdiClose : mdiEmail;
-});
-const computedSendtext = computed((): string => {
-	return confirm.value ? 'cancel' : 'send';
-});
-const emailAddresses = computed((): Array<string> => {
-	return adminModule().email;
-});
-// const emailErrors = computed((): Array<string> => {
-// 	const errors: Array<string>= [];
-// 	if (!v$.value.emails?.$dirty) return errors;
-// 	!v$.value.emails.required && errors.push('Email is required');
-// 	return errors;
-// });
+const buttonAndLink = computed(() => email.value.button_text && email.value.link || !email.value.button_text && !email.value.link ? false : true);
+const computedSendColor = computed(() => confirm.value ? 'error' : 'secondary');
+const computedSendIcon = computed(() => confirm.value ? mdiClose : mdiEmail);
+const computedSendtext = computed(() => confirm.value ? 'cancel' : 'send');
+const emailAddresses = computed(() => adminModule().email);
 
 const loading = computed({
 	get (): boolean {
@@ -134,21 +89,11 @@ const loading = computed({
 	}
 });
 
-const watcher_button_text = computed((): su => {
-	return email.value.button_text;
-});
-const watcher_title = computed((): su => {
-	return email.value.title;
-});
-const watcher_line_one = computed((): su => {
-	return email.value.line_one;
-});
-const watcher_link = computed((): su => {
-	return email.value.link;
-});
-const watch_emails = computed((): undefined | Array<string> => {
-	return email.value.emails;
-});
+const watcher_button_text = computed((): su => email.value.button_text);
+const watcher_title = computed((): su => email.value.title);
+const watcher_line_one = computed((): su => email.value.line_one);
+const watcher_link = computed((): su => email.value.link);
+const watch_emails = computed((): undefined | Array<string> => email.value.emails);
 
 const all = ref(false);
 const confirm = ref(false);
@@ -162,7 +107,6 @@ const email = ref({
 	button_text: undefined as su,
 	link: undefined as su
 });
-// const emailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
 const errorMessages = ref({
 	emails: undefined as su,
@@ -230,10 +174,10 @@ const allToggle = (): void => {
 	if (all.value) email.value.emails = emailAddresses.value;
 	else email.value.emails = [];
 };
-const confirmButton = async (): Promise<void> => {
 
-	if (v$.value.$invalid || errors.value.button_text || errors.value.link || email.value.emails?.length === 0) return;
-	if (!email.value.title || !email.value.line_one) return;
+const confirmButton = async (): PV => {
+
+	if (v$.value.$invalid || errors.value.button_text || errors.value.link || email.value.emails?.length === 0 || !email.value.title || !email.value.line_one) return;
 	// Still not happy with this
 	loading.value = true;
 	localLoading.value = true;
@@ -242,9 +186,9 @@ const confirmButton = async (): Promise<void> => {
 	if (response) {
 		const emailPlural = email.value.emails.length > 1 ? 's have' : ' has';
 		snackSuccess({
-			message: `The email${emailPlural} been sent`,
+			message: `the email${emailPlural} been sent`,
 			icon: mdiEmail,
-			type: 'success' 
+			type: 'success'
 		});
 		v$.value.$reset();
 		email.value = {
@@ -256,7 +200,7 @@ const confirmButton = async (): Promise<void> => {
 			link: undefined
 		};
 	}
-	[ loading.value, localLoading.value, confirm.value, disabled.value ] = [ false, false, false, false ];
+	[loading.value, localLoading.value, confirm.value, disabled.value] = [false, false, false, false];
 
 };
 const sendButton = (): void => {
@@ -264,10 +208,10 @@ const sendButton = (): void => {
 	confirm.value = !confirm.value;
 	if (confirm.value) {
 		countdown.value = 5;
-		disabledTimeout.value = window.setTimeout(()=>{
+		disabledTimeout.value = window.setTimeout(() => {
 			disabled.value = false;
 		}, 5000);
-		countdownInterval.value = window.setInterval(()=>{
+		countdownInterval.value = window.setInterval(() => {
 			if (countdown.value > 0) countdown.value -= 1;
 			if (countdown.value === 0) clearInterval(countdownInterval.value);
 		}, 1000);

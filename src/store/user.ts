@@ -1,21 +1,25 @@
+import { axios_authenticatedUser } from '@/services/axios';
 import { defineStore } from 'pinia';
-import { dexieDB } from '@/services/dexieDb';
-import { ModuleName } from '@/types/const_module';
+import { FrontEndRoutes } from '@/types/const_routes';
 import { getActivePinia } from 'pinia';
+import { ModuleName } from '@/types/const_module';
 
 export const userModule = defineStore(ModuleName.User, {
-	state: ()=> ({
+	state: () => ({
 		authenticated: false,
 		admin: false,
 		email: ''
 	}),
-	
+
 	actions: {
 
 		set_authenticated (b: boolean): void {
+			mealStorage.delete();
+			mealViewModule().$reset();
+			mealModule().$reset();
 			this.authenticated = b;
 		},
-			
+
 		set_admin (b: boolean): void {
 			this.admin = b;
 		},
@@ -28,29 +32,28 @@ export const userModule = defineStore(ModuleName.User, {
 			this.email = '';
 			this.admin = false;
 		},
-		
-		async clientSideSignout (): Promise<void> {
-			snackbarModule().$reset();
-			this.clear_email_admin();
+
+		clientSideSignout (): void {
+			loadingModule().set_loading(true);
+			axios_authenticatedUser.signout_post();
 			this.authenticated = false;
-			getActivePinia()?.router().push('/');
-			await dexieDB.clear_all();
+			adminModule().$reset();
+			snackbarModule().$reset();
+			drawerModule().$reset();
+			resetPasswordModule().$reset();
+			this.clear_email_admin();
+			infobarModule().$reset();
+			mealViewModule().$reset();
+			mealModule().$reset();
+			mealStorage.delete();
+			getActivePinia()?.router().push(FrontEndRoutes.BASE);
 			loadingModule().set_loading(false);
-			await Promise.all([
-				adminModule().$reset(),
-				drawerModule().$reset(),
-				resetPasswordModule().$reset(),
-				infobarModule().$reset(),
-				categoriesModule().$reset(),
-				foodModule().$reset(),
-				mealsModule().$reset()
-			]);
 		}
 	},
-	
+
 	persist: {
 		storage: localStorage,
-		pick: [ 'authenticated' ]
+		pick: ['authenticated']
 	}
 
 });

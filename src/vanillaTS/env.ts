@@ -1,3 +1,4 @@
+import { su } from '@/types';
 
 class Env {
 	readonly #app_version = String(import.meta.env.VERSION);
@@ -35,6 +36,13 @@ class Env {
 	get mode_production (): boolean {
 		return this.#mode_production;
 	}
+
+	/// Generate a url for a given photoname
+	gen_photo_url (photoname: su): string {
+		return `${this.domain_static}/photo/${photoname}`;
+	}
 }
+
+export type TEnv = typeof Env;
 
 export const env = new Env();

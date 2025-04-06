@@ -10,25 +10,14 @@
 		</v-row>
 		<v-row justify='start' align='center' class='ma-0 pa-0'>
 			<v-col cols='auto' class='pa-0 ma-0'>
-				<v-btn
-					@click='copyString'
-					class='ma-0 pa-0 fab-fix mr-6 black--text'
-					color='primary'
-					size='small'
-					variant='text'
-				>
+				<v-btn @click='copyString' class='ma-0 pa-0 fab-fix mr-6 text-black' color='primary' size='small'
+					variant='text'>
 					<v-icon size='x-small' color='primary' :icon='mdiContentCopy' />
 					<span class='text-overline ml-1 text-primary'>copy</span>
 				</v-btn>
 			</v-col>
 			<v-col cols='auto' class='pa-0 ma-0'>
-				<v-btn
-					@click='revoke'
-					class='ma-0 pa-0 fab-fix'
-					color='secondary'
-					size='small'
-					variant='text'
-				>
+				<v-btn @click='revoke' class='ma-0 pa-0 fab-fix' color='secondary' size='small' variant='text'>
 					<v-icon size='small' :icon='mdiClose' />
 					<span class='text-overline ml-1 text-secondary'>revoke</span>
 				</v-btn>
@@ -38,12 +27,7 @@
 	<div v-else>
 		<v-row justify='start' align='center' class='ma-0 pa-0'>
 			<v-col cols='auto' class='pa-0 ma-0 mr-6'>
-				<v-btn
-					@click='force'
-					class='ma-0 pa-0 fab-fix'
-					color='mealtype'
-					variant='text'
-				>
+				<v-btn @click='force' class='ma-0 pa-0 fab-fix' color='mealtype' variant='text'>
 					<v-icon size='small' :icon='mdiLockReset' />
 					<span class='ml-1 text-mealtype'>force reset</span>
 				</v-btn>
@@ -51,10 +35,7 @@
 		</v-row>
 		<v-row justify='start' align='center' class='ma-0 pa-0 mt-n4'>
 			<v-col cols='auto' class='pa-0 ma-0'>
-				<v-switch
-					v-model='withEmail'
-					:color='withEmail?"mealtype":""'
-				>
+				<v-switch v-model='withEmail' :color='withEmail ? "mealtype" : ""'>
 					<template v-slot:label>
 						<span class='text-overline'>send email</span>
 					</template>
@@ -73,26 +54,28 @@ import {
 	mdiContentCopy,
 	mdiLockReset
 } from '@mdi/js';
+import { PV } from '@/types';
 
 const withEmail = ref(false);
 
 const copyString = (): void => {
 	useClipboard().copy(`${env.domain_www}/user/reset/${props.reset_string}`);
 };
-const force = async (): Promise<void> => {
+
+const force = async (): PV => {
 	if (!props.password_reset_id) {
 		await axios_admin.user_patch({
 			patch: { reset: true },
-			email: props.email 
+			email: props.email
 		});
 		await axios_admin.user_get();
 	}
 };
-const revoke = async (): Promise<void> => {
+const revoke = async (): PV => {
 	if (props.password_reset_id) {
 		await axios_admin.user_patch({
 			patch: { password_reset_id: props.password_reset_id },
-			email: props.email 
+			email: props.email
 		});
 		await axios_admin.user_get();
 	}

@@ -5,6 +5,7 @@ import { VitePWA } from 'vite-plugin-pwa';
 import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify';
 import type { VitePWAOptions } from 'vite-plugin-pwa';
 import AutoImport from 'unplugin-auto-import/vite';
+// import vueDevTools from 'vite-plugin-vue-devtools';
 import Components from 'unplugin-vue-components/vite';
 
 // Utilities
@@ -75,6 +76,7 @@ export default defineConfig({
 			],
 			vueTemplate: false
 		}),
+		// vueDevTools(),
 		VitePWA(pwaOptions),
 		viteCompression({ algorithm: 'brotliCompress' }),
 		viteCompression({ algorithm: 'gzip' })

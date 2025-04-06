@@ -1,18 +1,12 @@
 <template>
 	<v-row wrap justify='center'>
-		<v-col cols='12' sm='8' md='6' >
-			<v-data-table
-				:headers='headers'
-				:items='userLimits'
-				class='elevation-1 mt-2'
-				item-key='users'
-				density='compact'
-			>
-				<template v-slot:item='{item}'>
+		<v-col cols='12' sm='8' md='6'>
+			<v-data-table-virtual height='220' :headers='headers' :items='userLimits' class='elevation-1 mt-2' item-key='users'
+				density='compact'>
+				<template v-slot:item='{ item }'>
 					<tr>
 						<td class='text-left'>{{ item.key }}</td>
 						<td class='text-center'>
-							<!-- :class='{"text--mealtype": item.b}'> -->
 							{{ item.points }}
 						</td>
 						<td class='text-right cl' @click='clearLimit(item.key)'>
@@ -20,7 +14,7 @@
 						</td>
 					</tr>
 				</template>
-			</v-data-table>
+			</v-data-table-virtual>
 		</v-col>
 	</v-row>
 </template>
@@ -28,12 +22,10 @@
 <script setup lang='ts'>
 import { axios_admin } from '@/services/axios';
 import { mdiCloseCircleOutline } from '@mdi/js';
-import type { TLimit } from '@/types';
+import type { PV, TLimit } from '@/types';
 
-const userLimits = computed((): TLimit => {
-	return adminModule().limit;
-});
-	
+const userLimits = computed((): TLimit => adminModule().limit);
+
 const headers = [
 	{
 		title: 'key',
@@ -54,7 +46,7 @@ const headers = [
 	}
 ] as const;
 
-const clearLimit = async (key: string): Promise<void> => {
+const clearLimit = async (key: string): PV => {
 	await axios_admin.limit_delete({ key });
 };
 

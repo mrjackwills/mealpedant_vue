@@ -1,58 +1,35 @@
 <template>
-	<v-container container--fluid fill-height>
+	<v-container fluid class='fill-height'>
 		<v-row align='center' justify='center' wrap>
 			<v-col cols='12' sm='8' md='4'>
-				<v-form
-					v-on:submit.prevent
-					method='post'
-				>
-					<div v-for='(item, index) in textFields'
-						:key='index'>
+				<v-form v-on:submit.prevent method='post'>
+					<div v-for='(item, index) in textFields' :key='index'>
 						<v-expand-transition>
-							<PasswordContainsEmail v-if='item.label === "INVITE" && errors.password && !passNum' />
-							<HibpMessage v-if='item.label === "INVITE" && passNum' :passNum='passNum' />
+							<PasswordContainsEmail v-if='item.label === "invite" && errors.password && !passNum' />
+							<HibpMessage v-if='item.label === "invite" && passNum' :passNum='passNum' />
 						</v-expand-transition>
-						<v-text-field
-							v-model='user[item.model]'
-							v-on:keyup.enter='register'
-							@input='touch(item.model)'
-							@blur='touch(item.model)'
-							:autocomplete='item.autocomplete'
-							:disabled='loading || completed'
-							:error='errors[item.model]'
-							:error-messages='errorMessages[item.model]'
-							:label='item.label'
-							:prepend-icon='item.icon'
-							:type='item.type'
-							variant='underlined'
-						>
-						</v-text-field>
+						<v-text-field v-model='user[item.model]' v-on:keyup.enter='register' @input='touch(item.model)'
+							@blur='touch(item.model)' :autocomplete='item.autocomplete' :disabled='loading || completed'
+							@click:append-inner='appendClick(item.model)'
+							:append-inner-icon='item.appendIcon'
+
+							:error='errors[item.model]' :error-messages='errorMessages[item.model]' :label='item.label'
+							:prepend-inner-icon='item.icon' :type='item.type' variant='underlined' />
 					</div>
 				</v-form>
 				<div class='text-center mt-1'>
-					<v-btn
-						@click='$router.push("/")'
-						:disabled='loading || completed'
-						:class='{"elevation-0": v$.$invalid || loading || completed }'
-						:variant='loading || completed?"outlined":"flat"'
-						class='elevation-2 mr-4'
-						:color='loading || completed?"":"error"'
-						dark
-						large
-					>
+					<v-btn @click='cancel' :disabled='loading || completed'
+						:variant='loading || completed ? "outlined" : "flat"' class='elevation-0 mr-4'
+						:color='loading || completed ? "" : "error"' dark large
+						rounded>
 						<ButtonIcon :icon='mdiClose' />
 						cancel
 					</v-btn>
-					<v-btn
-						@click='register'
-						:disabled='loading || v$.$invalid || errors.password || completed'
-						:class='{"elevation-0": loading || v$.$invalid || errors.password || completed }'
-						:variant='loading || v$.$invalid || errors.password || completed?"outlined":"flat"'
-						class='elevation-2'
-						:color='loading || v$.$invalid || errors.password || completed?"":"secondary"'
-						dark
-						large
-					>
+					<v-btn @click='register' :disabled='loading || v$.$invalid || errors.password || completed'
+						:variant='loading || v$.$invalid || errors.password || completed ? "outlined" : "flat"'
+						class='elevation-0'
+						:color='loading || v$.$invalid || errors.password || completed ? "" : "secondary"' dark large
+						rounded>
 						<ButtonIcon :icon='mdiAccountPlus' />
 						Register
 					</v-btn>
@@ -72,11 +49,15 @@ import {
 	mdiClose,
 	mdiEmail,
 	mdiLock,
+	mdiEye, 
+	mdiEyeOff,
 	mdiKeyboard
 } from '@mdi/js';
 import { passwordCheck } from '@/vanillaTS/hibp';
 import { snackSuccess } from '@/services/snack';
 import useVuelidate from '@vuelidate/core';
+import { FrontEndRoutes } from '@/types/const_routes';
+import { PV } from '@/types';
 
 const loading = computed({
 	get (): boolean {
@@ -86,20 +67,19 @@ const loading = computed({
 		loadingModule().set_loading(b);
 	}
 });
-	
-const watcher_email = computed((): string => {
-	return user.value.email;
-});
-const watcher_full_name = computed((): string => {
-	return user.value.full_name;
-});
-const watcher_invite = computed((): string => {
-	return user.value.invite;
-});
-const watcher_password = computed((): string => {
-	return user.value.password;
-});
-	
+
+const watcher_email = computed(() => user.value.email);
+const watcher_full_name = computed(() => user.value.full_name);
+const watcher_invite = computed(() => user.value.invite);
+const watcher_password = computed(() => user.value.password);
+
+const password_visible = ref(false);
+
+/// Set the password field visible
+const appendClick = (model: string): void => {
+	if (model === 'password') password_visible.value = !password_visible.value;
+};
+
 const completed = ref(false);
 const errorMessages = ref({
 	email: '',
@@ -114,38 +94,37 @@ const errors = ref({
 	invite: false
 });
 const passNum = ref(false);
-const textFields = computed(() => {
-	return [
-		{
-			autocomplete: 'full_name',
-			icon: mdiAccount,
-			label: 'FULL NAME',
-			model: 'full_name' as const,
-			type: 'text'
-		},
-		{
-			autocomplete: 'email',
-			icon: mdiEmail,
-			label: 'EMAIL',
-			model: 'email' as const,
-			type: 'text'
-		},
-		{
-			autocomplete: 'new-password',
-			icon: mdiLock,
-			label: 'PASSWORD',
-			model: 'password' as const,
-			type: 'password'
-		},
-		{
-			autocomplete: 'invite',
-			icon: mdiKeyboard,
-			label: 'INVITE',
-			model: 'invite' as const,
-			type: 'text'
-		}
-	]; 
-});
+const textFields = computed(() => [
+	{
+		autocomplete: 'full_name',
+		icon: mdiAccount,
+		label: 'full name',
+		model: 'full_name' as const,
+		type: 'text'
+	},
+	{
+		autocomplete: 'email',
+		icon: mdiEmail,
+		label: 'email',
+		model: 'email' as const,
+		type: 'text'
+	},
+	{
+		autocomplete: 'new-password',
+		icon: mdiLock,
+		label: 'password',
+		model: 'password' as const,
+		type: password_visible.value ? 'text' : 'password',
+		appendIcon: password_visible.value ? mdiEyeOff : mdiEye
+	},
+	{
+		autocomplete: 'invite',
+		icon: mdiKeyboard,
+		label: 'invite',
+		model: 'invite' as const,
+		type: 'text'
+	}
+]);
 const user = ref({
 	email: '',
 	full_name: '',
@@ -159,10 +138,18 @@ onMounted(() => {
 	browserStore.set_description('Meal Pedant - Register for an account in order to gain access to the daily log of ingestion');
 });
 
+const router = useRouter();
+
+/// On cancel button press, either go to base page, or meal page, depedning if meal page has already been visited
+const cancel = async (): PV => {
+	if (mealModule().meals_length > 0) await router.push(FrontEndRoutes.MEALS);
+	else await router.push(FrontEndRoutes.BASE);
+};
+
 const touch = (name: string): void => {
 	v$.value[name]?.$touch();
 };
-const register = async (): Promise<void> => {
+const register = async (): PV => {
 	if (v$.value.$invalid) return;
 	if (user.value.password.toLowerCase().includes(user.value.email.toLowerCase().trim())) {
 		errors.value.password = true;
@@ -175,6 +162,7 @@ const register = async (): Promise<void> => {
 		loading.value = false;
 		return;
 	}
+	password_visible.value = false;
 	const registerRequest = await axios_incognito.register_post(user.value);
 	if (registerRequest) {
 		completed.value = true;
@@ -182,7 +170,7 @@ const register = async (): Promise<void> => {
 			message: registerRequest,
 			timeout: 20000,
 			closable: false,
-			type: 'success' 
+			type: 'success'
 		});
 	}
 	loading.value = false;

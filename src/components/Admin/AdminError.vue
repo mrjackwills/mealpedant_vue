@@ -1,17 +1,14 @@
 <template>
 	<v-row justify='center' class='no-gutters'>
-		<v-col cols='12' class=''>
+		<v-col cols='12' md='10' class=''>
 			<v-row justify='center' class='no-gutters'>
-				<v-col cols='12' >
-					<v-data-table
+				<v-col cols='12'>
+					<v-data-table-virtual 
 						:headers='headers'
 						:items='errorLog'
-						:sort-desc='true'
 						class='elevation-1 mt-4'
-						density='compact'
-						id='datatable'
-					>
-
+						height='220'
+						density='compact' id='datatable'>
 						<template v-slot:[`item.timestamp`]='{ item }'>
 							<div class=''>{{ item.timestamp }}</div>
 						</template>
@@ -25,7 +22,7 @@
 							</div>
 						</template>
 
-					</v-data-table>
+					</v-data-table-virtual>
 				</v-col>
 			</v-row>
 		</v-col>
@@ -35,9 +32,7 @@
 <script setup lang='ts'>
 import type { TLogs } from '@/types';
 
-const errorLog = computed((): Array<TLogs> => {
-	return adminModule().logs;
-});
+const errorLog = computed((): Array<TLogs> => adminModule().logs);
 
 const headers = [
 	{

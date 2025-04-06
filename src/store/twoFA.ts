@@ -11,7 +11,6 @@ export const twoFAModule = defineStore(ModuleName.TwoFa, {
 		backup_count: 0,
 		secret: undefined as su,
 		setupProcessStarted: false
-
 	}),
 
 	actions: {
@@ -39,6 +38,5 @@ export const twoFAModule = defineStore(ModuleName.TwoFa, {
 		set_setupProcessStarted (x: boolean) {
 			this.setupProcessStarted = x;
 		}
-
 	}
 });

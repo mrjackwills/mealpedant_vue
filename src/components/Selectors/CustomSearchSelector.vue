@@ -1,112 +1,28 @@
 <template>
-	<v-text-field
-		v-model='searchTerm'
-		@click:append-outer='textSearch'
-		@click:clear='reset'
-		@keydown.delete='reset'
-		@keydown.enter='textSearch'
-		@input='textSearch'
-		:append-outer-icon='mdiMagnify'
-		hint='enter search term'
-		label='Text search'
-		variant='underlined'
-		clearable
-		persistent-hint
-	/>
+	<v-text-field v-model='searchTerm' @click:clear='searchTerm = ""' :prepend-inner-icon='mdiMagnify'
+		label='search' variant='underlined' clearable />
 </template>
 
 <script setup lang='ts'>
 import { mdiMagnify } from '@mdi/js';
-import { resetFilters } from '@/services/reset';
-import type { TPiniaDateMeal, TMealType, TCategory, su } from '@/types';
 
-const searchTerm = computed({
-	get (): su {
-		return selectorsModule().searchTerm;
-	},
-	set (s: su): void {
-		if (s) {
-			const a = s.replaceAll(/[^a-z ]+/g, '');
-			selectorsModule().set_searchTerm(a.toLowerCase().trim());
-		} else reset();
-	}
+const mealStore = mealModule();
+
+const searchTerm = ref('');
+
+watch(searchTerm, (i) => {
+	mealStore.set_search_by_term(i);
+	browserModule().set_pageTitle(i);
 });
 
-const pageTitle = ref('');
-
-watch(()=> pageTitle.value, (i) => {
-	if (i) {
-		browserModule().set_pageTitle(i);
-	}
+/// The reset can get called from other modules, so need to watch then reset
+const is_filtered = computed(() => mealStore.is_filtered);
+watch(is_filtered, (i) => {
+	if (!i) searchTerm.value = '';
 });
 
-const reset = async (): Promise<void> => {
-	await resetFilters();
-	pageTitle.value = '';
-};
+onMounted(() => {
+	if ( mealStore.search_by.term) searchTerm.value = mealStore.search_by.term;
+});
 
-const textSearch = (): void => {
-	if (!searchTerm.value) return;
-	const st = searchTerm.value?.toLowerCase();
-	const currentMealArray = mealsModule().meals;
-	const newMealArray: Array<TPiniaDateMeal> = [];
-	const filteredTypes = new Set<TMealType>();
-	const filteredCategories = new Set<TCategory>();
-	pageTitle.value = `search: ${st}`;
-
-	for (const item of currentMealArray) {
-		const Jd = item.J?.md.toLowerCase().includes(st);
-		const Dd = item.D?.md.toLowerCase().includes(st);
-		const Dc = item.D?.c.toLowerCase().includes(st);
-		const Jc = item.J?.c.toLowerCase().includes(st);
-		if (Dd && Jd || Dc && Jc || Dc && Jd || Dd && Jc) {
-			newMealArray.push(item);
-			if (item.D?.c) {
-				const y = categoriesModule().categories.findIndex((i) => i.c === item.D?.c);
-				const x = categoriesModule().categories[y];
-				if (x) filteredCategories.add(x);
-			}
-			if (item.J?.c) {
-				const y = categoriesModule().categories.findIndex((i) => i.c === item.J?.c);
-				const x = categoriesModule().categories[y];
-				if (x) filteredCategories.add(x);
-			}
-			if (item.J?.r || item.D?.r) filteredTypes.add('restaurant');
-			if (item.J?.t || item.D?.t) filteredTypes.add('takeout');
-			if (item.J?.v || item.D?.v) filteredTypes.add('vegetarian');
-		} else if (Dd || Dc) {
-			newMealArray.push(
-				{
-					da: item.da,
-					D: item.D
-				});
-			if (item.D?.c) {
-				const y = categoriesModule().categories.findIndex((i) => i.c === item.D?.c);
-				const x = categoriesModule().categories[y];
-				if (x) filteredCategories.add(x);
-			}
-			if (item.D?.r) filteredTypes.add('restaurant');
-			if (item.D?.t) filteredTypes.add('takeout');
-			if (item.D?.v) filteredTypes.add('vegetarian');
-		} else if (Jd || Jc) {
-			newMealArray.push(
-				{
-					da: item.da,
-					J: item.J
-				});
-			if (item.J?.c) {
-				const y = categoriesModule().categories.findIndex((i) => i.c === item.J?.c);
-				const x = categoriesModule().categories[y];
-				if (x) filteredCategories.add(x);
-			}
-			if (item.J?.r) filteredTypes.add('restaurant');
-			if (item.J?.t) filteredTypes.add('takeout');
-			if (item.J?.v) filteredTypes.add('vegetarian');
-		}
-	}
-	mealsModule().set_meals(newMealArray);
-	categoriesModule().set_categories([ ...filteredCategories ]);
-	typesModule().set_types([ ...filteredTypes ]);
-	foodModule().set_original(false);
-};
 </script>

@@ -1,63 +1,59 @@
 /* hammersmith-one-regular - latin */
 @font-face {
+	font-display: swap;
 	font-family: 'Hammersmith One';
 	font-style: normal;
 	font-weight: 400;
-	font-display: swap;
-	src: local(''),
-	url('@/assets/fonts/hammersmith-one-v12-latin-regular.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-	url('@/assets/fonts/hammersmith-one-v12-latin-regular.woff') format('woff'); 
+	src: url('@/assets/fonts/hammersmith-one-v17-latin-regular.woff2') format('woff2');
 }
 
-$snackbar-action-margin : 0px!important;
+$snackbar-action-margin : 0px !important;
 
+.v-btn {
+	text-transform: lowercase !important;
+}
 
-html, .v-snackbar__content, [class*='text-']{
+html,
+.v-snackbar__content,
+[class*='text-'] {
 	font-family: 'Hammersmith One', sans-serif !important;
 }
 
-.v-progress-linear__bar__indeterminate--active .short, .v-progress-linear__bar__indeterminate--active .long {
+.v-progress-linear__bar__indeterminate--active .short,
+.v-progress-linear__bar__indeterminate--active .long {
 	animation-duration: 3.8s;
 }
-nav .v-toolbar__extension{
-	padding:0;
+
+nav .v-toolbar__extension {
+	padding: 0;
 }
 
 .fab-fix:focus::before {
 	opacity: 0 !important;
 }
 
-html{
-	scroll-behavior: smooth;
-	overflow-y: scroll!important;
-}
-
-.smalltext{
+.smalltext {
 	font-size: 9px;
 }
 
-.smallesttext{
+.smallesttext {
 	font-size: 7px;
 }
 
 .tooltip {
-	opacity: .90!important;
-	background: black!important;
-	color: white!important;
+	opacity: .90 !important;
+	background: black !important;
+	color: white !important;
 }
 
-.tinytext{
+.tinytext {
 	font-size: 5px;
-}
-
-// monospace fontface
-.monospace-font{
-	font-family: 'Courier New', monospace !important;
 }
 
 .dave-header {
 	color: #c6c490 !important;
 }
+
 .jack-header {
 	color: #7ca1b2 !important;
 }
@@ -71,13 +67,13 @@ html{
 	user-select: none;
 }
 
-#mealpedant{
+#mealpedant {
 	background-color: #929892;
 }
 
 
 /* Global pointer class */
-.cl{
+.cl {
 	cursor: pointer;
 }
 
@@ -120,6 +116,7 @@ a {
 	from {
 		transform: rotate(0deg);
 	}
+
 	to {
 		transform: rotate(359deg);
 	}
@@ -160,17 +157,21 @@ a {
 
 @keyframes heartbeat {
 	0% {
-		 transform: scale(1);
+		transform: scale(1);
 	}
+
 	14% {
 		transform: scale(1.3);
 	}
+
 	28% {
 		transform: scale(1);
 	}
+
 	42% {
 		transform: scale(1.3);
 	}
+
 	70% {
 		transform: scale(1);
 	}
@@ -181,4 +182,4 @@ a {
 	animation-duration: 1.3s;
 	animation-timing-function: ease-in-out;
 	animation-iteration-count: infinite;
-  }
+}

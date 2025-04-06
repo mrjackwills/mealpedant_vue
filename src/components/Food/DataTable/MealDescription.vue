@@ -1,112 +1,67 @@
 <template>
-	<v-col cols='12' justify='start' class='mb-0 py-0' :class='computedFont'>
-		<span @click='goToEdit' :class='[categoryColor, {"cl":admin}]'> {{ category }}</span>
-		<span v-if='restaurant' class='font-weight-bold text-uppercase ml-1 text-mealtype'>r</span>
-		<span v-if='takeaway' class='font-weight-bold text-uppercase ml-1 text-mealtype'>t</span>
-		<span v-if='vegetarian' class='font-weight-bold text-uppercase ml-1 text-mealtype'>v</span>
+	<v-col cols='12' justify='start' class='ma-0 pa-0' :class='computedFont' >
+		<router-link v-if='admin' :to='editHref' :class='[categoryColor, { "cl": admin }]'> {{ formatCategoryName(category) }}</router-link>
+		<span v-else :class='categoryColor'>{{ formatCategoryName(category) }}</span>
+		<span v-if='restaurant' v-tooltip:top='"Restaurant"'
+			class='font-weight-bold text-uppercase ml-1 text-mealtype'>r</span>
+		<span v-if='takeaway' v-tooltip:top='"Takeaway"'
+			class='font-weight-bold text-uppercase ml-1 text-mealtype'>t</span>
+		<span v-if='vegetarian' v-tooltip:top='"Vegetarian"'
+			class='font-weight-bold text-uppercase ml-1 text-mealtype'>v</span>
 	</v-col>
-	<v-col cols='12' class='my-0 py-0'>
-		<div class='' :class='computedFont'>
-			<span class='text-uppercase'>{{ description.slice(0,1) }}</span>
-			<span>{{ description.slice(1) }}</span>
-		</div>
+	<v-col cols='12' class='ma-0 pa-0' :class='computedFont'>
+		{{ formatDescription(description) }}
 	</v-col>
-	<v-col cols='12' align='self-end' class='' v-if='photo?.o'>
-		<v-row class=''>
-			<v-col
-				@click='showPhoto(photo, date, person)'
-				class='cl '
-				cols='12'
-			>
-				<v-row align='center' justify='start' class=''>
-					<v-col cols='auto' class='ma-0 py-0'>
-						<v-icon class='text-mealtype' style='vertical-align: middle;' size='small' :icon='mdiCamera' />
-					</v-col>
-					<v-col cols='auto' class='ma-0 py-0'>
-						<div class='text-mealtype text-uppercase' :class='computedFont'>view</div>
-					</v-col>
-				</v-row>
-			</v-col>
-		</v-row>
+	<v-col cols='12' class='ma-0 pa-0' align='self-end' v-if='photo?.converted'>
+		<v-chip @click='showPhoto' density='compact' variant='flat' color='mealtype' class='ma-0 pa-0 mt-1 mb-2 px-2' size='small' >
+			<v-row align='center' justify='center' class='ma-0 pa-0'>
+				<v-col cols='auto' class='ma-0 pa-0 mr-1'>
+					<v-icon color='black' style='vertical-align: middle;' :size='smAndDown?"x-small":"small"'
+						:icon='mdiCamera' />
+				</v-col>
+				<v-col cols='auto' class='ma-0 pa-0 text-black text-caption' :class='computedFont'> 
+					view
+				</v-col>
+			</v-row>
+		</v-chip>
 	</v-col>
 </template>
 
 <script setup lang='ts'>
 import { mdiCamera } from '@mdi/js';
-import type { TPerson, TPhoto, u } from '@/types';
-
+import type { PersonPhoto, TPerson } from '@/types';
 import { useDisplay } from 'vuetify';
 import { FrontEndRoutes } from '@/types/const_routes';
-const { mdAndDown } = useDisplay();
+const { mdAndDown, smAndDown } = useDisplay();
+import { formatCategoryName } from '@/vanillaTS/helpers';
 
-const admin = computed((): boolean => {
-	return userModule().admin;
-});
-const categoryColor = computed((): string => {
-	return props.person === 'D' ? 'text-primary ' : 'text-secondary';
-});
-const computedFont = computed((): string => {
-	return mdAndDown ? '' : 'text-body-1';
-});
-const photoDate = computed({
-	get (): u<string> {
-		return foodModule().photo_date;
-	},
-	set (s: u<string>): void {
-		foodModule().set_photo_date(s);
-	}
-});
-const photoPerson = computed({
-	get (): u<TPerson> {
-		return foodModule().photo_person;
-	},
-	set (s: u<TPerson>): void {
-		foodModule().set_photo_person(s);
-	}
-});
-const photoUrlConverted = computed({
-	get (): u<string> {
-		return foodModule().photo_url_converted;
-	},
-	set (s: u<string>): void {
-		foodModule().set_photo_url_converted(s);
-	}
-});
-const photoUrlOriginal = computed({
-	get (): u<string> {
-		return foodModule().photo_url_original;
-	},
-	set (s: u<string>): void {
-		foodModule().set_photo_url_original(s);
-	}
+const admin = computed(() => userModule().admin);
+const category = computed(() => mealModule().get_category_by_id(props.meal_category_id));
+const categoryColor = computed(() => props.person === 'Dave' ? 'text-primary ' : 'text-secondary');
+const computedFont = computed(() => mdAndDown ? '' : 'text-body-1');
+const description = computed(() => mealModule().get_description_by_id(props.meal_description_id));
+const formatDescription = (description: string): string => `${description.slice(0, 1).toUpperCase()}${description.slice(1)}`; 
+const mealViewStore = mealViewModule();
+
+const editHref = computed(() => {
+	return `${FrontEndRoutes.EDITMEAL}?person=${props.person}&date=${props.date}`;
 });
 
-const router = useRouter();
-
-const goToEdit = (): void => {
-	if (admin.value) {
-
-		const person = props.person === 'D' ? 'Dave' : 'Jack';
-		adminModule().set_person(person);
-		adminModule().set_date(props.date);
-		router.push(FrontEndRoutes.EDITMEAL);
-	}
-};
-
-const showPhoto = (i: TPhoto, d: string, p: string): void => {
-	foodModule().set_dialog(true);
-	photoDate.value = d;
-	photoPerson.value = p === 'D' ? 'Dave' : 'Jack';
-	photoUrlConverted.value = `/converted/${i.c}`;
-	photoUrlOriginal.value = `/original/${i.o}`;
+const showPhoto = (): void => {
+	if (props.photo?.converted) mealViewStore.set_dialog_photo_url_converted(props.photo.converted);
+	if (props.photo?.original) mealViewStore.set_dialog_photo_url_original(props.photo.original);
+	mealViewStore.set_photo_date(props.date);
+	mealViewStore.set_dialog_photo_person(props.person);
+	mealViewStore.set_dialog_photo_meal_description(description.value);
+	mealViewStore.set_dialog_visible(true);
 };
 
 const props = withDefaults(defineProps<{
-	category: string;
+	meal_category_id: number;
 	date: string;
-	description: string;
-	person: string;
-	photo?: TPhoto;
+	meal_description_id: number;
+	person: TPerson;
+	photo?: PersonPhoto;
 	restaurant?: boolean;
 	takeaway?: boolean;
 	vegetarian?: boolean;

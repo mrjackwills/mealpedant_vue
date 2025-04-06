@@ -1,105 +1,117 @@
 <template>
-	<v-navigation-drawer
-		v-model='drawer'
-		:location='mobile?"right":"left"'
-		:rail='mini'
-		:mobile-breakpoint='960'
-		color='navmenu'
-		height='100vh'
-		id='nav_menu'
-		width='175'
-		app
-		touchless
-	>
-		<v-list v-if='init'>
+	<v-navigation-drawer v-model='drawer' :location='mobile ? "right" : "left"' :rail='mini' :mobile-breakpoint='960'
+		color='navmenu' height='' id='nav_menu' width='150' app touchless>
+		<v-list v-if='init' >
 			<section v-if='mobile'>
 
-				<v-list-item @click='(drawer=!drawer)' class='cl'>
+				<v-list-item density='compact' @click='(drawer = !drawer)' class='cl'>
 					<template v-slot:prepend>
-						<v-icon :icon='mdiClose' class='flipx' />
+						<v-icon :icon='mdiClose' size='small' class='flipx' />
 					</template>
 					<template v-slot:title>
-						<span class='ml-2'>close</span>
+						<span class='ml-2 text-body-2'>close</span>
 					</template>
 				</v-list-item>
-				<v-divider class='mt-2 mb-2' />
+				<v-divider class='' />
 			</section>
-			<section v-if='!authed && mobile' >
-				<v-list-item v-for='(item, index) in registerLinks' :key='`drt${index}`' router :to='item.route' >
-					<template v-slot:prepend >
-						<v-icon :icon='item.icon' class='ma-0 pa-0'/>
+			<section v-if='!authed && mobile'>
+				<v-list-item density='compact' v-for='(item, index) in registerLinks' :key='`drt${index}`' router :to='item.route'>
+					<template v-slot:prepend>
+						<v-icon size='small' :icon='item.icon' class='ma-0 pa-0' />
 					</template>
 					<template v-slot:title>
-						<span class=''>{{ item.text }}</span>
+						<span class='text-body-2'>{{ item.text }}</span>
 					</template>
 				</v-list-item>
 			</section>
 			<section v-if='authed'>
 
-				<v-list-item v-for='(item, index) in drawerLinks' :key='`dr${index}`' router :to='item.route'>
-					<template v-slot:prepend >
-						<v-icon :icon='item.icon' class='ma-0 pa-0'/>
+				<v-list-item density='compact' v-for='(item, index) in drawerLinks' :key='`dr${index}`' router :to='item.route'>
+					<template v-slot:prepend>
+						<v-icon size='small' :icon='item.icon' class='ma-0 pa-0' />
+						<v-tooltip
+							v-if='mini &&!mobile'
+							activator='parent'
+							location='end'
+							:text='item.text'
+						/>
 					</template>
 					<template v-slot:title>
-						<span class=''>{{ item.text }}</span>
+						<span class='text-body-2' >{{ item.text }}</span>
 					</template>
 				</v-list-item>
 
 				<section v-if='admin'>
 
-					<v-list-item v-for='(item, index) in adminLinks' :key='`al${index}`' router :to='item.route'>
-						<template v-slot:prepend >
-							<v-icon :icon='item.icon' class='ma-0 pa-0'/>
+					<v-list-item density='compact' v-for='(item, index) in adminLinks' :key='`al${index}`' router :to='item.route'>
+						<template v-slot:prepend>
+							<v-icon size='small' :icon='item.icon' class='ma-0 pa-0' />
+							<v-tooltip
+								v-if='mini &&!mobile'
+								activator='parent'
+								location='end'
+								:text='item.text'
+							/>
 						</template>
 						<template v-slot:title>
-							<span class=''>{{ item.text }}</span>
+							<span class='text-body-2'>{{ item.text }}</span>
 						</template>
 					</v-list-item>
 
+					<v-list-item density='compact' class='cl' @click='flushCache'>
+						<template v-slot:prepend>
+							<v-icon size='small' :icon='mdiDeleteSweep' class='ma-0 pa-0' />
+							<v-tooltip
+								v-if='mini &&!mobile'
+								activator='parent'
+								location='end'
+								text='flush cache'
+							/>
+						</template>
+						<template v-slot:title>
+							<span class='text-body-2'>flush cache</span>
+						</template>
+					</v-list-item>
 				</section>
 
-				<v-list-item class='cl ' @click='mini=!mini' v-if='!mobile'>
-					<template v-slot:prepend >
-						<v-icon :icon='minivariantIcon' class='ma-0 pa-0'/>
+				<v-list-item density='compact' class='cl ' @click='mini = !mini' v-if='!mobile' >
+					<template v-slot:prepend>
+						<v-icon size='small' :icon='minivariantIcon' class='ma-0 pa-0' />
+						<v-tooltip
+							v-if='mini &&!mobile'
+							activator='parent'
+							location='end'
+							text='maxmize'
+						/>
 					</template>
 					<template v-slot:title>
-						<span class=''>minimize</span>
+						<span class='text-body-2' >minimize</span>
 					</template>
 				</v-list-item>
-					
-				<v-divider :class='{"dividermargin": lgAndUp, "mt-2 mb-2" : mdAndDown}' />
 
-				<v-list-item class='cl' @click='signout'>
-					<template v-slot:prepend >
-						<v-icon :icon='mdiPower' class='ma-0 pa-0'/>
+				<v-divider class='my-2'/>
+
+				<v-list-item density='compact' class='cl' @click='signout'>
+					<template v-slot:prepend>
+						<v-icon size='small' :icon='mdiPower' class='ma-0 pa-0' />
+						<v-tooltip
+							v-if='mini &&!mobile'
+							activator='parent'
+							location='end'
+							text='sign out'
+						/>
 					</template>
 					<template v-slot:title>
-						<span class='text-uppercase'>sign-out</span>
+						<span class='text-body-2'>sign out</span>
 					</template>
 				</v-list-item>
-				
-				<v-row align='center' justify='center' v-if='mobile && !mini' class='mt-4'>
-					<v-col >
-						<div class='text-center smalltext'>{{ userEmail }}</div>
-					</v-col>
-				</v-row>
+
 			</section>
-		</v-list>
-		<v-list v-else>
-			<v-row class='pa-0 ma-0' align='center' justify='center'>
-				<v-col cols='auto' class='pa-0 ma-0'>
-					<v-progress-circular
-						color='primary'
-						indeterminate
-					/>
-				</v-col>
-			</v-row>
 		</v-list>
 	</v-navigation-drawer>
 </template>
 
 <script setup lang='ts'>
-import { axios_authenticatedUser } from '@/services/axios';
 import {
 	mdiAccountCircle,
 	mdiAccountPlus,
@@ -108,29 +120,26 @@ import {
 	mdiClose,
 	mdiCog,
 	mdiDeleteSweep,
-	mdiFormatListBulleted,
+	mdiFood,
 	mdiLogin,
 	mdiPlusCircle,
 	mdiPower
 } from '@mdi/js';
-import type { su } from '@/types';
 import { useDisplay } from 'vuetify';
 import { FrontEndRoutes } from '@/types/const_routes';
-const { lgAndUp, mdAndDown } = useDisplay();
+import { PV } from '@/types';
+import { axios_admin } from '@/services/axios';
+const { smAndDown } = useDisplay();
 
-const [ drawStore, userStore ] = [ drawerModule(), userModule() ];
+const [drawStore, userStore] = [drawerModule(), userModule()];
 
-const mobile = computed((): boolean => {
-	return mdAndDown.value;
-});
+const mobile = computed(() => smAndDown.value);
+const admin = computed(() => userStore.admin);
+const authed = computed(() => userStore.authenticated);
 
-const admin = computed((): boolean => {
-	return userStore.admin;
-});
-const authed = computed((): boolean => {
-	return userStore.authenticated;
-});
+const minivariantIcon = computed(() => mini.value ? mdiChevronRight : mdiChevronLeft);
 
+const init = ref(false);
 const drawer = computed({
 	get (): boolean {
 		return drawStore.open;
@@ -138,9 +147,6 @@ const drawer = computed({
 	set (b: boolean): void {
 		drawStore.set_open(b);
 	}
-});
-const init = computed((): boolean => {
-	return browserModule().init;
 });
 
 const mini = computed({
@@ -152,23 +158,22 @@ const mini = computed({
 	}
 });
 
-const minivariantIcon = computed((): string => {
-	return mini.value ? mdiChevronRight : mdiChevronLeft;
-});
-const userEmail = computed((): su => {
-	return userStore.email;
-});
 
+const flushCache = async (): PV => {
+	await axios_admin.cache_delete();
+	if (mobile.value && drawer.value) drawer.value = false;
+};
 onBeforeMount(() => {
 	if (!mobile.value && authed.value) {
 		drawer.value = true;
 		mini.value = false;
 	}
+	init.value = true;
 });
 
 const drawerLinks = [
 	{
-		icon: mdiFormatListBulleted,
+		icon: mdiFood,
 		text: 'meals',
 		route: FrontEndRoutes.MEALS
 	},
@@ -182,20 +187,20 @@ const adminLinks = [
 	{
 		icon: mdiPlusCircle,
 		text: 'add meal',
-		route: '/addmeal'
+		route: FrontEndRoutes.ADDMEAL
 	},
 	{
 		icon: mdiCog,
 		text: 'admin',
-		route: '/admin'
-	},
-	{
-		icon: mdiDeleteSweep,
-		text: 'flush cache',
-		route: FrontEndRoutes.FLUSH_CACHE
+		route: FrontEndRoutes.ADMIN
 	}
 ];
 const registerLinks = [
+	{
+		icon: mdiFood,
+		text: 'meals',
+		route: FrontEndRoutes.MEALS
+	},
 	{
 		icon: mdiAccountPlus,
 		text: 'register',
@@ -208,30 +213,25 @@ const registerLinks = [
 	}
 ];
 
-/**
- ** Sign out via pinia
-*/
-const signout = async (): Promise<void> => {
+/// Sign out via the pinia method
+const signout = (): void => {
 	mini.value = false;
-	await userModule().clientSideSignout();
-	await axios_authenticatedUser.signout_post();
+	userModule().clientSideSignout();
+	
 };
 
 </script>
 
 <style>
-
 .minivariantmargintop {
 	margin-top: 5rem;
 }
-.dividermargin {
-	margin-top: 2.5rem;
-	margin-bottom: 2.5rem;
+
+.v-list-item__spacer {
+	width: 8px !important;
 }
-.v-list-item__spacer{
-	width: 8px!important;
-}
-#nav_menu{
+
+#nav_menu {
 	min-height: 100vh;
 }
 </style>

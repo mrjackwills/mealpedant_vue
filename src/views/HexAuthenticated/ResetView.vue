@@ -1,68 +1,38 @@
 <template>
-	<v-container container--fluid fill-height>
+	<v-container fluid class='fill-height'>
 		<v-row align='center' justify='center' wrap>
 			<v-col cols='12' md='9'>
-				<p class='text-center' :class='fontSize' >Please enter a new password</p>
+				<p class='text-center mb-2' :class='fontSize'>Please enter a new password</p>
 				<v-row align='center' justify='center' wrap>
 					<v-col cols='12' sm='8' md='5'>
-						<v-form
-							v-on:submit.prevent
-							method='post'
-						>
-							<v-text-field
-								v-show='false'
-								label='EMAIL'
-								type='email'
-								autocomplete='email'
-							/>
-							<v-text-field
-								v-for='(item, index) in textFields'
-								:key='index'
-								v-model='user[item.model]'
-								v-on:keyup.enter='reset'
-								@blur='touch(item.model)'
-								@input='touch(item.model)'
-								:error='errors[item.model]'
-								:error-messages='errorMessages[item.model]'
-								:disabled='loading || completed'
-								:label='item.label'
-								:prepend-icon='item.icon'
-								:type='item.type'
-								autocomplete='new-password'
+						<v-form v-on:submit.prevent method='post'>
+							<v-text-field v-for='(item, index) in textFields' :key='index' v-model='user[item.model]'
+								v-on:keyup.enter='reset' @blur='touch(item.model)' @input='touch(item.model)'
+								:error='errors[item.model]' :error-messages='errorMessages[item.model]'
+								:disabled='loading || completed' :label='item.label' :prepend-inner-icon='item.icon'
+								:type='item.type' autocomplete='new-password'
 								variant='underlined'
-							>
-							</v-text-field>
+								:append-inner-icon='item.appendIcon'
+								@click:append-inner='new_passwordVisible = !new_passwordVisible' />
 							<v-expand-transition>
 								<PasswordContainsEmail v-if='errors.new_password && !passNum' />
 								<HibpMessage v-if='passNum' :passNum='passNum' />
 							</v-expand-transition>
 							<section v-if='twoFA_active'>
-								<v-text-field
-									v-for='item in tokenFields'
-									v-model='user[item.model]'
-									@blur='touch(item.model)'
-									@input='touch(item.model)'
-									:dense='smAndDown'
-									:disabled='loading || completed'
-									:error='errors[item.model]'
-									:error-messages='errorMessages[item.model]'
-									:key='item.model'
-									:label='item.label'
-									:prepend-icon='item.icon'
-									variant='underlined'
-									required
-								/>
+								<v-text-field v-for='item in tokenFields' v-model='user[item.model]'
+									@blur='touch(item.model)' @input='touch(item.model)' :dense='smAndDown'
+									:disabled='loading || completed' :error='errors[item.model]'
+									:error-messages='errorMessages[item.model]' :key='item.model' :label='item.label'
+									:prepend-inner-icon='item.icon' required />
 							</section>
 						</v-form>
 						<div class='text-center mt-1'>
-							<v-btn
-								@click='reset'
-								:class='{"elevation-0": loading || v$.$invalid || completed || errors.new_password }'
-								:color='loading || v$.$invalid || completed || errors.new_password || disabled?"":"secondary"'
+							<v-btn @click='reset'
+								:color='loading || v$.$invalid || completed || errors.new_password || disabled ? "" : "secondary"'
 								:disabled='loading || v$.$invalid || completed || errors.new_password || disabled'
-								:variant='loading || v$.$invalid || completed || errors.new_password || disabled?"outlined":"flat"'
-								size='large'
-							>
+								:variant='loading || v$.$invalid || completed || errors.new_password || disabled ? "outlined" : "flat"'
+								rounded
+								size='large'>
 								<ButtonIcon :icon='mdiCached' />
 								Change
 							</v-btn>
@@ -83,7 +53,7 @@ import { passwordCheck } from '@/vanillaTS/hibp';
 import { snackSuccess } from '@/services/snack';
 import { useDisplay } from 'vuetify';
 import { useRouter } from 'vue-router';
-import type { TResetPassword, u } from '@/types';
+import type { u } from '@/types';
 import useVuelidate from '@vuelidate/core';
 const { mdAndDown, smAndDown } = useDisplay();
 
@@ -91,13 +61,9 @@ onBeforeUnmount(() => {
 	resetPasswordModule().$reset();
 });
 
-const disabled = computed((): boolean => {
-	return twoFA_active.value && !user.value.token;
-});
+const disabled = computed(() => twoFA_active.value && !user.value.token);
+const fontSize = computed(() => mdAndDown.value ? 'text-subtitle-1' : 'text-h5');
 
-const fontSize = computed((): string => {
-	return mdAndDown.value ? 'text-subtitle-1' : 'text-h5';
-});
 const loading = computed({
 	get (): boolean {
 		return loadingModule().loading;
@@ -106,27 +72,19 @@ const loading = computed({
 		loadingModule().set_loading(b);
 	}
 });
-const resetId = computed((): string | undefined => {
-	return resetPasswordModule().id;
-});
-const twoFA_active = computed((): boolean => {
-	return resetPasswordModule().two_fa_active;
-});
-const textFields = computed((): Array<TResetPassword> => {
-	return [
-		{
-			autocomplete: 'new-password',
-			icon: mdiLock,
-			label: 'new password',
-			model: 'new_password' as const,
-			type: new_passwordVisible.value ? 'text' : 'password',
-			appendIcon: new_passwordVisible.value ? mdiEyeOff : mdiEye
-		}
-	];
-});
-const watcher_password = computed((): string =>{
-	return user.value.new_password;
-});
+const resetId = computed(() => resetPasswordModule().id);
+const twoFA_active = computed(() => resetPasswordModule().two_fa_active);
+const textFields = computed(() => [
+	{
+		autocomplete: 'new-password',
+		icon: mdiLock,
+		label: 'new password',
+		model: 'new_password' as const,
+		type: new_passwordVisible.value ? 'text' : 'password',
+		appendIcon: new_passwordVisible.value ? mdiEyeOff : mdiEye
+	}
+]);
+const watcher_password = computed(() => user.value.new_password);
 
 const completed = ref(false);
 const errorMessages = ref({
@@ -165,8 +123,7 @@ const touch = (name: string): void => {
 };
 
 const reset = async (): Promise<void> => {
-	if (v$.value.$invalid || !resetId.value) return;
-	if (twoFA_active.value && !user.value.token) return;
+	if (v$.value.$invalid || !resetId.value || twoFA_active.value && !user.value.token) return;
 	loading.value = true;
 	passNum.value = await passwordCheck(user.value.new_password);
 	if (passNum.value) {
@@ -174,7 +131,6 @@ const reset = async (): Promise<void> => {
 		loading.value = false;
 		return;
 	}
-	// This is rubbish
 	errorMessages.value = {
 		token: '',
 		new_password: ''
@@ -186,28 +142,26 @@ const reset = async (): Promise<void> => {
 	const success = await axios_incognito.reset_patch({
 		resetId: resetId.value,
 		password: user.value.new_password,
-		token: user.value.token 
+		token: user.value.token
 	});
 	loading.value = false;
 	if (success) {
 		completed.value = true;
-		router.push(FrontEndRoutes.SIGNIN);
+		await router.push(FrontEndRoutes.SIGNIN);
 		snackSuccess({
-			message: 'Password changed',
+			message: 'password changed',
 			timeout: 10000,
-			icon: mdiLockReset 
+			icon: mdiLockReset
 		});
 	} else {
-		 
 		user.value.new_password = '';
 		if (twoFA_active.value) {
-			 
 			user.value.token = '';
 			errorMessages.value.token = 'invalid token';
 		}
 	}
 };
-	
+
 watch(watcher_password, () => {
 	passNum.value = false;
 	errors.value.new_password = false;
@@ -216,7 +170,7 @@ watch(watcher_password, () => {
 	else if (!v$.value.user?.new_password?.required) errorMessages.value.new_password = 'password required';
 	else if (!v$.value.user?.new_password?.minLength) errorMessages.value.new_password = '12 characters minimum';
 });
-	
+
 const rules = {
 	new_password: {
 		required,
