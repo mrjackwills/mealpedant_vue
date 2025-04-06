@@ -116,7 +116,7 @@
 
 									<v-row justify='center' v-else>
 										<v-col cols='auto'>
-											no sesions
+											no sessions
 										</v-col>
 									</v-row>
 								</v-col>
