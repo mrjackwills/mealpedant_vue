@@ -6,6 +6,7 @@
 					<v-data-table-virtual 
 						:headers='headers'
 						:items='errorLog'
+						:mobile='smAndDown'
 						class='elevation-1 mt-4'
 						height='220'
 						density='compact' id='datatable'>
@@ -31,6 +32,9 @@
 
 <script setup lang='ts'>
 import type { TLogs } from '@/types';
+import { useDisplay } from 'vuetify';
+
+const { smAndDown } = useDisplay();
 
 const errorLog = computed((): Array<TLogs> => adminModule().logs);
 

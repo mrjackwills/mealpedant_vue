@@ -1,9 +1,10 @@
 <template>
-	<v-row justify='center' class='no-gutters'>
-		<v-col cols='12' sm='8'>
+	<v-row justify='center' class='no-gutters ma-0 pa-0'>
+		<v-col cols='12' sm='8' class='ma-0 pa-0'>
 			<v-data-table-virtual
 				:headers='headers'
 				:items='backup'
+				:mobile='smAndDown'
 				class='elevation-1 mt-4'
 				height='220'
 				density='compact'
@@ -13,10 +14,10 @@
 					<tr>
 						<td class='text-left cl' @click='downloadFile(item.file_name)'>
 							<ButtonIcon :icon='mdiDownload' :size='mdAndDown?"x-small":""' margin='mr-1'/>
-							<span class='text-caption'>{{ item.file_name }}</span>
+							<span :class='smAndDown?"smalltext":"text-caption"'>{{ item.file_name }}</span>
 						</td>
 						<td class='text-right'>
-							<div class='text-caption'>{{ bytes_to_mb(Number(item.file_size)) }} mb</div>
+							<div :class='smAndDown?"smalltext":"text-caption"'>{{ bytes_to_mb(Number(item.file_size)) }} mb</div>
 						</td>
 						<td class='text-right cl' @click='deleteFile(item.file_name)'>
 							<ButtonIcon color='red' :icon='mdiCloseCircleOutline' />

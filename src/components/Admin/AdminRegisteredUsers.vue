@@ -1,5 +1,5 @@
 <template>
-	<v-row justify='center' class='no-gutters'>
+	<v-row justify='center' class='' width='100%'>
 
 		<v-col cols='12' md='10' id='datatable' v-touch='{
 			left: () => toggleDrawer(true),
@@ -7,6 +7,7 @@
 		}'>
 
 			<v-data-table-virtual :headers='registeredUsersHeaders' :items='registeredUsers' height='300'
+				:mobile='smAndDown'
 				class='elevation-1 mt-4' density='compact' id='datatable'>
 				<template v-slot:[`item.active`]='{ item }'>
 					<UserActive v-model:active='item.active' v-model:email='item.email' patchName='active' />
@@ -136,7 +137,9 @@ import { mdiClose, mdiChevronDown, mdiChevronUp } from '@mdi/js';
 import { snackError } from '@/services/snack';
 import type { PV, TAdminSession, TAllUserInfo } from '@/types';
 import type { VDataTableRow } from 'vuetify/components/VDataTable';
+import { useDisplay } from 'vuetify';
 
+const { smAndDown } = useDisplay();
 const expandedEmail = ref(undefined as undefined | string);
 const expandedRow = ref(false);
 
