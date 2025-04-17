@@ -4,15 +4,15 @@
 		:min-width='mdAndUp?"30vw":"90vw"'
 	>
 		<v-row v-intersect='onIntersect' justify='center' align='center' class='no-gutters ma-0 pa-0'>
-			<v-col cols='1' class='pa-0 ma-0'  v-if='loading' >
+			<v-col cols='1' class='pa-0 ma-0'>
 				<v-progress-circular v-if='loading' indeterminate :width='3' :size='18' color='white' class='' />
-				<v-icon v-if='icon && isDesktop && !loading' medium class='' :icon='icon' />
+				<v-icon v-if='icon && !loading' medium class='' :icon='icon' />
 			</v-col>
-			<v-col :cols='loading?10:11' class='pa-0 ma-0 text-center' :class='messageSize'>
+			<v-col cols='auto' class='pa-0 ma-0 text-center' :class='messageSize'>
 				{{ message }}
 			</v-col>
-			<v-col v-if='closable && isDesktop' cols='1' class='pa-0 ma-0'>
-				<v-icon @click='visible = false' class='ml-2' size='small' :icon='mdiClose' />
+			<v-col cols='1' class='pa-0 ma-0'>
+				<v-icon   v-if='closable' @click='visible = false' class='ml-2' size='small' :icon='mdiClose' />
 			</v-col>
 		</v-row>
 	</v-snackbar>
@@ -28,7 +28,6 @@ const snackbarStore = snackbarModule();
 const closable = computed(() => snackbarStore.closable);
 const color = computed(() => snackbarStore.color);
 const icon = computed(() => snackbarStore.icon);
-const isDesktop = computed(() => mdAndUp.value);
 const loading = computed(() => snackbarStore.loading);
 const message = computed(() => snackbarStore.message);
 const messageSize = computed(() => mdAndUp.value ? 'text-body-1' : 'text-body-2');
