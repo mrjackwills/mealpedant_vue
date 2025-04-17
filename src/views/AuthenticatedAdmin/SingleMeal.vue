@@ -69,7 +69,7 @@
 						<v-col v-if='computedHint.length >0' cols='12' class='ma-0 pa-0 mt-n5 mb-1'>
 							<v-row class='ma-0 pa-0' justify='start'>
 								<v-col class='ma-0 pa-0 mr-3' cols='auto' v-for='(item,index) in computedHint' :key='index'>
-									<v-chip size='small' density='compact' color='primary' variant='outlined' @click='meal.category = item'>
+									<v-chip size='small' density='compact' color='primary' :variant='chipVariant' @click='meal.category = item'>
 										{{ item }}
 									</v-chip>
 								</v-col>
@@ -276,6 +276,8 @@ const computedDateLabel = computed((): string => {
 
 const categories = computed(() => mealModule().get_all_categories_sorted_alpha);
 
+const chipVariant = computed(() => computedHint.value.length === 1 && meal.value.category.toUpperCase() === computedHint.value[0] ? 'flat' : 'outlined');
+
 /// Generate a hint for the category text box, to show categories names once you start typing
 const computedHint = computed(() => {
 	if (!meal.value.category) return '';
@@ -287,7 +289,8 @@ const computedHint = computed(() => {
 			output.push(eachCategory[1]);
 		}
 	}
-	return output.length === 1 && output[0] === meal.value.category.toUpperCase() ? [] : output;
+	return output;
+	// return output.length === 1 && output[0] === meal.value.category.toUpperCase() ? [] : output;
 });
 
 const loading = computed({
