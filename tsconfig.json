@@ -35,7 +35,7 @@
 		"src/**/*.d.ts",
 		"src/**/*.tsx",
 		"src/**/*.vue",
-		"src/vanillaTS/globalConststs"
+		"src/vanillaTS/globalConsts"
 	],
 	"references": [
 		{
