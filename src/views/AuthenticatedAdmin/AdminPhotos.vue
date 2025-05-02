@@ -3,50 +3,41 @@
 		<v-row class='ma-0 pa-0' justify='space-around'>
 			<v-col cols='12' class='ma-0 pa-0text-center'>
 				<v-row class='ma-0 pa-0 bg-black' justify='space-around'>
-					<v-col cols='12'  class='ma-0 pa-0 bg-black'>
+					<v-col cols='12' class='ma-0 pa-0 bg-black'>
 
-						<v-row justify='space-around' class='ma-0 pa-0'>
-							<v-col cols='auto' class='ma-0 pa-0 text-right'>
-								<span class='text-primary mr-1'>original:</span>
-								<span class='text-white mr-1'> {{ bytes_to_mb(totalDave[0]) }}mb</span>
-							</v-col>
-							<v-col cols='auto' class='ma-0 pa-0 text-center'>
-								<span class='text-primary mr-1 '>converted:</span>
-								<span class='text-white mr-1'>{{ bytes_to_mb(totalDave[1]) }}mb</span>
-							</v-col>
-							<v-col cols='auto' class='ma-0 pa-0'>
-								<span class='text-primary mr-1'>#</span>
-								<span class='text-white mr-1'>{{ (totalDave[2]) }}</span>
-							</v-col>
-						</v-row>
+						<v-row v-for='(item, index) in totals' :key='index' justify='space-around' class='ma-0 pa-0' :class='{"smalltext": mdAndDown}'>
 
-						<v-row justify='space-around' class='ma-0 pa-0'>
-							<v-col cols='auto' class='ma-0 pa-0 text-right'>
-								<span class='text-secondary mr-1'>original:</span>
-								<span class='text-white mr-1'> {{ bytes_to_mb(totalJack[0]) }}mb</span>
+							<v-col cols='3' md='2' class='ma-0 pa-0'>
+								<v-row justify='space-around' class='ma-0 pa-0'>
+									<v-col cols='auto' :class='`ma-0 pa-0 text-left text-${item.class}`'>
+										original:
+									</v-col>
+									<v-col cols='auto' class='ma-0 pa-0 text-right'>
+										{{ item.original }}mb
+									</v-col>
+								</v-row>
 							</v-col>
-							<v-col cols='auto' class='ma-0 pa-0 text-center'>
-								<span class='text-secondary mr-1'>converted:</span>
-								<span class='text-white mr-1'>{{ bytes_to_mb(totalJack[1]) }}mb</span>
-							</v-col>
-							<v-col cols='auto' class='ma-0 pa-0'>
-								<span class='text-secondary mr-1'>#</span>
-								<span class='text-white mr-1'>{{ (totalJack[2]) }}</span>
-							</v-col>
-						</v-row>
 
-						<v-row justify='space-around' class='ma-0 pa-0'>
-							<v-col cols='auto' class='ma-0 pa-0 text-right'>
-								<span class='text-mealtype mr-1'>original:</span>
-								<span class='text-white mr-1'> {{ bytes_to_mb(totalOriginal) }}mb</span>
+							<v-col cols='3' md='2' class='ma-0 pa-0 text-center'>
+								<v-row justify='space-around' class='ma-0 pa-0'>
+									<v-col cols='auto' :class='`ma-0 pa-0 text-left text-${item.class}`'>
+										converted:
+									</v-col>
+									<v-col cols='auto' class='ma-0 pa-0 text-right'>
+										{{ item.converted }}mb
+									</v-col>
+								</v-row>
 							</v-col>
-							<v-col cols='auto' class='ma-0 pa-0 text-center'>
-								<span class='text-mealtype mr-1'>converted:</span>
-								<span class='text-white mr-1'>{{ bytes_to_mb(totalConverted) }}mb</span>
-							</v-col>
-							<v-col cols='auto' class='ma-0 pa-0'>
-								<span class='text-mealtype mr-1'>#</span>
-								<span class='text-white mr-1'>{{ (photo_data.length) }}</span>
+
+							<v-col cols='1' class='ma-0 pa-0'>
+								<v-row justify='space-around' class='ma-0 pa-0'>
+									<v-col cols='auto' :class='`ma-0 pa-0 text-left text-${item.class}`'>
+										#
+									</v-col>
+									<v-col cols='auto' class='ma-0 pa-0 text-right'>
+										{{ item.total }}
+									</v-col>
+								</v-row>
 							</v-col>
 						</v-row>
 
@@ -147,6 +138,29 @@ import { FrontEndRoutes } from '@/types/const_routes';
 import { mdiImageSizeSelectLarge, mdiImageSizeSelectActual } from '@mdi/js';
 import { PV, TAdminPhoto } from '@/types';
 import { bytes_to_mb } from '@/vanillaTS/helpers';
+import { useDisplay } from 'vuetify';
+const { mdAndDown } = useDisplay();
+
+const totals = computed(() => [
+	{
+		class: 'primary',
+		original: bytes_to_mb(totalDave.value[0]),
+		converted: bytes_to_mb(totalDave.value[1]),
+		total: totalDave.value[2]
+	},
+	{
+		class: 'secondary',
+		original: bytes_to_mb(totalJack.value[0]),
+		converted: bytes_to_mb(totalJack.value[1]),
+		total: totalJack.value[2]
+	},
+	{
+		class: 'mealtype',
+		original: bytes_to_mb(totalOriginal.value),
+		converted: bytes_to_mb(totalConverted.value),
+		total: photo_data.value.length
+	}
+]);
 
 const loading = computed({
 	get (): boolean {
@@ -162,7 +176,7 @@ onBeforeMount(async () => {
 	browserModule().set_description('Meal Pedant - all meal photos');
 	loading.value = true;
 	await get_data();
-	
+
 });
 
 //// Delete an unused photo
@@ -181,7 +195,7 @@ const photo_data = computed(() => adminModule().allPhotos);
 const totalOriginal = computed(() => photo_data.value.reduce((total, i) => total + (i.size_in_bytes_original ?? 0), 0));
 const totalConverted = computed(() => photo_data.value.reduce((total, i) => total + (i.size_in_bytes_converted ?? 0), 0));
 
-const totalJack = computed(() => 
+const totalJack = computed(() =>
 	photo_data.value.reduce(
 		(acc, { person, size_in_bytes_original = 0, size_in_bytes_converted = 0 }) => {
 			if (person === 'Jack') {
@@ -195,7 +209,7 @@ const totalJack = computed(() =>
 	)
 );
 
-const totalDave = computed(() => 
+const totalDave = computed(() =>
 	photo_data.value.reduce(
 		(acc, { person, size_in_bytes_original = 0, size_in_bytes_converted = 0 }) => {
 			if (person === 'Dave') {
