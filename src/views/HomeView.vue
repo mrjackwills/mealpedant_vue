@@ -3,7 +3,7 @@
 		<v-row align='center' justify='center'>
 			<v-col cols='10' md='8' align='center' justify='center'>
 				<p class='text-center text-white text-h5'>
-					Since May 9th 2015, two friends have meticulously exchanged information on every evening meal that they have consumed.
+					Since May 9th 2015, two friends have fastidiously exchanged information on every evening meal that they have consumed.
 				</p>
 				<p class='text-center text-white text-h5 my-4'>
 					This is a comprehensive chronicling of that pedantry.
