@@ -9,10 +9,10 @@
 
 							<v-col cols='3' md='2' class='ma-0 pa-0'>
 								<v-row justify='space-around' class='ma-0 pa-0'>
-									<v-col cols='auto' :class='`ma-0 pa-0 text-left text-${item.class}`'>
+									<v-col cols='5' :class='`ma-0 pa-0 text-left text-${item.class}`'>
 										original:
 									</v-col>
-									<v-col cols='auto' class='ma-0 pa-0 text-right'>
+									<v-col cols='5' class='ma-0 pa-0 text-right'>
 										{{ item.original }}mb
 									</v-col>
 								</v-row>
@@ -20,10 +20,10 @@
 
 							<v-col cols='3' md='2' class='ma-0 pa-0 text-center'>
 								<v-row justify='space-around' class='ma-0 pa-0'>
-									<v-col cols='auto' :class='`ma-0 pa-0 text-left text-${item.class}`'>
+									<v-col cols='5' :class='`ma-0 pa-0 text-left text-${item.class}`'>
 										converted:
 									</v-col>
-									<v-col cols='auto' class='ma-0 pa-0 text-right'>
+									<v-col cols='5' class='ma-0 pa-0 text-right'>
 										{{ item.converted }}mb
 									</v-col>
 								</v-row>
@@ -31,10 +31,10 @@
 
 							<v-col cols='1' class='ma-0 pa-0'>
 								<v-row justify='space-around' class='ma-0 pa-0'>
-									<v-col cols='auto' :class='`ma-0 pa-0 text-left text-${item.class}`'>
+									<v-col cols='5' :class='`ma-0 pa-0 text-left text-${item.class}`'>
 										#
 									</v-col>
-									<v-col cols='auto' class='ma-0 pa-0 text-right'>
+									<v-col cols='5' class='ma-0 pa-0 text-right'>
 										{{ item.total }}
 									</v-col>
 								</v-row>
