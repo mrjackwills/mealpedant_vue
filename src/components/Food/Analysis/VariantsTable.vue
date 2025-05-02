@@ -23,10 +23,10 @@
 
 				<v-col class='ma-0 pa-0' cols='6' v-if='authenticated' :class='show_jack && show_dave? "text-mealtype" : show_jack &&!show_dave?"text-secondary":"text-primary"'>
 					<v-row align='center' justify='space-around' class='ma-0 pa-0'>
-						<v-col cols='6' class='ma-0 pa-0 font-weight-bold'>
+						<v-col cols='6' class='ma-0 pa-0 font-weight-bold mono-num'>
 							{{ item.q.Dave + item.q.Jack }}
 						</v-col>
-						<v-col cols='6' class='ma-0 pa-0 font-italic'
+						<v-col cols='6' class='ma-0 pa-0 font-italic mono-num'
 							v-tooltip:top='has_filter ? "% filtered meals" : "% all meals"'>
 							{{ (100 / (originalLength) * (item.q.Dave + item.q.Jack)).toFixed(2) }}% 
 						</v-col>
@@ -37,10 +37,10 @@
 					<v-row align='center' class='ma-0 pa-0' justify='center'>
 						<v-col class='ma-0 pa-0 text-primary' cols='12' v-if='authenticated'>
 							<v-row align='center' justify='space-around' class='ma-0 pa-0'>
-								<v-col class='ma-0 pa-0 font-weight-bold text-right'>
+								<v-col class='ma-0 pa-0 font-weight-bold text-right mono-num'>
 									{{ item.q.Dave }}
 								</v-col>
-								<v-col class='ma-0 pa-0 font-italic'
+								<v-col class='ma-0 pa-0 font-italic mono-num'
 									v-tooltip:top='"% split"'>
 									{{ (item.q.Dave !== 0) ? ((100 / (item.q.Dave + item.q.Jack) * item.q.Dave).toFixed(2)) : '0.00' }}%
 								</v-col>
@@ -49,10 +49,10 @@
 
 						<v-col class='ma-0 pa-0 text-secondary' cols='12'>
 							<v-row align='center' justify='space-around' class='ma-0 pa-0'>
-								<v-col class='ma-0 pa-0 font-weight-bold text-right'>
+								<v-col class='ma-0 pa-0 font-weight-bold text-right mono-num'>
 									{{ item.q.Jack }}
 								</v-col>
-								<v-col class='ma-0 pa-0 font-italic'
+								<v-col class='ma-0 pa-0 font-italic mono-num'
 									v-tooltip:top='authenticated ? "% split" : "% all meals"'>
 									<span v-if='authenticated'> 
 										{{ (item.q.Jack !== 0) ? ((100 / (item.q.Dave + item.q.Jack) * item.q.Jack).toFixed(2)) : '0.00' }}%
