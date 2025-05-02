@@ -47,7 +47,8 @@
 						<!-- Category -->
 						<v-col class='ma-0 pa-0' cols='12' md='5' order-md='1' order='2' >
 							<v-textarea v-model='meal.category' @blur='trimCategory' :disabled='completed' :auto-grow='true'
-								clearable :prepend-inner-icon='mdiFormatListBulletedType' class='cat_hint'
+								clearable :prepend-inner-icon='mdiFormatListBulletedType' 
+								hide-details
 								label='category' density='compact' name='category' variant='outlined' type='text'
 								rows='1' />
 						</v-col>
@@ -64,21 +65,20 @@
 						</v-col>
 
 					</v-row>
+					
 					<!-- Category suggestions -->
-					<v-expand-transition>
-						<v-col v-if='computedHint.length >0' cols='12' class='ma-0 pa-0 mt-n5 mb-1'>
-							<v-row class='ma-0 pa-0' justify='start'>
-								<v-col class='ma-0 pa-0 mr-3' cols='auto' v-for='(item,index) in computedHint' :key='index'>
-									<v-chip size='small' density='compact' color='primary' :variant='chipVariant' @click='meal.category = item'>
-										{{ item }}
-									</v-chip>
-								</v-col>
-							</v-row>
-						</v-col>
-					</v-expand-transition>
+					<v-col cols='12' class='ma-0 pa-0 mt-n5 cat_height'>
+						<v-row class='ma-0 pa-0' justify='start'>
+							<v-col class='ma-0 pa-0 mr-3' cols='auto' v-for='(item,index) in computedHint' :key='index'>
+								<v-chip size='small' density='compact' color='primary' :variant='chipVariant' @click='meal.category = item'>
+									{{ item }}
+								</v-chip>
+							</v-col>
+						</v-row>
+					</v-col>
 
 					<!-- Description -->
-					<v-col class='ma-0 pa-0' cols='12' >
+					<v-col class='ma-0 pa-0 mt-1' cols='12' >
 						<v-textarea v-model='meal.description' :auto-grow='true' :disabled='completed' density='compact'
 							:error='descriptionError'
 							:prepend-inner-icon='mdiMessageText' label='meal description' variant='outlined'
@@ -528,6 +528,11 @@ const v$ = useVuelidate(rules, meal);
 </script>
 
 <style>
+
+.cat_height {
+	height: 1.5rem;
+}
+
 @media (max-width: 960px) {
 	.v-input--switch .v-label {
 		font-size: 12px;
