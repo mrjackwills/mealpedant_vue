@@ -1,18 +1,18 @@
 <template>
 	<v-snackbar v-model='visible' id='snackbar' app :bottom='position.y === "bottom"' :color='color'
 		:left='position.x === "left"' :right='position.x === "right"' :timeout='timeout' :top='position.y === "top"'
-		:min-width='mdAndUp?"30vw":"90vw"'
+		:min-width='mdAndUp?"40vw":"90vw"'
 	>
 		<v-row v-intersect='onIntersect' justify='center' align='center' class='no-gutters ma-0 pa-0'>
 			<v-col cols='1' class='pa-0 ma-0'>
 				<v-progress-circular v-if='loading' indeterminate :width='3' :size='18' color='white' class='' />
 				<v-icon v-if='icon && !loading' medium class='' :icon='icon' />
 			</v-col>
-			<v-col cols='auto' class='pa-0 ma-0 text-center' :class='messageSize'>
+			<v-col cols='10' class='pa-0 ma-0 text-center' :class='messageSize'>
 				{{ message }}
 			</v-col>
 			<v-col cols='1' class='pa-0 ma-0'>
-				<v-icon   v-if='closable' @click='visible = false' class='ml-2' size='small' :icon='mdiClose' />
+				<v-icon  v-if='closable' @click='visible = false' class='ml-2' size='small' :icon='mdiClose' />
 			</v-col>
 		</v-row>
 	</v-snackbar>
