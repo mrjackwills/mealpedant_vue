@@ -1,6 +1,6 @@
 <template>
 	<v-row justify='space-around' class='ma-0 pa-0'>
-		<v-col cols='12' sm='7' md='3' class='ma-0 pa-0 mt-md-8'>
+		<v-col cols='5' md='3' class='ma-0 pa-0 mt-md-8'>
 			<v-text-field v-model='startDate' :hint='hintStartDate' :prepend-inner-icon='mdiCalendarStart'
 				@click='showStartDate = !showStartDate' :clearable='false' label='start'
 				variant='underlined' persistent-hint readonly
@@ -15,7 +15,7 @@
 			</v-text-field>
 		</v-col>
 
-		<v-col cols='12' sm='7' md='3' class='ma-0 pa-0 mt-md-8'>
+		<v-col cols='5' md='3' class='ma-0 pa-0 mt-md-8'>
 			<v-text-field v-model='endDate' :hint='hintEndDate' :prepend-inner-icon='mdiCalendarEnd'
 				@click='showEndDate = !showEndDate' :clearable='false' label='end'
 				variant='underlined' persistent-hint readonly

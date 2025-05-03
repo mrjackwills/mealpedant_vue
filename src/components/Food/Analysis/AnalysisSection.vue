@@ -1,5 +1,5 @@
 <template>
-	<v-row justify='space-between' class='ma-0 pa-0 mb-3'>
+	<v-row justify='center' class='ma-0 pa-0 mb-3'>
 		<v-col cols='12' class='ma-0 pa-0 pb-3 pb-md-0 pr-md-3' :md='totals_cols'>
 			<VariantsTable />
 		</v-col>
