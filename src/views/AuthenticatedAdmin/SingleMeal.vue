@@ -67,7 +67,7 @@
 					</v-row>
 					
 					<!-- Category suggestions -->
-					<v-col cols='12' class='ma-0 pa-0 mt-n5 cat_height'>
+					<v-col cols='12' class='ma-0 pa-0 mt-md-n5 cat_height'>
 						<v-row class='ma-0 pa-0' justify='start'>
 							<v-col class='ma-0 pa-0 mr-3' cols='auto' v-for='(item,index) in computedHint' :key='index'>
 								<v-chip size='small' density='compact' color='primary' :variant='chipVariant' @click='meal.category = item'>
