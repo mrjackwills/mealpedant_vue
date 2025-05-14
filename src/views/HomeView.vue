@@ -1,8 +1,8 @@
 <template>
 	<v-container fluid class=''>
 		<v-row align='center' justify='center'>
-			<v-col cols='11'  align='center' justify='center'>
-				<p class='text-center text-white text-h5'>
+			<v-col cols='11' align='center' >
+				<p class='text-white text-h5'>
 					Since May 9th 2015, two friends have fastidiously exchanged information on every evening meal that they have consumed.
 				</p>
 				<p class='text-center text-white text-h5 my-4'>
