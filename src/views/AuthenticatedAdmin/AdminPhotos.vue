@@ -93,35 +93,87 @@
 				</template>
 				<template v-else-if='(item.file_name_converted)'>
 
-					<v-row class='justify-center bg-black'>
+					<v-row class='justify-center bg-black ma-0 pa-0'>
+
 						<v-col cols='12' class='ma-0 pa-0'>
-							<v-img :src='env.gen_photo_url(item.file_name_converted)' alt='A photograph of a meal'
-								max-height='15rem' height='15rem' min-height='15rem' cover />
+							<span class='text-mealtype'>
+								<v-row class='ma-0 pa-0' justify='space-around'>
+									<v-col class='ma-0 pa-0 cl' cols='auto'>
+										unused 
+									</v-col>
+								</v-row>
+							</span>
 						</v-col>
-						<v-col cols='auto' class='ma-0 pa-0 cl text-error'>
-							converted: {{ item.file_name_converted }}
+
+						<v-col cols='12' class='ma-0 pa-0'>
+							<v-img v-if='(item.file_name_converted)' :src='env.gen_photo_url(item.file_name_converted)'
+								alt='A photograph of a meal' lazy-src='@/assets/tile_svg.svg' max-height='15rem'
+								eager />
 						</v-col>
-						<v-col cols='auto' class='cl ma-0 pa-0' @click='deletePhoto(item.file_name_converted)'>
-							delete
+
+						<v-col cols='12' class='ma-0 pa-0'>
+							<span class='text-mealtype'>
+								<v-row class='ma-0 pa-0' justify='space-around'>
+									<v-col class='ma-0 pa-0 cl' cols='auto'>
+										<a v-if='item.file_name_converted' target='_blank'
+											:href='env.gen_photo_url(item.file_name_converted)'>
+											<v-icon class='cl' :icon='mdiImageSizeSelectLarge' />
+											{{ bytes_to_mb(item.size_in_bytes_converted ?? 0) }}mb
+										</a>
+									</v-col>
+									<v-col cols='auto' class='cl ma-0 pa-0' @click='deletePhoto(item.file_name_converted)'>
+										<v-chip color='mealtype' variant='flat' size='x-small'>
+											delete
+										</v-chip>
+									</v-col>
+								</v-row>
+							</span>
 						</v-col>
 					</v-row>
 				</template>
 
 				<template v-else-if='(item.file_name_original)'>
 
-					<v-row class='justify-center bg-black'>
+					<v-row class='justify-center bg-black ma-0 pa-0'>
+
 						<v-col cols='12' class='ma-0 pa-0'>
-							<v-img :src='env.gen_photo_url(item.file_name_original)' alt='A photograph of a meal'
-								max-height='15rem' height='15rem' min-height='15rem' cover />
+							<span class='text-mealtype'>
+								<v-row class='ma-0 pa-0' justify='space-around'>
+									<v-col class='ma-0 pa-0 cl' cols='auto'>
+										unused 
+									</v-col>
+								</v-row>
+							</span>
 						</v-col>
-						<v-col cols='auto' class='ma-0 pa-0 cl text-error'>
-							original: {{ item.file_name_original }}
+
+						<v-col cols='12' class='ma-0 pa-0'>
+							<v-img v-if='(item.file_name_original)' :src='env.gen_photo_url(item.file_name_original)'
+								alt='A photograph of a meal' lazy-src='@/assets/tile_svg.svg' max-height='15rem'
+								eager />
 						</v-col>
-						<v-col cols='auto' class='cl ma-0 pa-0' @click='deletePhoto(item.file_name_original)'>
-							delete
+
+						<v-col cols='12' class='ma-0 pa-0'>
+							<span class='text-mealtype'>
+								<v-row class='ma-0 pa-0' justify='space-around'>
+									<v-col class='ma-0 pa-0 cl' cols='auto'>
+										<a v-if='item.file_name_original' target='_blank'
+											:href='env.gen_photo_url(item.file_name_original)'>
+											<v-icon class='cl' :icon='mdiImageSizeSelectActual' />
+											{{ bytes_to_mb(item.size_in_bytes_original ?? 0) }}mb
+										</a>
+									</v-col>
+									<v-col cols='auto' class='cl ma-0 pa-0' @click='deletePhoto(item.file_name_original)'>
+										<v-chip color='mealtype' variant='flat' size='x-small'>
+											delete
+										</v-chip>
+									</v-col>
+								</v-row>
+							</span>
 						</v-col>
 					</v-row>
 				</template>
+				
+				<!-- Handle any unknown edge case -->
 				<template v-else>
 					{{ item }}
 				</template>
