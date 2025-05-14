@@ -7,10 +7,8 @@
 				density='comfortable'
 			>
 				<v-menu v-model='showStartDate' activator='parent' :close-on-content-click='false'>
-
 					<v-date-picker v-model='startModel' first-day-of-week='1' :min='genesisDateString()'
 						:max='todayDateString()' />
-
 				</v-menu>
 			</v-text-field>
 		</v-col>

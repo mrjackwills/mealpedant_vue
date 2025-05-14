@@ -93,6 +93,8 @@
     "mealsTodoModule": true,
     "mealViewModule": true,
     "mealModule": true,
-    "mealStorage": true
+    "mealStorage": true,
+    "Slot": true,
+    "Slots": true
   }
 }

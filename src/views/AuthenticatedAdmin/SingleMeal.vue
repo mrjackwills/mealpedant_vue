@@ -97,7 +97,7 @@
 									</v-col>
 									<v-col class='ma-0 pa-0 text-center mt-2' cols='12' v-if='imageUrl'>
 										<v-chip class=''>
-											<a target='_blank' :href='env.gen_photo_url(meal.photo_converted)'>
+											<a target='_blank' :href='env.gen_photo_url(meal.photo_original)'>
 												<v-icon :icon='mdiCamera' color='white' class='mr-2' />
 												<span class='text-white'>see original</span>
 											</a>
@@ -330,6 +330,7 @@ const mealDate = ref(undefined as undefined | string);
 const descriptionError = ref(false);
 watch(meal, (i) => {
 	descriptionError.value = i.description.charAt(0) !== i.description.charAt(0).toUpperCase();
+	i.description = i.description.trimStart();
 }, { deep: true });
 
 watch(mealDate, (i) => {
