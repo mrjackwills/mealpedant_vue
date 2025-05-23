@@ -2,7 +2,7 @@
 + dependencies updated, [dc1e0ed7858170a6e39230f039e98ee529f9fe94], [70670ba135f767363297dcec9d5a6e28e33db88c], [816af6f3324dbbb5bb947ab46794c3759e573ed1], [817432949ff20e86d26601e41b51422c74b64f5a], [a78b71b0a1e498fd8a24736b45569a5f17a9ac44],
 
 ### Features
-+ cateogory chip flat if selected, [6088fae8745f411e23c0240fa24f6a990ac8598f]
++ category chip flat if selected, [6088fae8745f411e23c0240fa24f6a990ac8598f]
 + mono text class, [ba4e21cac1f1388e7798892937014d120ee8d00a]
 
 ### Fixes
