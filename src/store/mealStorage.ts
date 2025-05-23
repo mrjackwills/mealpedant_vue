@@ -1,5 +1,4 @@
 import { axios_authenticatedFood, axios_incognito } from '@/services/axios';
-import { snackError } from '@/services/snack';
 import { c_MealInfo, PV } from '@/types';
 
 class MealStorage {
@@ -78,8 +77,7 @@ class MealStorage {
 			} else {
 				await this.#get_set_meals_to_pinia(authenticated);
 			}
-		} catch (e) {
-			snackError({ message: `${e}` });
+		} catch {
 			const meals_in_storage = this.meals_get();
 			if (meals_in_storage) await this.#get_set_meals_to_pinia(authenticated, meals_in_storage);
 		}

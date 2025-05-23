@@ -3,17 +3,19 @@
 		<v-col cols='12' sm='6' lg='3' xl='2' class='pa-0 my-0'>
 			<v-btn @click='buttonSection = !buttonSection' block variant='text'>
 				<v-row align='center' justify='space-between' class='ma-0 pa-0'>
-					<v-col cols='auto' class='ma-0 pa-0'>
+
+					<v-col cols='5' md='auto' class='text-left ma-0 pa-0'>
 						<v-icon class='mr-1' style='vertical-align: middle;' medium :icon='buttonIcon' />
 					</v-col>
-					<v-col cols='auto' class='ma-0 pa-0'>
+					<v-col cols='4' md='auto' class='text-left ma-0 pa-0'>
 						<span v-if='buttonSection && lgAndUp'>hide</span>
 						<span v-if='!buttonSection && lgAndUp'>show</span>
 						{{ buttonName }}
 					</v-col>
-					<v-col cols='auto' class='ma-0 pa-0'>
+					<v-col cols='3' md='auto' class='ma-0 pa-0 text-right'>
 						<v-icon class='mr-1' style='vertical-align: middle;' medium>{{ showHideIcon }}</v-icon>
-					</v-col>
+					</v-col> 
+
 				</v-row>
 			</v-btn>
 		</v-col>
@@ -78,4 +80,5 @@ const props = defineProps<{ buttonName: string }>();
 .v-btn__content {
 	width: 100%
 }
+
 </style>

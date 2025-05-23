@@ -28,14 +28,14 @@
 	"types": [
 		"node",
 		"vite-plugin-pwa/client",
-		"vuetify",
+		"vuetify"
 	],
 	"include": [
 		"src/**/*.ts",
 		"src/**/*.d.ts",
 		"src/**/*.tsx",
 		"src/**/*.vue",
-		"src/vanillaTS/globalConststs"
+		"src/vanillaTS/globalConsts"
 	],
 	"references": [
 		{

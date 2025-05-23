@@ -13,6 +13,10 @@ $snackbar-action-margin : 0px !important;
 	text-transform: lowercase !important;
 }
 
+.mono-num {
+	font-variant-numeric: tabular-nums;
+}
+
 html,
 .v-snackbar__content,
 [class*='text-'] {

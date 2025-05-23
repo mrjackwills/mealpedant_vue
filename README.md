@@ -17,7 +17,7 @@
 </p>
 
 <hr>
-<p align="center"><em>Since May 9th 2015, two friends have pedantically exchanged information on every evening meal that they have consumed. This is a comprehensive chronicling of that pedantry.</em></p>
+<p align="center"><em>Since May 9th 2015, two friends have fastidiously exchanged information on every evening meal that they have consumed. This is a comprehensive chronicling of that pedantry.</em></p>
 <p align="center">
 	<a href="https://raw.githubusercontent.com/mrjackwills/mealpedant_vue/main/.github/screenshot.jpg" target='_blank' rel='noopener noreferrer'>
 		<img src='./.github/screenshot.jpg' width='100%'/>

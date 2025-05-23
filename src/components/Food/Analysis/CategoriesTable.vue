@@ -22,10 +22,10 @@
 					:class='show_jack && show_dave ? "text-mealtype" : show_jack && !show_dave ? "text-secondary" : "text-primary"'>
 
 					<v-row align='center' justify='space-around' class='ma-0 pa-0'>
-						<v-col cols='6' class='ma-0 pa-0 font-weight-bold'>
+						<v-col cols='6' class='ma-0 pa-0 font-weight-bol mono-num'>
 							{{ item.t }}
 						</v-col>
-						<v-col cols='6' class='ma-0 pa-0 font-italic'
+						<v-col cols='6' class='ma-0 pa-0 font-italic mono-num'
 							v-tooltip:top='has_filter ? "% filtered meals" : "% all meals"'>
 							{{ (100 / (filtered_total) * item.t).toFixed(2) }}%
 						</v-col>
@@ -39,23 +39,23 @@
 					<v-row align='center' class='ma-0 pa-0 ' justify='center'>
 						<v-col class='ma-0 pa-0 text-primary' cols='12' v-if='authenticated'>
 							<v-row align='center' justify='space-around' class='ma-0 pa-0'>
-								<v-col class='ma-0 pa-0 font-weight-bold text-right'>
+								<v-col class='ma-0 pa-0 font-weight-bold text-right mono-num'>
 									{{ item.d }}
 								</v-col>
 
-								<v-col class='ma-0 pa-0 font-italic' v-tooltip:top='"% split"'>
-									<span> {{ (100 / (item.t) *
+								<v-col class='ma-0 pa-0 font-italic mono-num' v-tooltip:top='"% split"'>
+									<span>{{ (100 / (item.t) *
 										item.d).toFixed(2) }}% </span>
 								</v-col>
 							</v-row>
 						</v-col>
 						<v-col class='ma-0 pa-0 text-secondary' cols='12'>
 							<v-row align='center' justify='space-around' class='ma-0 pa-0'>
-								<v-col class='ma-0 pa-0 font-weight-bold text-right'>
+								<v-col class='ma-0 pa-0 font-weight-bold text-right mono-num'>
 									{{ item.j }}
 								</v-col>
 
-								<v-col class='ma-0 pa-0 font-italic'
+								<v-col class='ma-0 pa-0 font-italic mono-num'
 									v-tooltip:top='authenticated ? "% split" : "% all meals"'>
 									<span v-if='authenticated'> {{ (100 / (item.t) *
 										item.j).toFixed(2) }}% </span>
@@ -75,7 +75,7 @@
 
 				<v-col cols='5' class='ma-0 pa-0 text-start'>
 					total:
-					<span class='text-mealtype font-weight-bold'>{{ total_categories }}</span>
+					<span class='text-mealtype font-weight-bold mono-num'>{{ total_categories }}</span>
 				</v-col>
 
 				<v-col cols='2' class='ma-0 pa-0 text-center' >
@@ -98,8 +98,8 @@
 				<v-col cols='5' class='ma-0 pa-0 text-end'>
 					<section v-if='has_filter'>
 						filtered:
-						<span class='font-weight-bold text-mealtype'>{{ tableData.length }}</span>
-						<span v-tooltip:top='"% all categories"' class='font-italic text-mealtype'>
+						<span class='font-weight-bold text-mealtype mono-num'>{{ tableData.length }}</span>
+						<span v-tooltip:top='"% all categories"' class='font-italic text-mealtype mono-num'>
 							({{ (100 / (total_categories) * tableData.length).toFixed(2) }}%)
 						</span>
 					</section>

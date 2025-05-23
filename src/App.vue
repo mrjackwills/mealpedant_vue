@@ -37,6 +37,7 @@ const title = computed(() => browserModule().pageTitle);
 
 const { isSwiping, direction } = useSwipe(swipe);
 
+// check for updates every x minutes using an interval?
 const check_pwa = (): void => {
 	if ('serviceWorker' in navigator) {
 		registerSW({
@@ -46,6 +47,7 @@ const check_pwa = (): void => {
 		});
 	}
 };
+
 
 onBeforeMount(async () => {
 	check_pwa();

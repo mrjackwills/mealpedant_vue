@@ -12,7 +12,7 @@
 					</section>
 
 					<section v-else>
-						<a :href='githubHref' target='_blank' rel='noopener noreferrer' class='text-caption'>
+						<a href='https:/www.github.com/mrjackwills' target='_blank' rel='noopener noreferrer' class='text-caption'>
 							<v-icon color='black' class='mr-2' href='' :icon='mdiGithub' />
 						</a>
 						<span @click='buildInfo' class=''>
@@ -31,7 +31,6 @@
 
 import { mdiGithub } from '@mdi/js';
 import { env } from '@/vanillaTS/env';
-import { githubHref } from '@/vanillaTS/globalConst';
 
 onBeforeMount(() => {
 	clearTimeout(buildTimeout.value);

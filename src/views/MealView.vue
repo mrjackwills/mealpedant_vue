@@ -24,7 +24,7 @@
 						</v-row>
 					</section>
 
-					<section class='' v-if='!lgAndUp'>
+					<section v-if='!lgAndUp'>
 
 						<v-row justify='center' align='center' class='ma-0 pa-0'>
 							<v-col cols='12' class='ma-0 pa-0 py-0'>
@@ -68,7 +68,7 @@
 						</v-col>
 					</v-row>
 					<v-expand-transition>
-						<v-row justify='center' align='center' class='ma-0 pa-0' v-if='show_analysis'>
+						<v-row justify='center' align='center' class='ma-0 pa-0' v-show='show_analysis'>
 							<v-col cols='12' md='11' class='ma-0 pa-0'>
 								<AnalysisSection />
 							</v-col>
@@ -78,7 +78,7 @@
 				</section>
 
 				<v-row justify='center' align='center' class='ma-0 pa-0'>
-					<v-col cols='12' md='11' class='ma-0 pa-0'>
+					<v-col cols='12' class='ma-0 pa-0'>
 						<v-expand-transition>
 							<MealTable :slot_height='slot_height'  />
 						</v-expand-transition>

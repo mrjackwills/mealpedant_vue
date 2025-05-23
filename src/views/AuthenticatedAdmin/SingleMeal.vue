@@ -41,19 +41,19 @@
 						</v-row>
 					</v-col>
 
-					
+
 					<v-row class='ma-0 pa-0' justify='space-between'>
 
 						<!-- Category -->
-						<v-col class='ma-0 pa-0' cols='12' md='5' order-md='1' order='2' >
-							<v-textarea v-model='meal.category' @blur='trimCategory' :disabled='completed' :auto-grow='true'
-								clearable :prepend-inner-icon='mdiFormatListBulletedType' class='cat_hint'
+						<v-col class='ma-0 pa-0' cols='12' md='5' order-md='1' order='2'>
+							<v-textarea v-model='meal.category' @blur='trimCategory' :disabled='completed'
+								:auto-grow='true' clearable :prepend-inner-icon='mdiFormatListBulletedType' hide-details
 								label='category' density='compact' name='category' variant='outlined' type='text'
 								rows='1' />
 						</v-col>
 
 						<!-- variant -->
-						<v-col class='ma-0 pa-0' cols='12' md='6'  order-md='2' order='1'>
+						<v-col class='ma-0 pa-0' cols='12' md='6' order-md='2' order='1'>
 							<v-row justify='space-between' class='ma-0 pa-0'>
 								<v-col class='ma-0 pa-0' cols='auto' shrink v-for='(item, index) in mealVariants'
 									:key='index'>
@@ -64,25 +64,27 @@
 						</v-col>
 
 					</v-row>
+
 					<!-- Category suggestions -->
-					<v-expand-transition>
-						<v-col v-if='computedHint.length >0' cols='12' class='ma-0 pa-0 mt-n5 mb-1'>
-							<v-row class='ma-0 pa-0' justify='start'>
-								<v-col class='ma-0 pa-0 mr-3' cols='auto' v-for='(item,index) in computedHint' :key='index'>
-									<v-chip size='small' density='compact' color='primary' variant='outlined' @click='meal.category = item'>
+					<v-col cols='12' class='ma-0 pa-0 mt-md-n5 mb-n3 cat_height' align-self='center'>
+						<v-expand-transition>
+							<v-row class='ma-0 pa-0' justify='start' v-if='computedHint.length > 0'>
+								<v-col class='ma-0 pa-0 mr-3' cols='auto' v-for='(item, index) in computedHint'
+									:key='index'>
+									<v-chip size='small' density='compact' color='primary' :variant='chipVariant'
+										@click='meal.category = item'>
 										{{ item }}
 									</v-chip>
 								</v-col>
 							</v-row>
-						</v-col>
-					</v-expand-transition>
+						</v-expand-transition>
+					</v-col>
 
 					<!-- Description -->
-					<v-col class='ma-0 pa-0' cols='12' >
+					<v-col class='ma-0 pa-0 pt-4' cols='12'>
 						<v-textarea v-model='meal.description' :auto-grow='true' :disabled='completed' density='compact'
-							:error='descriptionError'
-							:prepend-inner-icon='mdiMessageText' label='meal description' variant='outlined'
-							name='description' rows='3' />
+							:error='descriptionError' :prepend-inner-icon='mdiMessageText' label='meal description'
+							variant='outlined' name='description' rows='3' />
 					</v-col>
 
 					<!-- Photo section -->
@@ -97,7 +99,7 @@
 									</v-col>
 									<v-col class='ma-0 pa-0 text-center mt-2' cols='12' v-if='imageUrl'>
 										<v-chip class=''>
-											<a target='_blank' :href='env.gen_photo_url(meal.photo_converted)'>
+											<a target='_blank' :href='env.gen_photo_url(meal.photo_original)'>
 												<v-icon :icon='mdiCamera' color='white' class='mr-2' />
 												<span class='text-white'>see original</span>
 											</a>
@@ -276,6 +278,8 @@ const computedDateLabel = computed((): string => {
 
 const categories = computed(() => mealModule().get_all_categories_sorted_alpha);
 
+const chipVariant = computed(() => computedHint.value.length === 1 && meal.value.category.toUpperCase() === computedHint.value[0] ? 'flat' : 'outlined');
+
 /// Generate a hint for the category text box, to show categories names once you start typing
 const computedHint = computed(() => {
 	if (!meal.value.category) return '';
@@ -287,7 +291,8 @@ const computedHint = computed(() => {
 			output.push(eachCategory[1]);
 		}
 	}
-	return output.length === 1 && output[0] === meal.value.category.toUpperCase() ? [] : output;
+	return output;
+	// return output.length === 1 && output[0] === meal.value.category.toUpperCase() ? [] : output;
 });
 
 const loading = computed({
@@ -327,6 +332,7 @@ const mealDate = ref(undefined as undefined | string);
 const descriptionError = ref(false);
 watch(meal, (i) => {
 	descriptionError.value = i.description.charAt(0) !== i.description.charAt(0).toUpperCase();
+	i.description = i.description.trimStart();
 }, { deep: true });
 
 watch(mealDate, (i) => {
@@ -525,6 +531,10 @@ const v$ = useVuelidate(rules, meal);
 </script>
 
 <style>
+.cat_height {
+	min-height: 1.5rem;
+}
+
 @media (max-width: 960px) {
 	.v-input--switch .v-label {
 		font-size: 12px;
@@ -535,9 +545,5 @@ const v$ = useVuelidate(rules, meal);
 	.v-input--switch .v-label {
 		font-size: 10px;
 	}
-}
-
-.cat_hint .v-messages__message {
-	color: rgb(var(--v-theme-primary)) !important;
 }
 </style>
