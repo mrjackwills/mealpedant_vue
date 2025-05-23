@@ -28,7 +28,7 @@
 	"types": [
 		"node",
 		"vite-plugin-pwa/client",
-		"vuetify",
+		"vuetify"
 	],
 	"include": [
 		"src/**/*.ts",
