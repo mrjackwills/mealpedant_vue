@@ -27,7 +27,7 @@
 			</v-data-table-virtual>
 		</v-col>
 		<v-col cols='12' class='ma-0 pa-0'>
-			<v-row justify='space-around' align='center' class='no-gutters ma-0 pa-0 mt-n8'>
+			<v-row justify='space-around' align='center' class='no-gutters ma-0 pa-0 mt-n4'>
 				<v-col cols='auto' class='ma-0 pa-0 mt-5'>
 					<div class='text-center'>
 						<v-checkbox
