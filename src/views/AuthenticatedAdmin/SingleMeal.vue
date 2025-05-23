@@ -41,20 +41,19 @@
 						</v-row>
 					</v-col>
 
-					
+
 					<v-row class='ma-0 pa-0' justify='space-between'>
 
 						<!-- Category -->
-						<v-col class='ma-0 pa-0' cols='12' md='5' order-md='1' order='2' >
-							<v-textarea v-model='meal.category' @blur='trimCategory' :disabled='completed' :auto-grow='true'
-								clearable :prepend-inner-icon='mdiFormatListBulletedType' 
-								hide-details
+						<v-col class='ma-0 pa-0' cols='12' md='5' order-md='1' order='2'>
+							<v-textarea v-model='meal.category' @blur='trimCategory' :disabled='completed'
+								:auto-grow='true' clearable :prepend-inner-icon='mdiFormatListBulletedType' hide-details
 								label='category' density='compact' name='category' variant='outlined' type='text'
 								rows='1' />
 						</v-col>
 
 						<!-- variant -->
-						<v-col class='ma-0 pa-0' cols='12' md='6'  order-md='2' order='1'>
+						<v-col class='ma-0 pa-0' cols='12' md='6' order-md='2' order='1'>
 							<v-row justify='space-between' class='ma-0 pa-0'>
 								<v-col class='ma-0 pa-0' cols='auto' shrink v-for='(item, index) in mealVariants'
 									:key='index'>
@@ -65,24 +64,27 @@
 						</v-col>
 
 					</v-row>
-					
+
 					<!-- Category suggestions -->
-					<v-col cols='12' class='ma-0 pa-0 mt-md-n5 cat_height'>
-						<v-row class='ma-0 pa-0' justify='start'>
-							<v-col class='ma-0 pa-0 mr-3' cols='auto' v-for='(item,index) in computedHint' :key='index'>
-								<v-chip size='small' density='compact' color='primary' :variant='chipVariant' @click='meal.category = item'>
-									{{ item }}
-								</v-chip>
-							</v-col>
-						</v-row>
+					<v-col cols='12' class='ma-0 pa-0 mt-md-n5 mb-n3 cat_height' align-self='center'>
+						<v-expand-transition>
+							<v-row class='ma-0 pa-0' justify='start' v-if='computedHint.length > 0'>
+								<v-col class='ma-0 pa-0 mr-3' cols='auto' v-for='(item, index) in computedHint'
+									:key='index'>
+									<v-chip size='small' density='compact' color='primary' :variant='chipVariant'
+										@click='meal.category = item'>
+										{{ item }}
+									</v-chip>
+								</v-col>
+							</v-row>
+						</v-expand-transition>
 					</v-col>
 
 					<!-- Description -->
-					<v-col class='ma-0 pa-0 mt-1' cols='12' >
+					<v-col class='ma-0 pa-0 pt-4' cols='12'>
 						<v-textarea v-model='meal.description' :auto-grow='true' :disabled='completed' density='compact'
-							:error='descriptionError'
-							:prepend-inner-icon='mdiMessageText' label='meal description' variant='outlined'
-							name='description' rows='3' />
+							:error='descriptionError' :prepend-inner-icon='mdiMessageText' label='meal description'
+							variant='outlined' name='description' rows='3' />
 					</v-col>
 
 					<!-- Photo section -->
@@ -529,9 +531,8 @@ const v$ = useVuelidate(rules, meal);
 </script>
 
 <style>
-
 .cat_height {
-	height: 1.5rem;
+	min-height: 1.5rem;
 }
 
 @media (max-width: 960px) {
@@ -544,9 +545,5 @@ const v$ = useVuelidate(rules, meal);
 	.v-input--switch .v-label {
 		font-size: 10px;
 	}
-}
-
-.cat_hint .v-messages__message {
-	color: rgb(var(--v-theme-primary)) !important;
 }
 </style>
