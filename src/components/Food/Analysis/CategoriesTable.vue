@@ -27,7 +27,7 @@
 						</v-col>
 						<v-col cols='6' class='ma-0 pa-0 font-italic mono-num'
 							v-tooltip:top='has_filter ? "% filtered meals" : "% all meals"'>
-							{{ (100 / (filtered_total) * item.t).toFixed(2) }}%
+							{{ (100 / (total_meals) * item.t).toFixed(2) }}%
 						</v-col>
 					</v-row>
 
@@ -57,8 +57,9 @@
 
 								<v-col class='ma-0 pa-0 font-italic mono-num'
 									v-tooltip:top='authenticated ? "% split" : "% all meals"'>
-									<span v-if='authenticated'> {{ (100 / (item.t) *
-										item.j).toFixed(2) }}% </span>
+									<span v-if='authenticated'>
+										{{ (100 / (item.t) *
+											item.j).toFixed(2) }}% </span>
 									<span v-else>
 										{{ (100 / (originalLength) * item.j).toFixed(2) }}%
 									</span>
@@ -154,7 +155,7 @@ const height = computed((): string => {
 });
 
 const authenticated = computed(() => userModule().authenticated);
-const filtered_total = computed(() => mealStore.get_meals.date_meals.length);
+const total_meals = computed(() => mealStore.get_total_meals_visible());
 const has_filter = computed(() => mealStore.is_filtered);
 const show_dave = computed(() => mealStore.show_dave);
 const show_jack = computed(() => mealStore.show_jack);

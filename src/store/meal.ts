@@ -8,7 +8,7 @@ import { genesisDateString, todayDateString } from '@/vanillaTS/helpers';
 
 type BothTPersonFood = {
 	Dave?: TPersonFood;
-	Jack?: TPersonFood; 
+	Jack?: TPersonFood;
 };
 
 /// Convert a yymmdd to yyyy-mm-dd
@@ -218,7 +218,7 @@ export const mealModule = defineStore(ModuleName.Meal, {
 			this.filtered_date_meals = [];
 			this.search_by = default_search_by();
 			this.filter_b64 = '';
-			this.router.replace({ query: { } });
+			this.router.replace({ query: {} });
 		},
 
 		/// Toggle vegetarian, then search
@@ -303,13 +303,13 @@ export const mealModule = defineStore(ModuleName.Meal, {
 			const search_by = this.search_by;
 			this.filter_b64 = btoa(JSON.stringify(compress_search_by(search_by)));
 			this.router.replace({ query: { filter: this.filter_b64 } });
-			
+
 			const search_by_stringified = JSON.stringify(search_by);
 			if (search_by_stringified === JSON.stringify(default_search_by())) {
 				this.clear_all_filters();
 				return;
 			}
-			
+
 			const known = this.search_history.get(search_by_stringified);
 			if (known) {
 				this.filtered_meal_descriptions = known.filtered_meal_descriptions;
@@ -319,16 +319,16 @@ export const mealModule = defineStore(ModuleName.Meal, {
 				this.is_filtered = true;
 				return;
 			}
-			
+
 			const tmp_cat_id = new Set<number>();
 			const tmp_desc_id = new Set<number>();
-			
+
 			const filtered_date_meals = new Map<string, {
 				Dave?: TPersonFood;
-				Jack?: TPersonFood; 
+				Jack?: TPersonFood;
 			}>();
 			const filtered_meal_variants = new Set<TMealVariant>();
-			
+
 			const search_term = this.normalise_string(search_by.term);
 			const cat_id = new Set([...this.meal_categories.entries()].filter(([_, i]) => i.includes(search_term)).map(([id]) => id));
 			const desc_id = new Set([...this.meal_descriptions.entries()].filter(([_, i]) => this.normalise_string(i).includes(search_term)).map(([id]) => id));
@@ -357,19 +357,48 @@ export const mealModule = defineStore(ModuleName.Meal, {
 					}
 				}
 			}
-			
+
 			this.filtered_meal_descriptions = this.get_filtered_map(tmp_desc_id, this.meal_descriptions);
 			this.filtered_meal_categories = this.get_filtered_map(tmp_cat_id, this.meal_categories);
 			this.filtered_date_meals = this.converted_map_to_array(filtered_date_meals);
 			this.filtered_meal_variants = filtered_meal_variants;
+
 			this.search_history.set(search_by_stringified, {
 				filtered_meal_descriptions: this.filtered_meal_descriptions,
 				filtered_meal_categories: this.filtered_meal_categories,
 				filtered_meal_variants,
 				filtered_date_meals: this.filtered_date_meals
 			});
-			
+
 			this.is_filtered = true;
+		},
+
+		/// Get the total number of meals, not just meal_dates, most of the time it will be meal_dates *2, but you never know
+		/// Will check if filtered or not 
+		get_total_meals_visible (): number {
+			let total = 0;
+			if (this.is_filtered) {
+				for (const [_, x] of this.filtered_date_meals.entries()) {
+					if (x.Dave) total += 1;
+					if (x.Jack) total += 1;
+				}
+			} else {
+				for (const [_, x] of this.date_meals.entries()) {
+					if (x.Dave) total += 1;
+					if (x.Jack) total += 1;
+				}
+			}
+			return total;
+		},
+
+		/// Get total number of meals, ignoring if filtered or not
+		get_total_meals (): number {
+			let total = 0;
+			for (const [_, x] of this.date_meals.entries()) {
+				if (x.Dave) total += 1;
+				if (x.Jack) total += 1;
+			}
+			return total;
 		},
 
 		/// Add an entry to the filtered_output, and add variants, and description/category id's
@@ -409,7 +438,7 @@ export const mealModule = defineStore(ModuleName.Meal, {
 				output.push({
 					date: key,
 					Jack: value.Jack,
-					Dave: value.Dave 
+					Dave: value.Dave
 				});
 			}
 			output.sort((a, b) => b.date.localeCompare(a.date));

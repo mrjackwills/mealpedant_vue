@@ -26,9 +26,10 @@
 						<v-col cols='6' class='ma-0 pa-0 font-weight-bold mono-num'>
 							{{ item.q.Dave + item.q.Jack }}
 						</v-col>
-						<v-col cols='6' class='ma-0 pa-0 font-italic mono-num'
-							v-tooltip:top='has_filter ? "% filtered meals" : "% all meals"'>
-							{{ (100 / (originalLength) * (item.q.Dave + item.q.Jack)).toFixed(2) }}% 
+						<v-col cols='6' class='ma-0 pa-0 font-italic mono-num'>
+							<span v-tooltip:top='has_filter ? "% filtered meals" : "% all meals"'>
+								{{ (100 / (total_meals_visible) * (item.q.Dave + item.q.Jack)).toFixed(2) }}%
+							</span>
 						</v-col>
 					</v-row>
 				</v-col>
@@ -58,7 +59,7 @@
 										{{ (item.q.Jack !== 0) ? ((100 / (item.q.Dave + item.q.Jack) * item.q.Jack).toFixed(2)) : '0.00' }}%
 									</span>
 									<span v-else>
-										{{ (100 / (originalLength) * item.q.Jack).toFixed(2) }}%
+										{{ (100 / (total_meals) * item.q.Jack).toFixed(2) }}%
 									</span>
 								</v-col>
 							</v-row>
@@ -81,7 +82,9 @@ import { formatCategoryName } from '@/vanillaTS/helpers';
 const { smAndDown, platform } = useDisplay();
 const mealStore = mealModule();
 const authenticated = computed(() => userModule().authenticated);
-const originalLength = computed(() => mealStore.date_meals.length);
+// const originalLength = computed(() => mealStore.date_meals.length);
+const total_meals = computed(() => mealStore.get_total_meals());
+const total_meals_visible = computed(() => mealStore.get_total_meals_visible());
 const density = computed(() => platform.value.firefox ? 'comfortable' : 'compact');
 
 const has_filter = computed(() => mealStore.is_filtered);
