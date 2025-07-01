@@ -187,7 +187,7 @@ onBeforeUnmount(async () => {
 const submitText = computed(() => editMeal.value ? 'UPDATE' : 'ADD');
 const submitIcon = computed(() => editMeal.value ? mdiDatabaseEdit : mdiCloudUpload);
 
-/// Set the pages meal value from a given TMealDatePerson
+// Set the pages meal value from a given TMealDatePerson
 const meal_from_validated = (x: TMealDatePerson): void => {
 	meal.value.category = x.category;
 	meal.value.date = x.date;
@@ -200,7 +200,7 @@ const meal_from_validated = (x: TMealDatePerson): void => {
 	if (x.photo_original) meal.value.photo_original = x.photo_original;
 };
 
-/// Create the patch object from the meal object
+// Create the patch object from the meal object
 const gen_update_meal = (): TMealPatch => {
 	const output: TMealPatch = {
 		meal: {
@@ -222,7 +222,7 @@ const gen_update_meal = (): TMealPatch => {
 	return output;
 };
 
-/// Use params in client url to send request to server for that meals info
+// Use params in client url to send request to server for that meals info
 onBeforeMount(async () => {
 	loading.value = true;
 	await mealStorage.seed_meal_pinia();
@@ -266,12 +266,13 @@ onBeforeMount(async () => {
 	loading.value = false;
 });
 
-/// Add suffix to date box label
+// Add suffix to date box label
 const computedDateLabel = computed((): string => {
 	if (!meal.value) return '';
 	const today_long = new Date(Date.now() - new Date().getTimezoneOffset() * 60000);
 	const today = today_long.toISOString().slice(0, 10);
-	const yesterday = new Date(today_long.setDate(today_long.getDate() - 1)).toISOString().substring(0, 10);
+	const yesterday = new Date(today_long.setDate(today_long.getDate() - 1)).toISOString().
+		substring(0, 10);
 	const text = 'Choose date';
 	return meal.value.date === today ? `${text} - today` : meal.value.date === yesterday ? `${text} - yesterday` : text;
 });
@@ -280,7 +281,7 @@ const categories = computed(() => mealModule().get_all_categories_sorted_alpha);
 
 const chipVariant = computed(() => computedHint.value.length === 1 && meal.value.category.toUpperCase() === computedHint.value[0] ? 'flat' : 'outlined');
 
-/// Generate a hint for the category text box, to show categories names once you start typing
+// Generate a hint for the category text box, to show categories names once you start typing
 const computedHint = computed(() => {
 	if (!meal.value.category) return '';
 	const inputLength = meal.value.category.length;
@@ -327,15 +328,15 @@ const imageUrl = ref('');
 const original_date = ref('');
 const editMeal = ref(false);
 const showDate = ref(false);
-const mealDate = ref(undefined as undefined | string);
+const mealDate = ref(undefined as u<string>);
 
 const descriptionError = ref(false);
-watch(meal, (i) => {
+watch(meal, (i: TMealDatePerson) => {
 	descriptionError.value = i.description.charAt(0) !== i.description.charAt(0).toUpperCase();
 	i.description = i.description.trimStart();
 }, { deep: true });
 
-watch(mealDate, (i) => {
+watch(mealDate, (i: u<string>) => {
 	if (i) {
 		meal.value.date = convert_date(String(i));
 		showDate.value = false;
@@ -344,12 +345,12 @@ watch(mealDate, (i) => {
 
 const mealVariants = ['restaurant' as const, 'takeaway' as const, 'vegetarian' as const];
 
-/// Remove any uploaded photos, go back to meals back
+// Remove any uploaded photos, go back to meals back
 const cancel = async (): PV => {
 	await router.push(FrontEndRoutes.MEALS);
 };
 
-/// When image removed from file input, send a request to delete file from sever
+// When image removed from file input, send a request to delete file from sever
 const clear = async (): PV => {
 	loading.value = true;
 	if (!meal.value.photo_original || !meal.value.photo_converted) return;
@@ -365,7 +366,7 @@ const clear = async (): PV => {
 	loading.value = false;
 };
 
-/// Dialog to ask user if they really want to delete a meal
+// Dialog to ask user if they really want to delete a meal
 const deleteMeal = (): void => {
 	dialoger({
 		message: 'Are you sure you want to delete the meal?',
@@ -376,8 +377,10 @@ const deleteMeal = (): void => {
 	});
 };
 
-/// Delete meal completely
-/// @param {Object} AuthObject - {password: string, token?:string, twoFABackup?:boolean}
+/*
+ * Delete meal completely
+ * @param {Object} AuthObject - {password: string, token?:string, twoFABackup?:boolean}
+ */
 const deleteMeal_confirm = async (authObject: TAuthObject): PV => {
 	loading.value = true;
 	if (!meal.value) return;
@@ -398,7 +401,7 @@ const deleteMeal_confirm = async (authObject: TAuthObject): PV => {
 	loading.value = false;
 };
 
-/// Upload image to server, return {o: file_name, c:file_name}
+// Upload image to server, return {o: file_name, c:file_name}
 const fileInserted = async (): PV => {
 	loading.value = true;
 	if (!imageToUpload.value) {
@@ -434,12 +437,12 @@ const fileInserted = async (): PV => {
 	loading.value = false;
 };
 
-/// Remove whitespace from end of category, when input has been blurred
+// Remove whitespace from end of category, when input has been blurred
 const trimCategory = (): void => {
 	if (meal.value.category) meal.value.category = meal.value.category.trim();
 };
 
-/// Post new meal to server
+// Post new meal to server
 const addMeal = async (): PV => {
 	if (v$.value.$invalid) return;
 	loading.value = true;
@@ -457,7 +460,7 @@ const addMeal = async (): PV => {
 	loading.value = false;
 };
 
-/// After add & updated methods, reset infobar, get missing meals, clear the search history, re-seed the data, then search by again using current set filters, if any
+// After add & updated methods, reset infobar, get missing meals, clear the search history, re-seed the data, then search by again using current set filters, if any
 const complete_clear = async (): PV => {
 	infobarModule().$reset();
 	mealModule().clear_search_history();
@@ -470,7 +473,7 @@ const submit_color = computed(() => loading.value || v$.value.$invalid || comple
 const submit_variant = computed((): VBtn['$props']['variant'] => loading.value || v$.value.$invalid || completed.value ? 'outlined' : 'flat');
 const submit_disabled = computed((): boolean => loading.value || v$.value.$invalid || completed.value);
 
-/// Either edit or add meal, will show dialog if an edit
+// Either edit or add meal, will show dialog if an edit
 const submit = async (): PV => {
 	if (editMeal.value) {
 		dialoger({
@@ -486,7 +489,7 @@ const submit = async (): PV => {
 	}
 };
 
-/// Post updated meal to server
+// Post updated meal to server
 const updateMeal_confirm = async (): PV => {
 	if (v$.value.$invalid) return;
 	loading.value = true;
@@ -507,7 +510,7 @@ const updateMeal_confirm = async (): PV => {
 	}
 };
 
-/// Roll back the meal date by one
+// Roll back the meal date by one
 const previous = (): void => {
 	if (meal.value.date) {
 		const d = new Date(meal.value.date);

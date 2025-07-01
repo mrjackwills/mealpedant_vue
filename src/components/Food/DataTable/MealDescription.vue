@@ -19,7 +19,7 @@
 					<v-icon color='black' style='vertical-align: middle;' :size='smAndDown?"x-small":"small"'
 						:icon='mdiCamera' />
 				</v-col>
-				<v-col cols='auto' class='ma-0 pa-0 text-black text-caption' :class='computedFont'> 
+				<v-col cols='auto' class='ma-0 pa-0 text-black text-caption' :class='computedFont'>
 					view
 				</v-col>
 			</v-row>
@@ -40,7 +40,7 @@ const category = computed(() => mealModule().get_category_by_id(props.meal_categ
 const categoryColor = computed(() => props.person === 'Dave' ? 'text-primary ' : 'text-secondary');
 const computedFont = computed(() => mdAndDown ? '' : 'text-body-1');
 const description = computed(() => mealModule().get_description_by_id(props.meal_description_id));
-const formatDescription = (description: string): string => `${description.slice(0, 1).toUpperCase()}${description.slice(1)}`; 
+const formatDescription = (description: string): string => `${description.slice(0, 1).toUpperCase()}${description.slice(1)}`;
 const mealViewStore = mealViewModule();
 
 const editHref = computed(() => {

@@ -3,7 +3,7 @@
 		<v-col cols='12' md='10' class=''>
 			<v-row justify='center' class='no-gutters'>
 				<v-col cols='12'>
-					<v-data-table-virtual 
+					<v-data-table-virtual
 						:headers='headers'
 						:items='errorLog'
 						:mobile='smAndDown'

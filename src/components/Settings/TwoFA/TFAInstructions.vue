@@ -127,7 +127,7 @@ const verify = async (): PV => {
 	}
 };
 
-watch(userToken, (i) => {
+watch(userToken, (i: boolean) => {
 	if (!i) errorMessage.value = undefined;
 });
 

@@ -81,7 +81,7 @@ const goback = (): void => {
 	router.back();
 };
 
-/// ALWAYS sends a forgotten password axios request, and snack success
+// ALWAYS sends a forgotten password axios request, and snack success
 const forgot = async (): Promise<void> => {
 	if (v$.value.$invalid) return;
 	loading.value = true;

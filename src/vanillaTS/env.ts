@@ -24,11 +24,11 @@ class Env {
 	get domain_api (): string {
 		return this.#domain_api;
 	}
-	
+
 	get domain_static (): string {
 		return this.#domain_static;
 	}
-		
+
 	get domain_www (): string {
 		return this.#domain_www;
 	}
@@ -37,7 +37,7 @@ class Env {
 		return this.#mode_production;
 	}
 
-	/// Generate a url for a given photoname
+	// / Generate a url for a given photoname
 	gen_photo_url (photoname: su): string {
 		return `${this.domain_static}/photo/${photoname}`;
 	}

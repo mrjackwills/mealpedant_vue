@@ -46,11 +46,11 @@ const always_required = computed({
 	}
 });
 
-watch(always_required, (_) => {
+watch(always_required, () => {
 	arVal.value = always_required.value;
 });
 
-watch(arVal, (_) => {
+watch(arVal, () => {
 	arVal.value = always_required.value;
 });
 
@@ -78,7 +78,6 @@ const confirm_function = async (authObject: TAuthObject): PV => {
 };
 
 const show_dialog = (): void => {
-
 	dialoger({
 		message: 'are you sure you want to remove the extra two-factor authentication prompts?',
 		buttonText: 'confirm',
@@ -94,7 +93,6 @@ const toggle = async (): PV => {
 		const success = await axios_authenticatedUser.setupTwoFA_patch({ always_required: true });
 		if (success) snackSuccess({ message: 'extra two-factor authentication prompts enabled' });
 		loading.value = false;
-
 	} else {
 		show_dialog();
 	}

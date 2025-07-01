@@ -1,16 +1,15 @@
 <template>
 	<v-row justify='center' class='my-0'>
 		<v-col cols='12' sm='8' md='6' class='mt-8' v-if='memory'>
-			<v-row v-for='(index, item) in memory' :key='index' align='center' justify='space-around' class='my-0'>
+			<v-row v-for='(value, name) in memory' :key='name' align='center' justify='space-around' class='my-0'>
 				<v-col cols='4' class='pa-0 text-right'>
-					{{ item }}:
+					{{ name }}:
 				</v-col>
-
-				<v-col cols='4' class='pa-0 text-left' v-if='!item.includes("uptime")'>
-					{{ bytes_to_mb(Number(index)) }} mb
+				<v-col cols='4' class='pa-0 text-left' v-if='!name.includes("uptime")'>
+					{{ bytes_to_mb(Number(value)) }} mb
 				</v-col>
 				<v-col cols='4' class='pa-0 text-left' v-else>
-					{{ secondsToText(Number(index)) }}
+					{{ secondsToText(Number(value)) }}
 				</v-col>
 				<v-col cols='12' sm='6' class='ma-0 pa-0'>
 					<v-divider />
@@ -73,14 +72,14 @@ const disabledTimeout = ref(0);
 const pageTimeout = ref(0);
 const secondsInterval = ref(0);
 
-/// Clear all timers
+// Clear all timers
 const clearTimeouts = (): void => {
 	clearTimeout(disabledTimeout.value);
 	clearInterval(secondsInterval.value);
 	clearTimeout(pageTimeout.value);
 };
 
-/// Open dialog, and start countdown timer for confirm button
+// Open dialog, and start countdown timer for confirm button
 const restartDialog = async (): PV => {
 	dialoger({
 		message: 'Are you sure you want to restart the server?',
@@ -91,8 +90,10 @@ const restartDialog = async (): PV => {
 	});
 };
 
-/// Send axios request to restart app, if no error, refresh memory stats with snack
-/// @param {Object} AuthObject - {password: string, token?:string, twoFABackup?:boolean}
+/*
+ * Send axios request to restart app, if no error, refresh memory stats with snack
+ * @param {Object} AuthObject - {password: string, token?:string, twoFABackup?:boolean}
+ */
 const restartServer = async (authObject: TAuthObject): PV => {
 	loading.value = true;
 	snackSuccess({

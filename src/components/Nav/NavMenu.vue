@@ -213,11 +213,10 @@ const registerLinks = [
 	}
 ];
 
-/// Sign out via the pinia method
+// Sign out via the pinia method
 const signout = (): void => {
 	mini.value = false;
 	userModule().clientSideSignout();
-	
 };
 
 </script>

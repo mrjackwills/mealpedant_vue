@@ -21,7 +21,7 @@
 								@keydown.enter='submit' :append-inner-icon='item.appendIcon' :autocomplete='item.autocomplete'
 								:disabled='loading' :dense='smAndDown' :error-messages='errorMessages[item.model]'
 								:error='errorMessages[item.model] ? true : false' :label='item.label'
-								:prepend-inner-icon='item.icon' :type='item.type' required density='comfortable' 
+								:prepend-inner-icon='item.icon' :type='item.type' required density='comfortable'
 								variant='underlined'/>
 						</v-col>
 						<v-col cols='12' class='pa-0 mt-n2'>
@@ -42,7 +42,7 @@
 			</v-col>
 			<v-col class='ma-0 pa-0 mt-2' cols='12'>
 				<v-row class='ma-a pa- 0' align='center' justify='center'>
-			
+
 					<v-col class='ma-0 pa-0' cols='auto'>
 						<v-btn @click='cancel'
 							:disabled='!user.current_password && !user.new_password || loading' :size='buttonSize'
@@ -53,7 +53,7 @@
 							cancel
 						</v-btn>
 					</v-col>
-					
+
 					<v-col class='ma-0 pa-0' cols='auto'>
 						<v-btn @click='submit'
 							density='compact'
@@ -63,8 +63,8 @@
 							Update Password
 						</v-btn>
 					</v-col>
-				
-					
+
+
 				</v-row>
 				<v-row class='ma-0 pa-0 mt-4' align='center' justify='center'>
 					<v-col class='ma-0 pa-0' cols='auto'>
@@ -96,14 +96,16 @@ const buttonSize = computed(() => lgAndUp.value ? 'large' : mdAndDown.value ? 's
 
 const currentEmail = computed(() => userModule().email);
 const disabled = computed(() => v$.value.$invalid ||
-	errorMessages.value.new_password ||
-	errorMessages.value.current_password ||
-	passwordCompromised.value ||
-	!user.value.new_password ||
-	!user.value.current_password ||
-	loading.value ||
-	twoFA_always_required.value && !user.value.token ||
-	twoFA_always_required.value && user.value.token && user.value.token.length < 6 ? true : false);
+  errorMessages.value.new_password ||
+  errorMessages.value.current_password ||
+  passwordCompromised.value ||
+  !user.value.new_password ||
+  !user.value.current_password ||
+  loading.value ||
+  twoFA_always_required.value && !user.value.token ||
+  twoFA_always_required.value && user.value.token && user.value.token.length < 6
+	? true
+	: false);
 const headingSize = computed(() => mdAndDown.value ? 'text-h5' : 'text-h4');
 
 const loading = computed({
@@ -164,13 +166,13 @@ const user = ref({
 	remove_sessions: false
 });
 
-/// Set the password field visible
+// Set the password field visible
 const appendClick = (model: string): void => {
 	if (model === 'current_password') current_password_visible.value = !current_password_visible.value;
 	else if (model === 'new_password') new_password_visible.value = !new_password_visible.value;
 };
 
-/// Reset data, clear form
+// Reset data, clear form
 const cancel = (): void => {
 	errorMessages.value.current_password = '';
 	errorMessages.value.new_password = '';
@@ -181,21 +183,24 @@ const cancel = (): void => {
 	user.value.token = undefined;
 	user.value.remove_sessions = false;
 	v$.value.user?.$reset();
-
 };
 
-/// set the this.focus to the currently in focus text field
-/// If the in focus field ISN't the password field, then set current_password_visible to false
-/// @param {String} model - current model/textfield name
+/*
+ * set the this.focus to the currently in focus text field
+ * If the in focus field ISN't the password field, then set current_password_visible to false
+ * @param {String} model - current model/textfield name
+ */
 const focusMethod = (model: 'current_password' | 'new_password' | 'token'): void => {
 	if (model === 'new_password') new_password_visible.value = false;
 	if (model === 'current_password') current_password_visible.value = false;
 	else [new_password_visible.value, current_password_visible.value] = [false, false];
 };
 
-/// Instead of v-model, use this to change the value, and also touch the $v object
-/// @param {String} model - current model/textfield name
-/// @param {any} value - current values of the model
+/*
+ * Instead of v-model, use this to change the value, and also touch the $v object
+ * @param {String} model - current model/textfield name
+ * @param {any} value - current values of the model
+ */
 const valueTouch = (model: 'current_password' | 'new_password' | 'token', value: string): void => {
 	switch (model) {
 		case 'current_password':
@@ -213,10 +218,10 @@ const valueTouch = (model: 'current_password' | 'new_password' | 'token', value:
 	}
 };
 
-/// store axios request to patch password
+// store axios request to patch password
 const submit = async (): PV => {
-	if (v$.value?.$invalid || passwordCompromised.value || errorMessages.value.new_password || errorMessages.value.current_password 
-	|| loading.value || disabled.value || !user.value.new_password || !user.value.current_password) return;
+	if (v$.value?.$invalid || passwordCompromised.value || errorMessages.value.new_password || errorMessages.value.current_password ||
+	  loading.value || disabled.value || !user.value.new_password || !user.value.current_password) return;
 	loading.value = true;
 	[new_password_visible.value, current_password_visible.value] = [false, false];
 
@@ -237,7 +242,7 @@ const submit = async (): PV => {
 	cancel();
 };
 
-/// common watcher method, for new and current password watcher
+// common watcher method, for new and current password watcher
 const watch_password_common = (): void => {
 	const i = user.value.new_password;
 	passwordCompromised.value = false;
@@ -266,12 +271,12 @@ const rules = {
 };
 const v$ = useVuelidate(rules, user);
 
-watch(watcher_new_password, (_) => {
+watch(watcher_new_password, () => {
 	errorMessages.value.new_password = '';
 	watch_password_common();
 });
 
-watch(watcher_current_password, (_) => {
+watch(watcher_current_password, () => {
 	errorMessages.value.current_password = '';
 	watch_password_common();
 });

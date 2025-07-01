@@ -22,7 +22,6 @@ const init_check = async (): PV => {
 	}
 	BrowserStore.set_init(true);
 	loadingModule().set_loading(false);
-
 };
 
 const adminBefore = async (_to: RouteLocationNormalized, _from: RouteLocationNormalized, next: NavigationGuardNext): PV => {
@@ -48,13 +47,12 @@ const adminEditMeal = async (to: RouteLocationNormalized, _from: RouteLocationNo
 				next();
 			} else next(FrontEndRoutes.ERROR);
 		} else {
-
 			const personValid = adminModule().person === 'Jack' || adminModule().person === 'Dave';
 			const dateValid = dateRegex.test(adminModule().date);
 			if (personValid && dateValid) next();
 			else next(FrontEndRoutes.ERROR);
 		}
-	} catch (_e) {
+	} catch {
 		next(FrontEndRoutes.BASE);
 	}
 };
@@ -116,10 +114,8 @@ const notAuthedBefore = async (_to: RouteLocationNormalized, _from: RouteLocatio
 			next(FrontEndRoutes.BASE);
 		} else {
 			next();
-
 		}
 	}
-
 };
 const hexPasswordReset = async (to: RouteLocationNormalized, _from: RouteLocationNormalized, next: NavigationGuardNext): PV => {
 	const secret = String(to.params?.id);
@@ -173,7 +169,7 @@ const hexRoutes: Array<RouteRecordRaw> = [
 	},
 
 	{
-		/// Verify user after successful register - componentless
+		// / Verify user after successful register - componentless
 		path: FrontEndRoutes.USER_VERIFY_param_ID,
 		name: FrontEndNames.USER_VERIFY_param_ID,
 		component: EmptyComponent,
@@ -202,7 +198,6 @@ const notAuthedRoutes: Array<RouteRecordRaw> = [
 		beforeEnter: [notAuthedBefore]
 	}
 ];
-
 
 
 const baseBefore = async (_to: RouteLocationNormalized, _from: RouteLocationNormalized, next: NavigationGuardNext): PV => {
@@ -254,10 +249,9 @@ const router = createRouter({
 	history: createWebHistory(import.meta.env.BASE_URL),
 	routes: allRoutes,
 	scrollBehavior (to, from, savedPosition) {
-		/// Need to ignore changes in params, so just check names
+		// / Need to ignore changes in params, so just check names
 		if (to.name === from.name) return;
 		return savedPosition ?? { top: 0 };
-
 	}
 });
 

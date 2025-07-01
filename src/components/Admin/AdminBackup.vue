@@ -54,7 +54,7 @@
 				</v-col>
 			</v-row>
 		</v-col>
-		
+
 	</v-row>
 </template>
 
@@ -110,7 +110,7 @@ const headers = [
 const localLoading = ref(false);
 const withPhotos = ref(true);
 
-/// Request to create new backup, use checkbox data to include photos or not, automatically refreshes backup file list
+// / Request to create new backup, use checkbox data to include photos or not, automatically refreshes backup file list
 const createBackup = async (): PV => {
 	loading.value = true;
 	localLoading.value = true;
@@ -119,15 +119,17 @@ const createBackup = async (): PV => {
 		await axios_admin.backup_get();
 		snackSuccess({
 			message: 'new backup created',
-			icon: mdiCloudCheck 
+			icon: mdiCloudCheck
 		});
 	}
 	loading.value = false;
 	localLoading.value = false;
 };
 
-/// Request to delete selected backupfile, automatically refreshes backup file list
-/// @param {string} filename valid filename of format /^mealpedant_\d{4}-\d{2}-\d{2}_\d{2}\.\d{2}\.\d{2}_(PHOTOS_)?SQL_REDIS_LOGS_[0-9a-fA-F]{8}\.tar\.gpg$/
+/*
+ * Request to delete selected backupfile, automatically refreshes backup file list
+ *  @param {string} filename valid filename of format /^mealpedant_\d{4}-\d{2}-\d{2}_\d{2}\.\d{2}\.\d{2}_(PHOTOS_)?SQL_REDIS_LOGS_[0-9a-fA-F]{8}\.tar\.gpg$/
+ */
 const deleteFile = async (fileName: string): PV => {
 	if (loading.value) return;
 	loading.value = true;
@@ -136,14 +138,16 @@ const deleteFile = async (fileName: string): PV => {
 		await axios_admin.backup_get();
 		snackSuccess({
 			message: `deleted: ${fileName}`,
-			icon: mdiDeleteCircleOutline 
+			icon: mdiDeleteCircleOutline
 		});
 	}
 	loading.value = false;
 };
 
-/// Add href to body of backup link, then click to download
-/// @param {string} filename valid filename of format /^mealpedant_\d{4}-\d{2}-\d{2}_\d{2}\.\d{2}\.\d{2}_(PHOTOS_)?SQL_REDIS_LOGS_[0-9a-fA-F]{8}\.tar\.gpg$/
+/*
+ * Add href to body of backup link, then click to download
+ *  @param {string} filename valid filename of format /^mealpedant_\d{4}-\d{2}-\d{2}_\d{2}\.\d{2}\.\d{2}_(PHOTOS_)?SQL_REDIS_LOGS_[0-9a-fA-F]{8}\.tar\.gpg$/
+ */
 const downloadFile = async (filename: string): PV => {
 	const downloadLink = document.createElement('a');
 	downloadLink.setAttribute('href', `${env.domain_api}/admin/backup/${filename}`);

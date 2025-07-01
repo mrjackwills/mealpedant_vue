@@ -2,23 +2,22 @@ import { axios_authenticatedFood, axios_incognito } from '@/services/axios';
 import { c_MealInfo, PV } from '@/types';
 
 class MealStorage {
-
 	readonly #hash_name = 'hash';
 
 	readonly #meal_name = 'meal';
 
-	/// Delete hash and meals from the browser localStorage
+	// Delete hash and meals from the browser localStorage
 	delete (): void {
 		window.localStorage.removeItem(this.#hash_name);
 		window.localStorage.removeItem(this.#meal_name);
 	}
 
-	/// Retrieve the all meals hash from local storage
+	// Retrieve the all meals hash from local storage
 	hash_get (): string | null {
 		return window.localStorage.getItem(this.#hash_name);
 	}
 
-	/// Storage the all meals hash into local storage
+	// Storage the all meals hash into local storage
 	hash_set (latest_hash: string): void {
 		if (latest_hash.length > 0) {
 			mealModule().set_hash(latest_hash);
@@ -26,23 +25,27 @@ class MealStorage {
 		}
 	}
 
-	/// Attempt to retrieve jack meals from local storage
-	/// Need to store as compressed, as maps don't stringify
+	/*
+	 * Attempt to retrieve jack meals from local storage
+	 * Need to store as compressed, as maps don't stringify
+	 */
 	meals_get (): c_MealInfo | undefined {
 		const meals = window.localStorage.getItem(this.#meal_name);
 		if (meals) {
 			try {
 				const output = JSON.parse(meals);
 				return output;
-			} catch (_e) {
+			} catch {
 				window.localStorage.removeItem(this.#meal_name);
 				return undefined;
 			}
 		}
 	}
 
-	/// Stringify jack meals and store in localstorage
-	/// Need to store as compressed, as maps don't stringify
+	/*
+	 * Stringify jack meals and store in localstorage
+	 * Need to store as compressed, as maps don't stringify
+	 */
 	meals_set (input: c_MealInfo): void {
 		const input_json = JSON.stringify(input);
 		window.localStorage.setItem(this.#meal_name, input_json);
@@ -59,7 +62,7 @@ class MealStorage {
 		}
 	}
 
-	/// Check hash and get meals, save to storage, else return and insert into pinia
+	// Check hash and get meals, save to storage, else return and insert into pinia
 	async seed_meal_pinia (): Promise<void> {
 		loadingModule().set_loading(true);
 		const authenticated = userModule().authenticated;
@@ -81,7 +84,7 @@ class MealStorage {
 			const meals_in_storage = this.meals_get();
 			if (meals_in_storage) await this.#get_set_meals_to_pinia(authenticated, meals_in_storage);
 		}
-		
+
 		loadingModule().set_loading(false);
 	}
 }

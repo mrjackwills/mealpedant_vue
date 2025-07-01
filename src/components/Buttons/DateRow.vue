@@ -31,11 +31,12 @@
 import { mdiCalendarStart, mdiCalendarEnd } from '@mdi/js';
 import { convert_date, todayDateString, genesisDateString } from '@/vanillaTS/helpers';
 import { snackError } from '@/services/snack';
+import { u } from '@/types';
 
-const startModel = ref(undefined as undefined | Date);
+const startModel = ref(undefined as u<Date>);
 const showStartDate = ref(false);
 
-const endModel = ref(undefined as undefined | Date);
+const endModel = ref(undefined as u<Date>);
 const showEndDate = ref(false);
 const mealStore = mealModule();
 
@@ -44,10 +45,10 @@ onMounted(() => {
 	if (mealStore.search_by.end_date) endModel.value = new Date(mealStore.search_by.end_date);
 });
 
-watch(startModel, (i) => {
+watch(startModel, (i: u<Date>) => {
 	if (i) {
 		startDate.value = convert_date(String(i));
-		if (endModel.value && i < endModel.value ) {
+		if (endModel.value && i < endModel.value) {
 			mealStore.set_search_by_start_date(startDate.value);
 			showStartDate.value = false;
 		} else {
@@ -56,7 +57,7 @@ watch(startModel, (i) => {
 	}
 });
 
-watch(endModel, (i) => {
+watch(endModel, (i: u<Date>) => {
 	if (i) {
 		if (startModel.value && i > startModel.value) {
 			endDate.value = convert_date(String(i));
@@ -70,7 +71,7 @@ const startDate = ref(genesisDateString());
 const endDate = ref(todayDateString());
 
 const is_filtered = computed(() => mealStore.is_filtered);
-watch(is_filtered, (i) => {
+watch(is_filtered, (i: boolean) => {
 	if (!i) {
 		endDate.value = todayDateString();
 		startDate.value = genesisDateString();

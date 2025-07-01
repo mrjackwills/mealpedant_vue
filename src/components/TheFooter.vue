@@ -41,7 +41,7 @@ const apiVersion = computed(() => `${browserModule().api_version}`);
 const buildTimeout = ref(0);
 const showBuild = ref(false);
 
-/// Show build date on version number click if authed
+// Show build date on version number click if authed
 const buildInfo = (): void => {
 	showBuild.value = !showBuild.value;
 	clearTimeout(buildTimeout.value);

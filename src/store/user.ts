@@ -46,7 +46,8 @@ export const userModule = defineStore(ModuleName.User, {
 			mealViewModule().$reset();
 			mealModule().$reset();
 			mealStorage.delete();
-			getActivePinia()?.router().push(FrontEndRoutes.BASE);
+			getActivePinia()?.router().
+				push(FrontEndRoutes.BASE);
 			loadingModule().set_loading(false);
 		}
 	},

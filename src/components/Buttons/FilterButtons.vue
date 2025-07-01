@@ -1,7 +1,7 @@
 <template>
 	<v-col cols='auto' class='ma-0 pa-0 mt-lg-12'>
 		<v-row justify='space-evenly' align='center' class='no-gutters ma-0 pa-0'>
-			
+
 			<v-col cols='auto' class='ma-0 pa-0'>
 				<v-chip color='mealtype' rounded variant='flat' class='' :size='chip_size' >
 					<v-switch :model-value='only_photos' @update:model-value='update_photos' color='black'
@@ -57,12 +57,12 @@ const show_jack = computed(() => mealStore.show_jack);
 const authenticated = computed(() => userModule().authenticated);
 
 const chip_size = computed(() => smAndDown.value ? 'small' : 'default');
-/// Has to be the inverse of the value
+// Has to be the inverse of the value
 const only_photos = computed(() => mealStore.search_by.only_photos);
 
 const update_photos = (): void => mealStore.set_search_by_photo();
 
-/// If other person is already disabled, then don't disable the second
+// If other person is already disabled, then don't disable the second
 const update_person = (person: TPerson): void => {
 	if (person === 'Jack' && !show_dave.value || person === 'Dave' && !show_jack.value) return;
 	mealStore.set_search_by_person(person);

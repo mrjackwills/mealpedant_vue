@@ -17,7 +17,7 @@
 					<v-icon :size='smAndDown?"x-small":"small"' :icon='mdiInformation' />
 				</v-col>
 				<v-col cols='10'  md='auto' class='ma-0 pa-0 px-2 text-center' :class='{ "smalltext": smAndDown }'>
-					Access to both datasets requires registration 
+					Access to both datasets requires registration
 				</v-col>
 				<v-col cols='1'  md='auto' class='ma-0 pa-0 cl text-center' @click='showInfo=false'>
 					<v-icon :size='smAndDown?"x-small":"small"' :icon='mdiClose' />
@@ -99,17 +99,17 @@
 								<v-icon :icon='mdiArrowCollapseUp' color='mealtype' :size='smAndDown?"x-small":"small"'/>
 							</v-chip>
 						</v-col>
-							
+
 						<v-col cols='auto' class='ma-0 pa-0 text-center'>
 							<v-chip color='mealtype' @click='scrollTableEnd' density='compact' :size='smAndDown?"x-small":"small"' :disabled='scroll_down_disabled' v-tooltip:top='"scroll end"'>
 								<v-icon :icon='mdiArrowCollapseDown' color='mealtype' :size='smAndDown?"x-small":"small"' />
 							</v-chip>
-						</v-col> 
+						</v-col>
 					</v-row>
 				</v-col>
 
 				<v-col cols='5' class='ma-0 pa-0 text-end'>
-				
+
 					<section v-if='has_filter'>
 						filtered:
 						<span class='font-weight-bold text-mealtype'>{{ filteredDays }}</span>
@@ -121,7 +121,7 @@
 			</v-row>
 		</template>
 
-	</v-data-table-virtual> 
+	</v-data-table-virtual>
 
 </template>
 
@@ -168,14 +168,11 @@ const scrollTableEnd = (): void => {
 	scroll_down_disabled.value = true;
 	scroll_up_disabled.value = false;
 	table.value.scrollToIndex(tableData.value.length - 1);
-	setTimeout(
-		() => table.value.scrollToIndex(tableData.value.length - 1),
-		1
-	);
+	setTimeout(() => table.value.scrollToIndex(tableData.value.length - 1), 1);
 };
 
 const b64 = computed(() => mealStore.filter_b64);
-watch(b64, (_) => {
+watch(b64, () => {
 	scrollTableStart();
 });
 
@@ -190,18 +187,18 @@ const tableHeight = computed(() => `${size.value}px`);
 
 const props = defineProps<{ slot_height: number }>();
 
-watch(()=> props.slot_height, (_) => {
+watch(() => props.slot_height, () => {
 	calc_table_height();
 });
 
-const infobar = ref(null as null | VRow );
+const infobar = ref(null as null | VRow);
 const infobar_height = ref(0);
 
 onMounted(() => {
 	if (infobar.value) infobar_height.value = infobar.value.$el.clientHeight;
 });
 
-/// Calculate the table height based on inner window height, table location, and footer size
+// / Calculate the table height based on inner window height, table location, and footer size
 const calc_table_height = (): void => {
 	const suffix = 1.35;
 	const new_size = window.innerHeight - props.slot_height - footer_height() * suffix - header_height() * suffix - infobar_height.value;
@@ -217,38 +214,32 @@ const filteredDays = computed(() => mealStore.filtered_date_meals.length);
 const authenticated = computed(() => userModule().authenticated);
 const headers = computed(() => {
 	const headers = [];
-	headers.push(
-		{
-			align: 'start' as const,
-			class: '',
-			sortable: true,
-			title: 'Date',
-			key: 'date',
-			width: '10%'
-		}
-	);
-	if (show_dave.value) headers.push(
-		{
-			align: 'start' as const,
-			class: 'dave-header',
-			sortable: false,
-			title: 'Dave',
-			key: 'Dave',
-			width: show_jack.value ? '45%' : '90%'
+	headers.push({
+		align: 'start' as const,
+		class: '',
+		sortable: true,
+		title: 'Date',
+		key: 'date',
+		width: '10%'
+	});
+	if (show_dave.value) headers.push({
+		align: 'start' as const,
+		class: 'dave-header',
+		sortable: false,
+		title: 'Dave',
+		key: 'Dave',
+		width: show_jack.value ? '45%' : '90%'
 
-		}
-	);
+	});
 
-	if (show_jack.value) headers.push(
-		{
-			align: 'start' as const,
-			class: 'jack-header',
-			sortable: false,
-			title: 'Jack',
-			key: 'Jack',
-			width: show_dave.value ? '45%' : '90%'
-		}
-	);
+	if (show_jack.value) headers.push({
+		align: 'start' as const,
+		class: 'jack-header',
+		sortable: false,
+		title: 'Jack',
+		key: 'Jack',
+		width: show_dave.value ? '45%' : '90%'
+	});
 	return headers;
 });
 

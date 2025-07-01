@@ -49,7 +49,7 @@ import {
 	mdiClose,
 	mdiEmail,
 	mdiLock,
-	mdiEye, 
+	mdiEye,
 	mdiEyeOff,
 	mdiKeyboard
 } from '@mdi/js';
@@ -75,7 +75,7 @@ const watcher_password = computed(() => user.value.password);
 
 const password_visible = ref(false);
 
-/// Set the password field visible
+// Set the password field visible
 const appendClick = (model: string): void => {
 	if (model === 'password') password_visible.value = !password_visible.value;
 };
@@ -140,7 +140,7 @@ onMounted(() => {
 
 const router = useRouter();
 
-/// On cancel button press, either go to base page, or meal page, depedning if meal page has already been visited
+// On cancel button press, either go to base page, or meal page, depedning if meal page has already been visited
 const cancel = async (): PV => {
 	if (mealModule().meals_length > 0) await router.push(FrontEndRoutes.MEALS);
 	else await router.push(FrontEndRoutes.BASE);
@@ -196,7 +196,6 @@ watch(watcher_email, () => {
 	else if (!v$.value.user?.email?.$dirty) return;
 	else if (!v$.value.user?.email?.required) errorMessages.value.email = 'email required';
 	else if (!v$.value.user?.email?.email) errorMessages.value.email = 'email invalid';
-
 });
 
 watch(watcher_full_name, () => {
@@ -217,7 +216,8 @@ watch(watcher_password, () => {
 	errors.value.password = false;
 	if (user.value.email && user.value.password.toLowerCase().includes(user.value.email.toLowerCase().trim())) errors.value.password = true;
 	else if (user.value.email && user.value.password) {
-		const a = user.value.email.toLowerCase().trim().split('@')[0];
+		const a = user.value.email.toLowerCase().trim().
+			split('@')[0];
 		if (a && user.value.password.toLowerCase().includes(a)) errors.value.password = true;
 	} else if (!v$.value.user?.password?.$invalid && !passNum.value) errorMessages.value.password = '';
 	else if (!v$.value.user?.password?.$dirty) return;

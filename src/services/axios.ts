@@ -27,10 +27,7 @@ const staticAxios: AxiosInstance = Axios.create({
 });
 
 for (const i of [baseAxios, staticAxios]) {
-	i.interceptors.response.use(
-		(config) => Promise.resolve(config),
-		(error) => !error.response ? Promise.reject(new Error('offline')) : Promise.reject(error)
-	);
+	i.interceptors.response.use((config) => Promise.resolve(config), (error) => !error.response ? Promise.reject(new Error('offline')) : Promise.reject(error));
 }
 
 const isAuthenticated = <T>() => {
@@ -494,7 +491,6 @@ export class AdminPhoto {
 }
 
 class DownloadPhoto {
-
 	@wrap()
 	@isAuthenticated<string>()
 	async photo_get (url: string): Promise<ArrayBuffer> {

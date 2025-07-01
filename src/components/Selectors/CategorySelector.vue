@@ -20,22 +20,22 @@ const update_categories = (): void => {
 	if (selected_category.value) mealStore.set_search_by_category(selected_category.value.toUpperCase());
 };
 
-/// The reset can get called from other modules, so need to watch then reset
+// The reset can get called from other modules, so need to watch then reset
 const is_filtered = computed(() => mealStore.is_filtered);
-watch(is_filtered, (i) => {
+watch(is_filtered, (i: boolean) => {
 	if (!i) selected_category.value = undefined;
 });
 
 const disabled = computed(() => categories.value.length === 0);
 const label = computed(() => disabled.value ? 'no match' : 'category');
 
-const category_names = computed(() => categories.value.map(i => formatCategoryName(i[1])));
+const category_names = computed(() => categories.value.map((i: string) => formatCategoryName(i[1])));
 
 const reset = (): void => {
 	mealStore.clear_all_filters();
 	selected_category.value = undefined;
 };
 
-const max_height = computed(() => `${useDisplay().height.value * .66}px`);
+const max_height = computed(() => `${useDisplay().height.value * 0.66}px`);
 
 </script>

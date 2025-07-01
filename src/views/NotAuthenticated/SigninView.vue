@@ -8,7 +8,7 @@
 						@click:append-inner='appendClick()' @input='touch(item.model)'
 						:append-inner-icon='item.appendIcon' :disabled='loading || twoFARequired'
 						:autocomplete='item.autocomplete' :error-messages='errorMessages[item.model]'
-						:label='item.label' :prepend-inner-icon='item.icon' :type='item.type' 
+						:label='item.label' :prepend-inner-icon='item.icon' :type='item.type'
 						variant='underlined'
 					/>
 				</v-form>
@@ -29,7 +29,7 @@
 				<v-row justify='space-around' align='center' class='ma-0 pa-0' :class='twoFARequired?"mt-4":"mt-n4"'>
 
 					<v-col class='ma-0 pa-0 text-center' cols='auto'>
-						<v-btn v-if='twoFARequired' @click='cancel' 
+						<v-btn v-if='twoFARequired' @click='cancel'
 							:disabled='loading'
 							class='' flat color='error' vairant='flat' rounded
 						>
@@ -39,7 +39,7 @@
 						<v-checkbox v-else v-model='user.remember'
 							:disabled='loading || twoFARequired'
 							density='compact'
-							class='mt-4' 
+							class='mt-4'
 							color='primary'
 							label='remember me'
 						/>
@@ -49,7 +49,7 @@
 					<v-col class='ma-0 pa-0 text-center' cols='auto'>
 						<v-btn @click='signin' :disabled='signin_disabled'
 							:variant='signin_disabled ? "outlined" : "flat"' large
-							rounded 
+							rounded
 							:color='signin_disabled ? "" : "secondary"'>
 							<ButtonIcon :icon='mdiLogin' />
 							sign-in
@@ -96,7 +96,7 @@ const signin_disabled = computed(() => loading.value || v$.value.$invalid || two
 
 const passwordVisible = ref(false);
 
-/// Set the password visible
+// / Set the password visible
 const appendClick = (): void => {
 	if (loading.value) return;
 	passwordVisible.value = !passwordVisible.value;
@@ -149,7 +149,7 @@ const touch = (name: string): void => {
 	v$.value.user?.[name]?.$touch();
 };
 
-/// On 2fa screen reset user data nad go back to blank signin page
+// / On 2fa screen reset user data nad go back to blank signin page
 const cancel = (): void => {
 	twoFARequired.value = false;
 	user.value = {
@@ -162,7 +162,7 @@ const cancel = (): void => {
 };
 const localLoading = ref(false);
 
-/// axios method to sign in user, works with both 2fa and non 2fa users
+// / axios method to sign in user, works with both 2fa and non 2fa users
 const signin = async (): PV => {
 	if (v$.value.$invalid || !user.value.email || !user.value.password || twoFARequired.value && !user.value.token) return;
 	if (pwa.value) user.value.remember = true;
@@ -177,7 +177,7 @@ const signin = async (): PV => {
 	passwordVisible.value = false;
 	const loginRequest = await axios_incognito.signin_post(authObject);
 	if (loginRequest?.status === HttpCode.OK) {
-		userModule().set_authenticated(true); 
+		userModule().set_authenticated(true);
 		snackbarModule().$reset();
 		infobarModule().$reset();
 		mealModule().$reset();
@@ -186,7 +186,7 @@ const signin = async (): PV => {
 		await mealStorage.seed_meal_pinia();
 		user.value = {
 			email: '',
-			password: '', 
+			password: '',
 			token: '',
 			remember: false
 		};
@@ -225,7 +225,6 @@ watch(watcher_email, () => {
 	else if (!v$.value.user?.email?.$dirty) return;
 	else if (!v$.value.user?.email?.required) errorMessages.value.email = 'email required';
 	else if (!v$.value.user?.email?.email) errorMessages.value.email = 'email invalid';
-
 });
 
 watch(watcher_password, () => {

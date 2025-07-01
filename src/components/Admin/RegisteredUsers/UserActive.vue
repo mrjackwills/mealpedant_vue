@@ -32,14 +32,14 @@ const save = async (): PV => {
 				await axios_admin.user_patch({
 					patch: { active: newActive.value },
 					email: props.email
-				} );
+				});
 				break;
-		
+
 			case 'two_fa_secret':
 				await axios_admin.user_patch({
 					patch: { two_fa_secret: newActive.value },
 					email: props.email
-				} );
+				});
 				break;
 		}
 		await axios_admin.user_get();

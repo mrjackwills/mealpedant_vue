@@ -22,7 +22,7 @@ export const mealViewModule = defineStore(ModuleName.MealView, {
 	}),
 
 	actions: {
-		
+
 		set_button_analysis (x: boolean) {
 			this.button_analysis = x;
 		},
@@ -46,7 +46,7 @@ export const mealViewModule = defineStore(ModuleName.MealView, {
 		set_table_height (x: number) {
 			this.tableHeight = x;
 		},
-		
+
 		set_showInfo (x: boolean) {
 			this.showInfo = x;
 		},

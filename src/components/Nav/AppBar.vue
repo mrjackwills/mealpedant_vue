@@ -47,7 +47,7 @@
 				</v-col>
 			</v-row>
 		</template>
-		
+
 		<v-progress-linear :active='loading' :indeterminate='loading' color='primary' width='100%' absolute
 			location='bottom' />
 	</v-app-bar>

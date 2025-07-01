@@ -13,7 +13,7 @@
 import { mdiDatabaseRefresh } from '@mdi/js';
 import { axios_adminMeal } from '@/services/axios';
 
-/// Refresh the meal data, clear filters, and if admin, check for missing meals
+// Refresh the meal data, clear filters, and if admin, check for missing meals
 const refresh = async (): Promise<void> => {
 	mealStorage.delete();
 	infobarModule().$reset();

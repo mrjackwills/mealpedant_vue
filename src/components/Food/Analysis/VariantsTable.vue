@@ -8,7 +8,7 @@
 		hide-default-footer
 		hover
 	>
-	
+
 		<template v-slot:[`item.v`]='{ item }'>
 			<v-row justify='start' align='center' class='ma-0 pa-0 text-red-lighten-4 fill-height' :class='{ "smalltext": smAndDown }' >
 				<v-col cols='auto' class='ma-0 pa-0'>
@@ -55,7 +55,7 @@
 								</v-col>
 								<v-col class='ma-0 pa-0 font-italic mono-num'
 									v-tooltip:top='authenticated ? "% split" : "% all meals"'>
-									<span v-if='authenticated'> 
+									<span v-if='authenticated'>
 										{{ (item.q.Jack !== 0) ? ((100 / (item.q.Dave + item.q.Jack) * item.q.Jack).toFixed(2)) : '0.00' }}%
 									</span>
 									<span v-else>
@@ -69,8 +69,8 @@
 				</v-col>
 
 			</v-row>
-		</template> 
-		
+		</template>
+
 	</v-data-table-virtual>
 </template>
 
@@ -82,28 +82,28 @@ import { formatCategoryName } from '@/vanillaTS/helpers';
 const { smAndDown, platform } = useDisplay();
 const mealStore = mealModule();
 const authenticated = computed(() => userModule().authenticated);
-// const originalLength = computed(() => mealStore.date_meals.length);
 const total_meals = computed(() => mealStore.get_total_meals());
 const total_meals_visible = computed(() => mealStore.get_total_meals_visible());
 const density = computed(() => platform.value.firefox ? 'comfortable' : 'compact');
 
 const has_filter = computed(() => mealStore.is_filtered);
 
-const headers = [{
-	title: 'Variant',
-	align: 'start',
-	key: 'v',
-	sortable: false,
-	width: '20%'
-},
-{
-	title: 'Quantity',
-	key: 'q',
-	align: 'end',
-	sortable: false,
-	width: '80%'
-}
-] as const; 
+const headers = [
+	{
+		title: 'Variant',
+		align: 'start',
+		key: 'v',
+		sortable: false,
+		width: '20%'
+	},
+	{
+		title: 'Quantity',
+		key: 'q',
+		align: 'end',
+		sortable: false,
+		width: '80%'
+	}
+] as const;
 
 const default_totals = (): TCategoryTotals => [
 	{
