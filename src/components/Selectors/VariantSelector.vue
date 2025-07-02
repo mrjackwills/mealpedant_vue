@@ -2,8 +2,8 @@
 	<v-select v-model='selectedType' @click:clear='reset' @update:modelValue='typeSearch' :items='types'
 		:disabled='disabled'
 		:prepend-inner-icon='mdiStarThreePointsOutline'
-		no-data-text='hide-no-date' 
-		variant='underlined' 
+		no-data-text='hide-no-date'
+		variant='underlined'
 		:menu-props='{ maxHeight: "400" }' item-text='t' item-value='v' :label='label'
 		clearable />
 </template>
@@ -23,9 +23,9 @@ const reset = async (): PV => {
 	mealStore.clear_all_filters();
 };
 
-/// The reset can get called from other modules, so need to watch then reset
+// The reset can get called from other modules, so need to watch then reset
 const is_filtered = computed(() => mealModule().is_filtered);
-watch(is_filtered, (i) => {
+watch(is_filtered, (i: boolean) => {
 	if (!i) {
 		selectedType.value = undefined;
 	}

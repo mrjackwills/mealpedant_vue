@@ -98,8 +98,10 @@ onMounted(() => {
 	browserModule().set_description('Meal Pedant - Admin information');
 });
 
-/// Return the value of a name this.param, used in v-for iterations
-// @param {string} param Valid key from data: () attribute
+/*
+ * Return the value of a name this.param, used in v-for iterations
+ * @param {string} param Valid key from data: () attribute
+ */
 const returnThis = (param: TAdminShow | 'emailIcon' | 'errorIcon' | 'limitIcon' | 'memoryIcon' | 'backupIcon' | 'registeredUsersIcon'): boolean | string | null => {
 	switch (param) {
 		case 'showBackup':
@@ -146,7 +148,7 @@ const getParam = (x: TAdminShow): Ref<boolean> => {
 	}
 };
 
-/// Dispatch axios request to update filelist, show filelist component
+// Dispatch axios request to update filelist, show filelist component
 const clicker = async (axios: TAdminAxiosNames, show: TAdminShow): PV => {
 	loading.value = true;
 	if (!getParam(show).value) await dispatch(axios);
@@ -154,8 +156,10 @@ const clicker = async (axios: TAdminAxiosNames, show: TAdminShow): PV => {
 	loading.value = false;
 };
 
-/// Dispatch vuex axios command
-/// @param {string} choice A valid suffix to `axios` in vuex admin dispatch section
+/*
+ * Dispatch vuex axios command
+ * @param {string} choice A valid suffix to `axios` in vuex admin dispatch section
+ */
 const dispatch = async (axios: TAdminAxiosNames): PV => {
 	switch (axios) {
 		case 'backup':
@@ -179,8 +183,10 @@ const dispatch = async (axios: TAdminAxiosNames): PV => {
 	}
 };
 
-/// Dispatch vuex axios command to refresh chosen section
-/// @param {string} choice A valid suffix to `axios` in vuex admin dispatch section
+/*
+ * Dispatch vuex axios command to refresh chosen section
+ * @param {string} choice A valid suffix to `axios` in vuex admin dispatch section
+ */
 const refresh = async (axios: TAdminAxiosNames): PV => {
 	loading.value = true;
 	dispatch(axios);

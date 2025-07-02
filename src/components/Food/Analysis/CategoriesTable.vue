@@ -2,7 +2,7 @@
 	<v-data-table-virtual :headers='headers' :height='height' :items='tableData' :density='density'
 		ref='table'
 		item-key='name' fixed-header no-data-text='' hide-default-footer hover>
-	
+
 		<template v-slot:[`item.category_name`]='{ item }'>
 			<v-row justify='start' align='center' class='ma-0 pa-0 text-red-lighten-4 fill-height'
 				:class='[{ "smalltext": smAndDown }, {"my-1": rowPadding}]'>
@@ -27,7 +27,7 @@
 						</v-col>
 						<v-col cols='6' class='ma-0 pa-0 font-italic mono-num'
 							v-tooltip:top='has_filter ? "% filtered meals" : "% all meals"'>
-							{{ (100 / (filtered_total) * item.t).toFixed(2) }}%
+							{{ (100 / (total_meals) * item.t).toFixed(2) }}%
 						</v-col>
 					</v-row>
 
@@ -57,8 +57,9 @@
 
 								<v-col class='ma-0 pa-0 font-italic mono-num'
 									v-tooltip:top='authenticated ? "% split" : "% all meals"'>
-									<span v-if='authenticated'> {{ (100 / (item.t) *
-										item.j).toFixed(2) }}% </span>
+									<span v-if='authenticated'>
+										{{ (100 / (item.t) *
+											item.j).toFixed(2) }}% </span>
 									<span v-else>
 										{{ (100 / (originalLength) * item.j).toFixed(2) }}%
 									</span>
@@ -86,12 +87,12 @@
 								<v-icon :icon='mdiArrowCollapseUp' color='mealtype' :size='smAndDown?"x-small":"small"' />
 							</v-chip>
 						</v-col>
-							
+
 						<v-col cols='auto' class='ma-0 pa-0 text-center'>
 							<v-chip color='mealtype' @click='scrollTableEnd' density='compact' :size='smAndDown?"x-small":"small"' :disabled='scroll_down_disabled' v-tooltip:top='"scroll end"'>
 								<v-icon :icon='mdiArrowCollapseDown' color='mealtype' :size='smAndDown?"x-small":"small"' />
 							</v-chip>
-						</v-col> 
+						</v-col>
 					</v-row>
 				</v-col>
 
@@ -141,10 +142,7 @@ const scrollTableEnd = (): void => {
 	scroll_down_disabled.value = true;
 	scroll_up_disabled.value = false;
 	table.value.scrollToIndex(tableData.value.length - 1);
-	setTimeout(
-		() => table.value.scrollToIndex(tableData.value.length - 1),
-		1
-	);
+	setTimeout(() => table.value.scrollToIndex(tableData.value.length - 1), 1);
 };
 
 const mealStore = mealModule();
@@ -154,14 +152,14 @@ const height = computed((): string => {
 });
 
 const authenticated = computed(() => userModule().authenticated);
-const filtered_total = computed(() => mealStore.get_meals.date_meals.length);
+const total_meals = computed(() => mealStore.get_total_meals_visible());
 const has_filter = computed(() => mealStore.is_filtered);
 const show_dave = computed(() => mealStore.show_dave);
 const show_jack = computed(() => mealStore.show_jack);
 const total_categories = computed(() => mealStore.meal_categories.size);
 
 const b64 = computed(() => mealStore.filter_b64);
-watch(b64, (_) => {
+watch(b64, () => {
 	scrollTableStart();
 });
 

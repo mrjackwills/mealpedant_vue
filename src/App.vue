@@ -55,7 +55,7 @@ onBeforeMount(async () => {
 	init.value = true;
 });
 
-watch(isSwiping, (i) => {
+watch(isSwiping, (i: boolean) => {
 	if (i && smAndDown.value) {
 		if (direction.value === 'right') drawStore.set_open(false);
 		else if (direction.value === 'left') drawStore.set_open(true);
@@ -81,10 +81,12 @@ useHead({
 			}
 		}
 	],
-	link: () => [{
-		rel: 'canonical',
-		href: `https://www.mealpedant.com${route?.path}`
-	}]
+	link: () => [
+		{
+			rel: 'canonical',
+			href: `https://www.mealpedant.com${route?.path}`
+		}
+	]
 });
 
 const appUpdate = (): void => {
@@ -94,7 +96,6 @@ const appUpdate = (): void => {
 		timeout: 4500
 	});
 	window.setTimeout(() => updateServiceWorker(), 5000);
-
 };
 
 </script>

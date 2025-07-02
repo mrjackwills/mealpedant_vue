@@ -162,7 +162,6 @@ const getSessions = async (email: string): PV => {
 type item = NonNullable<VDataTableRow['$props']['item']>;
 
 const showRow = async (email: string, fn: (x: item) => void, da: item): PV => {
-
 	if (expandedEmail.value === email && expandedRow.value) {
 		fn(da);
 		expandedEmail.value = undefined;

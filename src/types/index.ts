@@ -48,14 +48,14 @@ export type TPhoto = Record<'o' | 'c', string>;
 export type TPhotoLong = Record<'original' | 'converted', string>;
 
 export type TUserInfo =
-	{
-		timestamp: Date;
-		login_attempt_number?: number;
-	}
-	& Record<'full_name' | 'email' | 'user_creation_ip', string>
-	& Record<'active' | 'admin' | 'two_fa_active', boolean>
-	& Partial<Record<'password_reset_id' | 'password_reset_creation_ip' | 'login_ip' | 'user_agent_string' | 'reset_string' | 'login_date' | 'password_reset_date', string>>
-	& Partial<Record<'password_reset_consumed' | 'login_success', boolean>>;
+  {
+  	timestamp: Date;
+  	login_attempt_number?: number;
+  } &
+  Record<'full_name' | 'email' | 'user_creation_ip', string> &
+  Record<'active' | 'admin' | 'two_fa_active', boolean> &
+  Partial<Record<'password_reset_id' | 'password_reset_creation_ip' | 'login_ip' | 'user_agent_string' | 'reset_string' | 'login_date' | 'password_reset_date', string>> &
+  Partial<Record<'password_reset_consumed' | 'login_success', boolean>>;
 
 export type TAdminPatch = {
 	patch: TActivePatch | TAttemptPatch | TPasswordResetId | TPasswordReset | TTfaSecret;
@@ -136,12 +136,12 @@ export type TDialogTitle = 'Remove Backup Codes' | 'Disable Two-Factor Authentic
 export type TMealVariant = 'restaurant' | 'takeaway' | 'vegetarian';
 
 export type TChangePassword =
-	Record<'autocomplete' | 'icon' | 'label' | 'type' | 'appendIcon', string>
-	& { model: 'current_password' | 'new_password' };
+  Record<'autocomplete' | 'icon' | 'label' | 'type' | 'appendIcon', string> &
+  { model: 'current_password' | 'new_password' };
 
 export type TResetPassword =
-	Record<'autocomplete' | 'icon' | 'label' | 'type' | 'appendIcon', string>
-	& { model: 'new_password' };
+  Record<'autocomplete' | 'icon' | 'label' | 'type' | 'appendIcon', string> &
+  { model: 'new_password' };
 
 export type TErrorLog = Record<'error_log_id' | 'message' | 'stack' | 'uuid', string> & {
 	timestamp: Date;
@@ -245,7 +245,7 @@ export type c_DateMeal = {
 	a: string;
 	// Dave
 	d?: c_TPersonFood | null;
-	//Jack
+	// Jack
 	j?: c_TPersonFood | null;
 };
 
@@ -258,7 +258,7 @@ export type PersonPhoto = {
 export type c_PersonPhoto = {
 	// original
 	o?: string | null;
-	//converted
+	// converted
 	c?: string | null;
 };
 

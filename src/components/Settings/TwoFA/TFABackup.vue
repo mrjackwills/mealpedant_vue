@@ -130,7 +130,7 @@ const close = (): void => {
 	twoFAModule().set_backupProcess(false);
 };
 
-/// Copy the 2fa codes, create multi-line string with description as first line
+// Copy the 2fa codes, create multi-line string with description as first line
 const copyCodes = (): void => {
 	useClipboard().copy(backupCodes());
 	showTooltip.value = true;
@@ -139,7 +139,7 @@ const copyCodes = (): void => {
 	}, 1750);
 };
 
-/// Download the 2fa codes as .txt, all clientside, create multi-line string with description as first line
+// Download the 2fa codes as .txt, all clientside, create multi-line string with description as first line
 const downloadCodes = (): void => {
 	const downloadCodes = document.createElement('a');
 	downloadCodes.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(backupCodes()));
@@ -150,7 +150,7 @@ const downloadCodes = (): void => {
 	document.body.removeChild(downloadCodes);
 };
 
-/// Generate button - dialog warning overwrite if backups already exist, else just generate
+// Generate button - dialog warning overwrite if backups already exist, else just generate
 const buttonPress = async (): PV => {
 	if (backup.value) {
 		dialoger({
@@ -160,13 +160,12 @@ const buttonPress = async (): PV => {
 			passwordRequired: true,
 			confirmFunction: generateBackups
 		});
-
 	} else {
 		generateBackups();
 	}
 };
 
-/// Post request to generate new backup tokens
+// Post request to generate new backup tokens
 const generateBackups = async (authObject?: TAuthObject): PV => {
 	loading.value = true;
 	localLoading.value = true;

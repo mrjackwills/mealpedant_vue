@@ -69,13 +69,14 @@ const confirmFunction = computed(() => dialogStore.confirmFunction);
 
 const confirmButton = computed(() => dialogStore.confirmButton ?? 'confirm');
 
-const disabled = computed(() => loading.value
-	|| timeout.value
-	|| passwordRequired.value && !user.value.password
-	|| passwordRequired.value && twoFA_always_required.value && !user.value.token
-	|| twoFA_always_required.value && passwordRequired.value && tokenLength.value < 6
-	|| passwordRequired.value && passwordLength.value < 10
-	? true : false);
+const disabled = computed(() => loading.value ||
+  timeout.value ||
+  passwordRequired.value && !user.value.password ||
+  passwordRequired.value && twoFA_always_required.value && !user.value.token ||
+  twoFA_always_required.value && passwordRequired.value && tokenLength.value < 6 ||
+  passwordRequired.value && passwordLength.value < 10
+	? true
+	: false);
 
 const maxWidth = computed(() => mdAndUp.value ? '60vw' : '100vw');
 const message = computed(() => dialogStore.message);
@@ -101,15 +102,20 @@ const timeout = computed({
 	}
 });
 
-const timeout_text = computed(() =>
-	timeout.value ?
-		`${zeroPad(timeout.value)}` : passwordRequired.value && !user.value.password || passwordRequired.value && passwordLength.value < 10
-			? 'password required ' : passwordRequired.value && twoFA_always_required.value && !user.value.token || passwordRequired.value && twoFA_always_required.value && tokenLength.value < 6
-				? 'token required' : confirmButton.value
-);
-const timeout_icon = computed(() => timeout.value ? '' : passwordRequired.value && !user.value.password || passwordRequired.value && passwordLength.value < 10
-	? mdiLock : passwordRequired.value && twoFA_always_required.value && !user.value.token || passwordRequired.value && twoFA_always_required.value && tokenLength.value < 6
-		? mdiCellphoneInformation : dialogStore.icon ? mdiCheck : mdiCheck);
+const timeout_text = computed(() => timeout.value
+	? `${zeroPad(timeout.value)}`
+	: passwordRequired.value && !user.value.password || passwordRequired.value && passwordLength.value < 10
+		? 'password required '
+		: passwordRequired.value && twoFA_always_required.value && !user.value.token || passwordRequired.value && twoFA_always_required.value && tokenLength.value < 6
+			? 'token required'
+			: confirmButton.value);
+const timeout_icon = computed(() => timeout.value
+	? ''
+	: passwordRequired.value && !user.value.password || passwordRequired.value && passwordLength.value < 10
+		? mdiLock
+		: passwordRequired.value && twoFA_always_required.value && !user.value.token || passwordRequired.value && twoFA_always_required.value && tokenLength.value < 6
+			? mdiCellphoneInformation
+			: dialogStore.icon ? mdiCheck : mdiCheck);
 
 const title = computed(() => dialogStore.title ?? 'warning');
 const tokenLength = computed(() => user.value.token ? user.value.token.length : 0);
@@ -171,14 +177,16 @@ const click = async (): Promise<void> => {
 	dialogStore.$reset();
 };
 
-/// set the focus to the currently in focus text field
-/// If the in focus field ISN't the password field, then set passwordVisible to false
-/// @param {String} model - current model/textfield name
+/*
+ * set the focus to the currently in focus text field
+ * If the in focus field ISN't the password field, then set passwordVisible to false
+ * @param {String} model - current model/textfield name
+ */
 const focusMethod = (model: string): void => {
 	if (model !== 'password') passwordVisible.value = false;
 };
 
-/// When visible, set a timeout for the button, if params are met
+// / When visible, set a timeout for the button, if params are met
 const mountedTimeout = (): void => {
 	if (!isIntersecting.value || !timeout.value) return;
 	timeoutInterval.value = window.setInterval(() => {
@@ -187,7 +195,7 @@ const mountedTimeout = (): void => {
 	}, 1000);
 };
 
-const onIntersect = (is_i: boolean, _entries: Array<IntersectionObserverEntry>, _observer: IntersectionObserver): void => {
+const onIntersect = (is_i: boolean): void => {
 	isIntersecting.value = is_i;
 };
 
@@ -195,7 +203,7 @@ onMounted(() => {
 	mountedTimeout();
 });
 
-watch(isIntersecting, (i) => {
+watch(isIntersecting, (i: boolean) => {
 	if (i) mountedTimeout();
 	else cancel();
 });

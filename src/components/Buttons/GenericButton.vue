@@ -14,7 +14,7 @@
 					</v-col>
 					<v-col cols='3' md='auto' class='ma-0 pa-0 text-right'>
 						<v-icon class='mr-1' style='vertical-align: middle;' medium>{{ showHideIcon }}</v-icon>
-					</v-col> 
+					</v-col>
 
 				</v-row>
 			</v-btn>

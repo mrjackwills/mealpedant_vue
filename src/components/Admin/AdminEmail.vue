@@ -27,7 +27,7 @@
 				<v-col cols='auto' class='mt-3'>
 					<div class='text-center'>
 						<v-btn @click='sendButton'
-					
+
 							:disabled='localLoading || errors.button_text || errors.link || buttonAndLink || v$.$invalid'
 							:color='localLoading || errors.button_text || errors.link || buttonAndLink || v$.$invalid ? "black" : computedSendColor'
 							:variant='localLoading || errors.button_text || errors.link || buttonAndLink || v$.$invalid ? "outlined" : "flat"'
@@ -129,42 +129,42 @@ const disabledTimeout = ref(0);
 const lineRows = [
 	{
 		icon: mdiFormatTitle,
-		model: 'title' as const,
-		name: 'title' as const,
-		hint: 'title' as const,
-		label: 'email title' as const,
+		model: 'title',
+		name: 'title',
+		hint: 'title',
+		label: 'email title',
 		type: 'text'
 	},
 	{
 		icon: mdiCommentTextOutline,
-		model: 'line_one' as const,
-		name: 'line_one' as const,
-		hint: 'line one' as const,
-		label: 'line one' as const,
+		model: 'line_one',
+		name: 'line_one',
+		hint: 'line one',
+		label: 'line one',
 		type: 'text'
 	},
 	{
 		icon: mdiCommentTextMultipleOutline,
-		model: 'line_two' as const,
-		name: 'line_two' as const,
-		hint: 'line two' as const,
-		label: 'line two' as const,
+		model: 'line_two',
+		name: 'line_two',
+		hint: 'line two',
+		label: 'line two',
 		type: 'text'
 	},
 	{
 		icon: mdiTagTextOutline,
-		model: 'button_text' as const,
-		name: 'button_text' as const,
-		hint: 'button text' as const,
-		label: 'button text' as const,
+		model: 'button_text',
+		name: 'button_text',
+		hint: 'button text',
+		label: 'button text',
 		type: 'text'
 	},
 	{
 		icon: mdiLink,
-		model: 'link' as const,
-		name: 'link' as const,
-		hint: 'button link' as const,
-		label: 'button hyperlink' as const,
+		model: 'link',
+		name: 'link',
+		hint: 'button link',
+		label: 'button hyperlink',
 		type: 'text'
 	}
 ] as const;
@@ -176,7 +176,6 @@ const allToggle = (): void => {
 };
 
 const confirmButton = async (): PV => {
-
 	if (v$.value.$invalid || errors.value.button_text || errors.value.link || email.value.emails?.length === 0 || !email.value.title || !email.value.line_one) return;
 	// Still not happy with this
 	loading.value = true;
@@ -201,7 +200,6 @@ const confirmButton = async (): PV => {
 		};
 	}
 	[loading.value, localLoading.value, confirm.value, disabled.value] = [false, false, false, false];
-
 };
 const sendButton = (): void => {
 	disabled.value = true;
@@ -215,7 +213,6 @@ const sendButton = (): void => {
 			if (countdown.value > 0) countdown.value -= 1;
 			if (countdown.value === 0) clearInterval(countdownInterval.value);
 		}, 1000);
-
 	} else {
 		clearInterval(countdownInterval.value);
 		clearTimeout(disabledTimeout.value);
@@ -242,12 +239,12 @@ const rules = {
 };
 const v$ = useVuelidate(rules, email);
 
-watch(watch_emails, (_) => {
+watch(watch_emails, () => {
 	if (email.value.emails?.length === emailAddresses.value.length) all.value = true;
 	if (email.value.emails?.length === 0) all.value = false;
 });
 
-watch(watcher_button_text, (i) => {
+watch(watcher_button_text, (i: su) => {
 	if (!i && !email.value.link) {
 		errors.value.link = false;
 		errors.value.button_text = false;
@@ -266,7 +263,7 @@ watch(watcher_button_text, (i) => {
 	}
 });
 
-watch(watcher_link, (i) => {
+watch(watcher_link, (i: su) => {
 	if (i) email.value.link = i.toLowerCase().trim();
 
 	if (!i && !email.value.button_text) {
@@ -298,14 +295,14 @@ watch(watcher_link, (i) => {
 	}
 });
 
-watch(watcher_title, (_) => {
+watch(watcher_title, () => {
 	if (!v$.value.title?.$invalid) delete errorMessages.value.title;
 	else if (!v$.value.title?.$dirty) return;
 	else if (!v$.value.title?.required) errorMessages.value.title = 'Email title invalid';
 	else if (!v$.value.title?.minLength) errorMessages.value.title = '12 characters minimum';
 });
 
-watch(watcher_line_one, (i) => {
+watch(watcher_line_one, (i: su) => {
 	if (!i) v$.value.line_one?.$reset();
 	else if (!v$.value.line_one?.$invalid) delete errorMessages.value.line_one;
 	else if (!v$.value.line_one?.$dirty) return;

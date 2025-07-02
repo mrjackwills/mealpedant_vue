@@ -99,7 +99,7 @@
 							<span class='text-mealtype'>
 								<v-row class='ma-0 pa-0' justify='space-around'>
 									<v-col class='ma-0 pa-0 cl' cols='auto'>
-										unused 
+										unused
 									</v-col>
 								</v-row>
 							</span>
@@ -140,7 +140,7 @@
 							<span class='text-mealtype'>
 								<v-row class='ma-0 pa-0' justify='space-around'>
 									<v-col class='ma-0 pa-0 cl' cols='auto'>
-										unused 
+										unused
 									</v-col>
 								</v-row>
 							</span>
@@ -172,7 +172,7 @@
 						</v-col>
 					</v-row>
 				</template>
-				
+
 				<!-- Handle any unknown edge case -->
 				<template v-else>
 					{{ item }}
@@ -228,16 +228,15 @@ onBeforeMount(async () => {
 	browserModule().set_description('Meal Pedant - all meal photos');
 	loading.value = true;
 	await get_data();
-
 });
 
-//// Delete an unused photo
+// // Delete an unused photo
 const deletePhoto = async (name: string): PV => {
 	await axios_admin.photo_delete(name);
 	await get_data();
 };
 
-/// Get the url for the edit page for a given photo
+// / Get the url for the edit page for a given photo
 const editHref = (item: TAdminPhoto): string => {
 	return `${FrontEndRoutes.EDITMEAL}?person=${item.person}&date=${item.meal_date}`;
 };
@@ -247,37 +246,28 @@ const photo_data = computed(() => adminModule().allPhotos);
 const totalOriginal = computed(() => photo_data.value.reduce((total, i) => total + (i.size_in_bytes_original ?? 0), 0));
 const totalConverted = computed(() => photo_data.value.reduce((total, i) => total + (i.size_in_bytes_converted ?? 0), 0));
 
-const totalJack = computed(() =>
-	photo_data.value.reduce(
-		(acc, { person, size_in_bytes_original = 0, size_in_bytes_converted = 0 }) => {
-			if (person === 'Jack') {
-				acc[0] += size_in_bytes_original ?? 0;
-				acc[1] += size_in_bytes_converted ?? 0;
-				acc[2] += 1;
-			}
-			return acc;
-		},
-		[0, 0, 0]
-	)
-);
+const totalJack = computed(() => photo_data.value.reduce((acc, { person, size_in_bytes_original = 0, size_in_bytes_converted = 0 }) => {
+	if (person === 'Jack') {
+		acc[0] += size_in_bytes_original ?? 0;
+		acc[1] += size_in_bytes_converted ?? 0;
+		acc[2] += 1;
+	}
+	return acc;
+}, [0, 0, 0]));
 
-const totalDave = computed(() =>
-	photo_data.value.reduce(
-		(acc, { person, size_in_bytes_original = 0, size_in_bytes_converted = 0 }) => {
-			if (person === 'Dave') {
-				acc[0] += size_in_bytes_original ?? 0;
-				acc[1] += size_in_bytes_converted ?? 0;
-				acc[2] += 1;
-			}
-			return acc;
-		},
-		[0, 0, 0]
-	)
-);
+const totalDave = computed(() => photo_data.value.reduce((acc, { person, size_in_bytes_original = 0, size_in_bytes_converted = 0 }) => {
+	if (person === 'Dave') {
+		acc[0] += size_in_bytes_original ?? 0;
+		acc[1] += size_in_bytes_converted ?? 0;
+		acc[2] += 1;
+	}
+	return acc;
+}, [0, 0, 0]));
+
 
 const init = ref(false);
 
-/// Download all photo data
+// / Download all photo data
 const get_data = async (): PV => {
 	loading.value = true;
 	await axios_admin.photo_get();

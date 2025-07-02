@@ -114,7 +114,7 @@ const is_admin = computed(() => userModule().admin);
 const show_analysis = computed(() => mealViewStore.button_analysis);
 
 const is_filtered = computed(() => mealStore.is_filtered);
-watch(is_filtered, (i) => {
+watch(is_filtered, (i: boolean) => {
 	if (i) show_filters.value = true;
 });
 

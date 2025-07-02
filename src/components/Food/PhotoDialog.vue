@@ -2,7 +2,7 @@
 	<v-dialog v-model='dialog' :max-width='maxWidth' eager scroll-strategy='none'>
 		<v-card v-intersect='onIntersect'>
 			<v-img
-				v-if='photoUrlConverted' 
+				v-if='photoUrlConverted'
 				:src='imgSource'
 				:max-height='window_height_70'
 				alt='A photograph of a meal'
@@ -65,13 +65,13 @@ const photoPerson = computed(() => mealViewStore.dialog_photo_person);
 const mealDescription = computed(() => mealViewStore.dialog_meal_description);
 const photoUrlConverted = computed(() => mealViewStore.dialog_photo_url_converted);
 const photoUrlOriginal = computed(() => mealViewStore.dialog_photo_url_original);
-const window_height_70 = computed(() => window.innerHeight * .7);
+const window_height_70 = computed(() => window.innerHeight * 0.7);
 
 const closeDialog = (): void => {
 	dialog.value = false;
 };
 
-/// Download the original photo, by adding it to the page as a link and clicking said link
+// Download the original photo, by adding it to the page as a link and clicking said link
 const downloadOriginalFromStatic = async (): Promise<void> => {
 	if (!photoUrlOriginal.value || !authenticated) return;
 	const image = await axios_downloadPhoto.photo_get(`photo/${photoUrlOriginal.value}`);
@@ -88,12 +88,12 @@ const downloadOriginalFromStatic = async (): Promise<void> => {
 
 const isIntersecting = ref(false);
 
-/// Calculate if visible, and save into isIntersecting
-const onIntersect = (is_i: boolean, _entries: Array<IntersectionObserverEntry>, _observer: IntersectionObserver): void => {
+// Calculate if visible, and save into isIntersecting
+const onIntersect = (is_i: boolean): void => {
 	isIntersecting.value = is_i;
 };
 
-watch(isIntersecting, (i) => {
+watch(isIntersecting, (i: boolean) => {
 	if (!i) {
 		window.setTimeout(() => mealViewStore.clear_photo(), 100);
 		dialog.value = false;

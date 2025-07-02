@@ -9,9 +9,6 @@ type ErrorData = { data: { response: string } };
 
 type AxiosClasses = Admin | AdminMeal | AdminPhoto | AuthenticatedFood | AuthenticatedUser | DownloadPhoto | Incognito;
 
-// Allow for longer timeouts when in debug mode
-const get_timeout = (): number => env.mode_production ? 15000 : 30000;
-
 const baseAxios: AxiosInstance = Axios.create({
 	baseURL: env.domain_api,
 	withCredentials: true,
@@ -20,7 +17,7 @@ const baseAxios: AxiosInstance = Axios.create({
 		'Content-Type': 'application/json; charset=utf-8',
 		'Cache-control': 'no-cache'
 	},
-	timeout: get_timeout()
+	timeout: 60000
 });
 
 const staticAxios: AxiosInstance = Axios.create({
@@ -30,10 +27,7 @@ const staticAxios: AxiosInstance = Axios.create({
 });
 
 for (const i of [baseAxios, staticAxios]) {
-	i.interceptors.response.use(
-		(config) => Promise.resolve(config),
-		(error) => !error.response ? Promise.reject(new Error('offline')) : Promise.reject(error)
-	);
+	i.interceptors.response.use((config) => Promise.resolve(config), (error) => !error.response ? Promise.reject(new Error('offline')) : Promise.reject(error));
 }
 
 const isAuthenticated = <T>() => {
@@ -497,7 +491,6 @@ export class AdminPhoto {
 }
 
 class DownloadPhoto {
-
 	@wrap()
 	@isAuthenticated<string>()
 	async photo_get (url: string): Promise<ArrayBuffer> {

@@ -25,7 +25,7 @@ export default createVuetify({
 		aliases,
 		sets: { mdi }
 	},
-	
+
 	theme: {
 		defaultTheme: 'customDarkTheme',
 		themes: { customDarkTheme }

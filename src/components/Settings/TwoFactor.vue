@@ -49,7 +49,7 @@ const loading = computed({
 });
 const setupProcessStarted = computed(() => twoFAStore.setupProcessStarted);
 
-/// @param {Object} AuthObject - {password: string, token?:string, twoFABackup?:boolean}
+// @param {Object} AuthObject - {password: string, token?:string, twoFABackup?:boolean}
 const removeTwoFAFunction = async (authObject: TAuthObject): PV => {
 	loading.value = true;
 	const confirm = await axios_authenticatedUser.twoFA_delete(authObject);
@@ -86,6 +86,5 @@ const removeTwoFA = (): void => {
 		passwordRequired: true,
 		confirmFunction: removeTwoFAFunction
 	});
-
 };
 </script>
