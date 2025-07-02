@@ -29,7 +29,7 @@ watch(is_filtered, (i: boolean) => {
 const disabled = computed(() => categories.value.length === 0);
 const label = computed(() => disabled.value ? 'no match' : 'category');
 
-const category_names = computed(() => categories.value.map((i: string) => formatCategoryName(i[1])));
+const category_names = computed(() => categories.value.map((i) => formatCategoryName(i[1])));
 
 const reset = (): void => {
 	mealStore.clear_all_filters();
