@@ -255,7 +255,7 @@ const totalJack = computed(() => photo_data.value.reduce((acc, { person, size_in
 	return acc;
 }, [0, 0, 0]));
 
-const totalDave = computed((): number => photo_data.value.reduce((acc, { person, size_in_bytes_original = 0, size_in_bytes_converted = 0 }) => {
+const totalDave = computed(() => photo_data.value.reduce((acc, { person, size_in_bytes_original = 0, size_in_bytes_converted = 0 }) => {
 	if (person === 'Dave') {
 		acc[0] += size_in_bytes_original ?? 0;
 		acc[1] += size_in_bytes_converted ?? 0;
@@ -263,6 +263,7 @@ const totalDave = computed((): number => photo_data.value.reduce((acc, { person,
 	}
 	return acc;
 }, [0, 0, 0]));
+
 
 const init = ref(false);
 
