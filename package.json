@@ -1,6 +1,6 @@
 {
   "name": "mealpedant_vue",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "private": true,
   "author": {
     "name": "Jack Wills"
@@ -15,24 +15,24 @@
     "lint": "eslint ./src"
   },
   "dependencies": {
-	  "@vuelidate/core": "^2.0.3",
-	  "@vuelidate/validators": "^2.0.4",
-	  "@vueuse/components": "^13.5.0",
-	  "@vueuse/core": "^13.5.0",
-	  "@vueuse/head": "^2.0.0",
-	  "axios": "^1.10.0",
-	  "hibp": "^15.0.1",
-	  "pinia": "^3.0.3",
-	  "pinia-plugin-persistedstate": "^4.4.1",
-	  "prismjs": "^1.30.0",
-	  "qrcode.vue": "^3.6.0",
-	  "vue": "^3.5.17",
-	  "vue-router": "^4.5.1",
+    "@vuelidate/core": "^2.0.3",
+    "@vuelidate/validators": "^2.0.4",
+    "@vueuse/components": "^13.5.0",
+    "@vueuse/core": "^13.5.0",
+    "@vueuse/head": "^2.0.0",
+    "axios": "^1.10.0",
+    "hibp": "^15.0.1",
+    "pinia": "^3.0.3",
+    "pinia-plugin-persistedstate": "^4.4.1",
+    "prismjs": "^1.30.0",
+    "qrcode.vue": "^3.6.0",
+    "vue": "^3.5.17",
+    "vue-router": "^4.5.1",
     "vuetify": "^3.8.12"
-},
-"devDependencies": {
+  },
+  "devDependencies": {
     "@mdi/js": "^7.4.47",
-	"@stylistic/eslint-plugin": "^5.1.0",
+    "@stylistic/eslint-plugin": "^5.1.0",
     "@types/node": "^24.0.10",
     "@types/prismjs": "^1.26.5",
     "@vitejs/plugin-vue": "^6.0.0",
@@ -51,7 +51,7 @@
     "vite-plugin-vuetify": "^2.1.1",
     "vue-tsc": "^3.0.1"
   },
-  "buildDate": "Fri 23 2025 May 16:30:28 BST",
+  "buildDate": "Wed 02 2025 July 16:58:03 BST",
   "homepage": "https://github.com/mrjackwills/mealpedant_vue",
   "license": "MIT"
 }
