@@ -155,9 +155,13 @@ export const mealModule = defineStore(ModuleName.Meal, {
 		get_category_by_id: (state) => {
 			return (id: number): string => state.meal_categories.get(id) ?? '';
 		},
+		// return the filtered categories by alphabetical order
+		get_all_filtered_categories_sorted_alpha (): Array<[number, string]> {
+			return Array.from(this.is_filtered ? this.filtered_meal_categories : this.meal_categories).sort((a, b) => a[1].localeCompare(b[1]));
+		},
 		// return the categories by alphabetical order
 		get_all_categories_sorted_alpha (): Array<[number, string]> {
-			return Array.from(this.is_filtered ? this.filtered_meal_categories : this.meal_categories).sort((a, b) => a[1].localeCompare(b[1]));
+			return Array.from(this.meal_categories).sort((a, b) => a[1].localeCompare(b[1]));
 		},
 		get_description_by_id: (state) => {
 			return (id: number): string => state.meal_descriptions.get(id) ?? '';

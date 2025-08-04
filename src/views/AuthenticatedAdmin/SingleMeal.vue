@@ -68,8 +68,8 @@
 					<!-- Category suggestions -->
 					<v-col cols='12' class='ma-0 pa-0 mt-md-n5 mb-n3 cat_height' align-self='center'>
 						<v-expand-transition>
-							<v-row class='ma-0 pa-0' justify='start' v-if='computedHint.length > 0'>
-								<v-col class='ma-0 pa-0 mr-3' cols='auto' v-for='(item, index) in computedHint'
+							<v-row class='ma-0 pa-0' justify='start' v-if='categorySuggestions.length > 0'>
+								<v-col class='ma-0 pa-0 mr-3' cols='auto' v-for='(item, index) in categorySuggestions'
 									:key='index'>
 									<v-chip size='small' density='compact' color='primary' :variant='chipVariant'
 										@click='meal.category = item'>
@@ -279,14 +279,15 @@ const computedDateLabel = computed((): string => {
 
 const categories = computed(() => mealModule().get_all_categories_sorted_alpha);
 
-const chipVariant = computed(() => computedHint.value.length === 1 && meal.value.category.toUpperCase() === computedHint.value[0] ? 'flat' : 'outlined');
+const chipVariant = computed(() => categorySuggestions.value.length === 1 && meal.value.category.toUpperCase() === categorySuggestions.value[0] ? 'flat' : 'outlined');
 
 // Generate a hint for the category text box, to show categories names once you start typing
-const computedHint = computed(() => {
+const categorySuggestions = computed(() => {
 	if (!meal.value.category) return '';
 	const inputLength = meal.value.category.length;
 	const input = meal.value.category.toUpperCase().substring(0, inputLength);
 	const output = [];
+	// THis is invalid!, need to get all categories not filtered ones
 	for (const eachCategory of categories.value) {
 		if (eachCategory[1].substring(0, inputLength) === input) {
 			output.push(eachCategory[1]);
