@@ -24,7 +24,6 @@
 			]
 		}
 	},
-	// "extends": "@vue/tsconfig/tsconfig.dom.json",
 	"types": [
 		"node",
 		"vite-plugin-pwa/client",
