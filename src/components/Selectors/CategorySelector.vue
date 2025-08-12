@@ -14,7 +14,7 @@ import { mdiFormatListBulletedType } from '@mdi/js';
 const selected_category = ref(undefined as undefined | string);
 const mealStore = mealModule();
 
-const categories = computed(() => mealStore.get_all_categories_sorted_alpha);
+const categories = computed(() => mealStore.get_all_filtered_categories_sorted_alpha);
 
 const update_categories = (): void => {
 	if (selected_category.value) mealStore.set_search_by_category(selected_category.value.toUpperCase());
