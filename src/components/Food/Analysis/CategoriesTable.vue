@@ -1,5 +1,5 @@
 <template>
-	<v-data-table-virtual :headers='headers' :height='height' :items='tableData' :density='density'
+	<v-data-table-virtual :headers :height :items='tableData' :density
 		ref='table'
 		item-key='name' fixed-header no-data-text='' hide-default-footer hover>
 

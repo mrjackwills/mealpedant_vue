@@ -48,7 +48,6 @@ const check_pwa = (): void => {
 	}
 };
 
-
 onBeforeMount(async () => {
 	check_pwa();
 	await axios_incognito.online_get();

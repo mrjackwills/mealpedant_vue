@@ -1,5 +1,5 @@
 <template>
-	<v-icon :class='margin' :color='color' :icon='icon' :size='size' style='vertical-align: middle;' />
+	<v-icon :class='margin' :color :icon :size style='vertical-align: middle;' />
 </template>
 
 <script setup lang='ts'>

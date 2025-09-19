@@ -40,7 +40,7 @@
 								</v-btn>
 							</v-col>
 							<v-col cols='6' class='ma-0 pa-0 text-center'>
-								<v-btn @click='click' :disabled='disabled' :small='smAndDown' color='secondary' rounded
+								<v-btn @click='click' :disabled :small='smAndDown' color='secondary' rounded
 									:variant='disabled ? "outlined" : "flat"'>
 									<span class='text-white'>
 										{{ timeout_text }}

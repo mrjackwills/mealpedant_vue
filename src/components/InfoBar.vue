@@ -1,7 +1,7 @@
 <template>
 	<v-row align='center' justify='center' class='pa-0 ma-0'>
 		<v-col cols='12' md='6' class='pa-0 ma-1'>
-			<v-alert class='pa-0 ma-0 pa-3' :color='color'>
+			<v-alert class='pa-0 ma-0 pa-3' :color >
 				<v-row justify='space-between' align='center' class='ma-0 pa-0'>
 					<v-col cols='1' lg='auto' class='pa-0 ma-0'>
 						<v-icon small color='white' :icon='mdiInformation' />

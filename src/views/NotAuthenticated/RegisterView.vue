@@ -6,7 +6,7 @@
 					<div v-for='(item, index) in textFields' :key='index'>
 						<v-expand-transition>
 							<PasswordContainsEmail v-if='item.label === "invite" && errors.password && !passNum' />
-							<HibpMessage v-if='item.label === "invite" && passNum' :passNum='passNum' />
+							<HibpMessage v-if='item.label === "invite" && passNum' :passNum />
 						</v-expand-transition>
 						<v-text-field v-model='user[item.model]' v-on:keyup.enter='register' @input='touch(item.model)'
 							@blur='touch(item.model)' :autocomplete='item.autocomplete' :disabled='loading || completed'

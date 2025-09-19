@@ -3,7 +3,7 @@
 		<v-col cols='12' sm='10' md='8' class='ma-0 pa-0'>
 			<v-row class='ma-0 pa-0' align='center'>
 				<v-col :class='{ "mr-2": mdAndUp }' class='ma-0 pa-0' cols='1' sm='auto'>
-					<v-icon :color='iconColor' :icon='icon' :size='smAndDown ? "small" : ""' />
+					<v-icon :color='iconColor' :icon :size='smAndDown ? "small" : ""' />
 				</v-col>
 				<v-col cols='10' sm='auto' class='ma-0 pa-0'>
 					<span class='text-h6' :class='textColor'>{{ text }}</span>

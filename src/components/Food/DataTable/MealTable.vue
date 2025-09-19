@@ -1,6 +1,6 @@
 <template>
 	<v-data-table-virtual
-		:headers='headers'
+		:headers
 		:height='tableHeight'
 		:items='tableData'
 		density='compact'

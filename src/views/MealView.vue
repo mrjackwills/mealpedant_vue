@@ -80,7 +80,7 @@
 				<v-row justify='center' align='center' class='ma-0 pa-0'>
 					<v-col cols='12' class='ma-0 pa-0'>
 						<v-expand-transition>
-							<MealTable :slot_height='slot_height'  />
+							<MealTable :slot_height  />
 						</v-expand-transition>
 					</v-col>
 				</v-row>

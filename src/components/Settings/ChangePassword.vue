@@ -57,7 +57,7 @@
 					<v-col class='ma-0 pa-0' cols='auto'>
 						<v-btn @click='submit'
 							density='compact'
-							:disabled='disabled' :size='buttonSize' :variant='disabled ? "outlined" : "flat"'
+							:disabled :size='buttonSize' :variant='disabled ? "outlined" : "flat"'
 							class='elevation-0 text-black' color='primary' dark rounded>
 							<ButtonIcon :icon='mdiCached' :color='disabled ? "primary" : "black"' />
 							Update Password

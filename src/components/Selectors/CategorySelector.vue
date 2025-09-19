@@ -1,8 +1,8 @@
 <template>
 	<v-select v-model.lazy='selected_category' @click:clear='reset' @update:model-value='update_categories'
 		:prepend-inner-icon='mdiFormatListBulletedType'
-		:disabled='disabled'
-		:items='category_names' :menu-props='{ maxHeight: max_height }' :label='label'
+		:disabled
+		:items='category_names' :menu-props='{ maxHeight: max_height }' :label
 		variant='underlined' clearable />
 </template>
 
