@@ -35,12 +35,15 @@ const pwaOptions: Partial<VitePWAOptions> = {
 				sizes: '512x512',
 				type: 'image/png'
 			}
-			// {
-			// 	src: 'img/icons/android-chrome-512x512.png',
-			// 	sizes: '512x512',
-			// 	type: 'image/png',
-			// 	purpose: 'any maskable'
-			// },
+
+			/*
+			 * {
+			 * 	src: 'img/icons/android-chrome-512x512.png',
+			 * 	sizes: '512x512',
+			 * 	type: 'image/png',
+			 * 	purpose: 'any maskable'
+			 * },
+			 */
 		]
 	}
 	// devOptions: {
@@ -62,7 +65,8 @@ export default defineConfig({
 		AutoImport({
 			include: [
 				/\.[tj]sx?$/,
-				/\.vue$/, /\.vue\?vue/,
+				/\.vue$/,
+				/\.vue\?vue/,
 				/\.md$/
 			],
 			imports: [
@@ -71,9 +75,7 @@ export default defineConfig({
 			],
 			dts: 'src/auto-imports.d.ts',
 			eslintrc: { enabled: true },
-			dirs: [
-				'src/store'
-			],
+			dirs: ['src/store'],
 			vueTemplate: false
 		}),
 		// vueDevTools(),
