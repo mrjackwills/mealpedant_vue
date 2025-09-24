@@ -1,10 +1,10 @@
 <template>
 	<v-select v-model='selectedType' @click:clear='reset' @update:modelValue='typeSearch' :items='types'
-		:disabled='disabled'
+		:disabled
 		:prepend-inner-icon='mdiStarThreePointsOutline'
 		no-data-text='hide-no-date'
 		variant='underlined'
-		:menu-props='{ maxHeight: "400" }' item-text='t' item-value='v' :label='label'
+		:menu-props='{ maxHeight: "400" }' item-text='t' item-value='v' :label
 		clearable />
 </template>
 

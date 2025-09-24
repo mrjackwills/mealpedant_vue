@@ -2,7 +2,7 @@
 	<v-row justify='center' class='no-gutters ma-0 pa-0'>
 		<v-col cols='12' sm='8' class='ma-0 pa-0'>
 			<v-data-table-virtual
-				:headers='headers'
+				:headers
 				:items='backup'
 				:mobile='smAndDown'
 				class='elevation-1 mt-4'

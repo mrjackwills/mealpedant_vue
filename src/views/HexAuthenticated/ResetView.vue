@@ -16,7 +16,7 @@
 								@click:append-inner='new_passwordVisible = !new_passwordVisible' />
 							<v-expand-transition>
 								<PasswordContainsEmail v-if='errors.new_password && !passNum' />
-								<HibpMessage v-if='passNum' :passNum='passNum' />
+								<HibpMessage v-if='passNum' :passNum />
 							</v-expand-transition>
 							<section v-if='twoFA_active'>
 								<v-text-field v-for='item in tokenFields' v-model='user[item.model]'

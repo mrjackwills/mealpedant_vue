@@ -4,7 +4,7 @@
 			Two Factor Authentication
 		</v-col>
 	</v-row>
-	<TFAStatusRow @click='removeTwoFA' v-if='active && !backupProcess' :active='active' text='Two-Factor enabled' />
+	<TFAStatusRow @click='removeTwoFA' v-if='active && !backupProcess' :active text='Two-Factor enabled' />
 	<TFAInactive v-if='!active' />
 	<section v-else>
 		<TFAStatusRow v-if='!backupProcess' @click='removeBackups' :active='backup_count > 0' :text='backupText' />

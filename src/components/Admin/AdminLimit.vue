@@ -1,7 +1,7 @@
 <template>
 	<v-row wrap justify='center'>
 		<v-col cols='12' sm='8' md='6'>
-			<v-data-table-virtual height='220' :headers='headers' :items='userLimits' class='elevation-1 mt-2' item-key='users'
+			<v-data-table-virtual height='220' :headers :items='userLimits' class='elevation-1 mt-2' item-key='users'
 				density='compact'>
 				<template v-slot:item='{ item }'>
 					<tr>

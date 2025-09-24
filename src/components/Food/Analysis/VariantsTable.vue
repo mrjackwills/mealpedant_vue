@@ -1,7 +1,7 @@
 <template>
 	<v-data-table-virtual
-		:density='density'
-		:headers='headers'
+		:density
+		:headers
 		:items='tableData'
 		item-key='name'
 		no-data-text=''
