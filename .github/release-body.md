@@ -1,9 +1,10 @@
-### 2025-08-12
+### 2025-09-24
 
 ### Chores
-+ dependencies updated, [acfdcc5e5f60679f0225d9954d7b5539d825517a], [e09ff87e59151846008fa9aa62648e92f727353a]
++ GitHub workflow updated, [431f39a2319071bd0a6d95ad5e6c187e9ae4a3e5], [c1248d259f9831c334df34a56b3ff3ee1a8bf05b]
++ dependencies updated, [383fa5799e98da8b775646e1af3d8d57ebdccbd7], [631d27a34cd1d01f33b844bed17ac48f67e09fbf]
 
-### Fixes
-+ edit/add meal categories, [f2344c80bdb60b4dfc7acb9548281f10e256b969]
+### Refactors
++ use :x instead of :x='x', [389a160d354447ec946590043d90f2a6fb80a1d5], [1878d8961b0bae4083f2b132700f6410cede1c74]
 
 see <a href='https://github.com/mrjackwills/mealpedant_vue/blob/main/CHANGELOG.md'>CHANGELOG.md</a> for more details
