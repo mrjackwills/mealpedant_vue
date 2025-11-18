@@ -458,6 +458,7 @@ export const mealModule = defineStore(ModuleName.Meal, {
 			const exists = filtered_date_meals.get(meal.date);
 			if (meal.Jack) {
 				if (exists) exists.Jack = meal.Jack;
+				// TODO Use a type here or object const
 				else if (person === 'Jack') filtered_date_meals.set(meal.date, { Jack: meal.Jack });
 			}
 			if (meal.Dave) {
