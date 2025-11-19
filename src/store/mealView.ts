@@ -18,6 +18,7 @@ export const mealViewModule = defineStore(ModuleName.MealView, {
 		original: true,
 		showInfo: true,
 		tableHeight: 300,
+		photo_cache: new Set() as Set<string>,
 	}),
 
 	actions: {
@@ -76,6 +77,13 @@ export const mealViewModule = defineStore(ModuleName.MealView, {
 
 		set_dialog_photo_url_converted (x: su) {
 			this.dialog_photo_url_converted = x
+		},
+
+		add_photo_cache (x: string) {
+			this.photo_cache.add(x)
+		},
+		remove_photo_cache (x: string) {
+			this.photo_cache.delete(x)
 		},
 
 		set_dialog_photo_url_original (x: su) {

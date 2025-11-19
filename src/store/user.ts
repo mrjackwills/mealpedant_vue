@@ -1,4 +1,5 @@
-import { defineStore, getActivePinia } from 'pinia'
+import { defineStore } from 'pinia'
+import router from '@/router'
 import { axios_authenticatedUser } from '@/services/axios'
 import { ModuleName } from '@/types/const_module'
 import { FrontEndRoutes } from '@/types/const_routes'
@@ -45,7 +46,7 @@ export const userModule = defineStore(ModuleName.User, {
 			mealViewModule().$reset()
 			mealModule().$reset()
 			mealStorage.delete()
-			getActivePinia()?.router().push(FrontEndRoutes.BASE)
+			router.push(FrontEndRoutes.BASE)
 			loadingModule().set_loading(false)
 		},
 	},

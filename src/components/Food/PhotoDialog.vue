@@ -6,10 +6,23 @@
 				alt='A photograph of a meal'
 				class='grey darken-4'
 				eager
-				lazy-src='@/assets/tile_svg.svg'
 				:max-height='window_height_70'
 				:src='imgSource'
 			/>
+
+			<template
+				v-for='item in imageCache'
+				:key='item'
+			>
+				<v-img
+					v-show='false'
+					alt='cached photo'
+					class='grey darken-4'
+					eager
+					max-height='0'
+					:src='`${item}`'
+				/>
+			</template>
 			<v-card-actions>
 
 				<v-container class='ma-0 pa-0' fluid>
@@ -72,6 +85,10 @@ const dialog = computed({
 	set (b: boolean): void {
 		mealViewStore.set_dialog_visible(b)
 	},
+})
+
+const imageCache = computed(() => {
+	return Array.from(mealViewStore.photo_cache).map(i => env.gen_photo_url(String(i)))
 })
 
 const authenticated = computed(() => userModule().authenticated)

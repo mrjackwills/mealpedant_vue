@@ -23,12 +23,14 @@
 	</v-col>
 	<v-col v-if='photo?.converted' align='self-end' class='ma-0 pa-0' cols='12'>
 		<v-chip
+			v-intersect='onIntersect'
 			class='ma-0 pa-0 mt-1 mb-2 px-2'
 			color='mealtype'
 			density='compact'
 			size='small'
 			variant='flat'
 			@click='showPhoto'
+			@mouseover='loadPhoto'
 		>
 			<v-row align='center' class='ma-0 pa-0' justify='center'>
 				<v-col class='ma-0 pa-0 mr-1' cols='auto'>
@@ -63,16 +65,29 @@ const description = computed(() => mealModule().get_description_by_id(props.meal
 const formatDescription = (description: string): string => `${description.slice(0, 1).toUpperCase()}${description.slice(1)}`
 const mealViewStore = mealViewModule()
 
+function onIntersect (intersecting: boolean): void {
+	if (props.photo?.converted) {
+		if (intersecting) {
+			mealViewStore.add_photo_cache(props.photo.converted)
+		} else {
+			mealViewStore.remove_photo_cache(props.photo.converted)
+		}
+	}
+}
+
 const editHref = computed(() => {
 	return `${FrontEndRoutes.EDITMEAL}?person=${props.person}&date=${props.date}`
 })
 
-function showPhoto (): void {
+function loadPhoto (): void {
 	if (props.photo?.converted) mealViewStore.set_dialog_photo_url_converted(props.photo.converted)
 	if (props.photo?.original) mealViewStore.set_dialog_photo_url_original(props.photo.original)
 	mealViewStore.set_photo_date(props.date)
 	mealViewStore.set_dialog_photo_person(props.person)
 	mealViewStore.set_dialog_photo_meal_description(description.value)
+}
+function showPhoto (): void {
+	loadPhoto()
 	mealViewStore.set_dialog_visible(true)
 }
 

@@ -1,7 +1,8 @@
 import type { c_MealInfo, c_search_by, DateMeal, MealCategoryMap, MealDescriptionMap, MealHistoryValue, MealInfo, search_by, TMealVariant, TPerson, TPersonFood } from '@/types'
-import { defineStore, getActivePinia } from 'pinia'
-import { snackError } from '@/services/snack'
+import { defineStore } from 'pinia'
+import router from '@/router'
 
+import { snackError } from '@/services/snack'
 import { ModuleName } from '@/types/const_module'
 import { genesisDateString, todayDateString } from '@/vanillaTS/helpers'
 
@@ -250,7 +251,7 @@ export const mealModule = defineStore(ModuleName.Meal, {
 			this.filtered_date_meals = []
 			this.search_by = default_search_by()
 			this.filter_b64 = ''
-			this.router.replace({ query: {} })
+			router.replace({ query: {} })
 		},
 
 		// Toggle vegetarian, then search
@@ -321,8 +322,8 @@ export const mealModule = defineStore(ModuleName.Meal, {
 				this.filter_by_search_by()
 			} catch {
 				snackError({ message: 'Invalid URL search params' })
-				getActivePinia()?.router().replace({
-					path: getActivePinia()?.router().currentRoute.value.path,
+				router.replace({
+					path: router.currentRoute.value.path,
 					query: {},
 				})
 			}
@@ -338,7 +339,7 @@ export const mealModule = defineStore(ModuleName.Meal, {
 		filter_by_search_by () {
 			const search_by = this.search_by
 			this.filter_b64 = btoa(JSON.stringify(compress_search_by(search_by)))
-			this.router.replace({ query: { filter: this.filter_b64 } })
+			router.replace({ query: { filter: this.filter_b64 } })
 
 			const search_by_stringified = JSON.stringify(search_by)
 			if (search_by_stringified === JSON.stringify(default_search_by())) {
