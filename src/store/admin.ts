@@ -1,4 +1,4 @@
-import type { TAdminPhoto, TAllUserInfo, TBackup, TLimit, TLogs, TServerStats, u } from '@/types'
+import type { TAdminPhoto, TAllUserInfo, TBackup, TLimit, TLogs, TPersonVal, TServerStats, u } from '@/types'
 import { defineStore } from 'pinia'
 import { ModuleName } from '@/types/const_module'
 
@@ -13,7 +13,7 @@ export const adminModule = defineStore(ModuleName.Admin, {
 		registeredUsers: [] as TAllUserInfo,
 		allPhotos: [] as Array<TAdminPhoto>,
 		date: '',
-		person: '',
+		person: undefined as u<TPersonVal>,
 	}),
 
 	actions: {
@@ -24,8 +24,7 @@ export const adminModule = defineStore(ModuleName.Admin, {
 			this.date = x
 		},
 
-		// TODO what's this used for?
-		set_person (x: string) {
+		set_person (x: u<TPersonVal>) {
 			this.person = x
 		},
 

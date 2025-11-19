@@ -264,7 +264,7 @@
 </template>
 
 <script setup lang='ts'>
-import type { PV, TAuthObject, TMealDatePerson, TMealPatch, TPersonVal, u } from '@/types'
+import type { PV, TAuthObject, TMealDatePerson, TMealPatch, u } from '@/types'
 import { mdiAttachment, mdiCalendar, mdiCamera, mdiClose, mdiCloudUpload, mdiDatabaseEdit, mdiDeleteOutline, mdiFormatListBulletedType, mdiMessageText, mdiPlusCircle, mdiRestore } from '@mdi/js'
 import useVuelidate from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
@@ -284,7 +284,7 @@ const route = useRoute()
 
 onBeforeUnmount(async () => {
 	adminModule().set_date('')
-	adminModule().set_person('')
+	adminModule().set_person(undefined)
 	if (!completed.value && meal.value.photo_converted && meal.value.photo_original) await clear()
 })
 
@@ -330,7 +330,7 @@ function gen_update_meal (): TMealPatch {
 onBeforeMount(async () => {
 	loading.value = true
 	await mealStorage.seed_meal_pinia()
-	const person = adminModule().person as TPersonVal
+	const person = adminModule().person
 	const date = adminModule().date
 
 	if (person && date) {
@@ -419,7 +419,7 @@ function default_meal (): TMealDatePerson {
 		restaurant: false,
 		takeaway: false,
 		vegetarian: false,
-		person: '' as TPersonVal,
+		person: undefined,
 	}
 }
 
@@ -487,7 +487,7 @@ function deleteMeal (): void {
  */
 async function deleteMeal_confirm (authObject: TAuthObject): PV {
 	loading.value = true
-	if (!meal.value) return
+	if (!meal.value || !meal.value.person) return
 	const success = await axios_adminMeal.meal_delete({
 		person: meal.value.person,
 		date: original_date.value,
@@ -512,7 +512,7 @@ async function fileInserted (): PV {
 		clear()
 		return
 	}
-	if (!imageToUpload.value || !meal.value) return
+	if (!meal.value.person || !imageToUpload.value || !meal.value) return
 
 	if (imageToUpload.value.size > 10_240_000) {
 		snackError({ message: 'filesize too large' })

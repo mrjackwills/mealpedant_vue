@@ -78,7 +78,7 @@ export type TMealPatch = {
 	original_date: string
 }
 
-type TBaseMeal = Record<'date' | 'category' | 'description', string> & Record<TMealVariant, boolean> & { person: TPersonVal }
+type TBaseMeal = Record<'date' | 'category' | 'description', string> & Record<TMealVariant, boolean> & { person: u<TPersonVal> }
 
 export type TMealDatePerson = TBaseMeal & Record<'photo_original' | 'photo_converted', string | undefined>
 

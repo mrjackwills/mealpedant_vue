@@ -4,6 +4,7 @@ import { axios_admin, axios_authenticatedUser, axios_incognito } from '@/service
 import { snackError, snackSuccess } from '@/services/snack'
 import { type PV, TPerson } from '@/types'
 import { FrontEndNames, FrontEndRoutes } from '@/types/const_routes'
+import { isPerson } from '@/types/typeGuards'
 import Home from '@/views/HomeView.vue'
 
 async function init_check (): PV {
@@ -42,12 +43,16 @@ async function adminEditMeal (to: RouteLocationNormalized, _from: RouteLocationN
 		const dateRegex = /([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))/
 
 		if (to.query.date && to.query.person) {
-			const personValid = to.query.person.toString() === TPerson.JACK || to.query.person.toString() === TPerson.DAVE
-			const dateValid = dateRegex.test(to.query.date.toString())
-			if (personValid && dateValid) {
-				adminModule().set_date(to.query.date.toString())
-				adminModule().set_person(to.query.person.toString())
-				next()
+			const person = to.query.person.toString()
+			if (isPerson(person)) {
+				const dateValid = dateRegex.test(to.query.date.toString())
+				if (dateValid) {
+					adminModule().set_date(to.query.date.toString())
+					adminModule().set_person(person)
+					next()
+				} else {
+					next(FrontEndRoutes.ERROR)
+				}
 			} else {
 				next(FrontEndRoutes.ERROR)
 			}
