@@ -1,13 +1,20 @@
 <template>
-	<v-app-bar :extended='!online' :height='`${toolbarHeight}`' color='appbar' extension-height='40' app clipped-left name='header'
-		flat>
+	<v-app-bar
+		app
+		clipped-left
+		:extended='!online'
+		extension-height='40'
+		flat
+		:height='`${toolbarHeight}`'
+		name='header'
+	>
 		<router-link :to='FrontEndRoutes.MEALS'>
-			<v-avatar :size='`${toolbarHeight - 8}px`' tile class='cl mx-2'>
-				<v-img src='@/assets/tile_svg.svg' :eager='true' id='topOfPage' />
+			<v-avatar class='cl mx-2' :size='`${toolbarHeight - 8}px`' tile>
+				<v-img id='topOfPage' :eager='true' src='@/assets/tile_svg.svg' />
 			</v-avatar>
 		</router-link>
 		<v-toolbar-title>
-			<router-link :to='FrontEndRoutes.MEALS' class='text-white'>
+			<router-link class='text-white' :to='FrontEndRoutes.MEALS'>
 				<span class='font-weight-bold' :class='navTitleFontSize' FrontendRoutes.BASE>Meal Pedant</span>
 				<section v-if='!mobile' class='mx-1'>
 					<span class='font-weight-light font-italic tag-line text-subtitle-1'>"A meticulous daily log of
@@ -15,15 +22,15 @@
 				</section>
 			</router-link>
 		</v-toolbar-title>
-		<v-toolbar-items class='' v-if='!authed && !mobile'>
-			<v-btn v-for='(item, index) in registerLinks' :key='`${index}`' :to='item.route' class='cl'>
-				<v-icon dark small class='mr-1' :icon='item.icon' />
+		<v-toolbar-items v-if='!authed && !mobile' class=''>
+			<v-btn v-for='(item, index) in registerLinks' :key='`${index}`' class='cl' :to='item.route'>
+				<v-icon class='mr-1' dark :icon='item.icon' small />
 				{{ item.text }}
 			</v-btn>
 		</v-toolbar-items>
-		<v-toolbar-items class='' v-if='authed && !mobile'>
+		<v-toolbar-items v-if='authed && !mobile' class=''>
 			<v-row align='center'>
-				<v-col cols='auto mr-6' class='cl' >
+				<v-col class='cl' cols='auto mr-6'>
 					<router-link :to='FrontEndRoutes.SETTINGS'>
 						<v-chip class='text-white'>
 							{{ userEmail }}
@@ -33,75 +40,86 @@
 			</v-row>
 		</v-toolbar-items>
 		<v-toolbar-items v-if='mobile' class='mr-xs-4'>
-			<v-row class='no-gutters' justify='center' align='center'>
-				<v-col cols='auto' class='mr-2'>
-					<v-icon class='' large @click='drawer = !drawer' :icon='mdiMenu' />
+			<v-row align='center' class='no-gutters' justify='center'>
+				<v-col class='mr-2' cols='auto'>
+					<v-icon class='' :icon='mdiMenu' large @click='drawer = !drawer' />
 				</v-col>
 			</v-row>
 		</v-toolbar-items>
 
-		<template v-slot:extension v-if='!online'>
-			<v-row :class='alert_class' class='ma-0 pa-0' justify='end' denisty='compact' no-gutters>
-				<v-col cols='12' class='ma-0 pa-0'>
+		<template v-if='!online' #extension>
+			<v-row
+				class='ma-0 pa-0'
+				:class='alert_class'
+				denisty='compact'
+				justify='end'
+				no-gutters
+			>
+				<v-col class='ma-0 pa-0' cols='12'>
 					<OfflineRow />
 				</v-col>
 			</v-row>
 		</template>
 
-		<v-progress-linear :active='loading' :indeterminate='loading' color='primary' width='100%' absolute
-			location='bottom' />
+		<v-progress-linear
+			absolute
+			:active='loading'
+			color='primary'
+			:indeterminate='loading'
+			location='bottom'
+			width='100%'
+		/>
 	</v-app-bar>
 </template>
 
 <script setup lang='ts'>
-import { FrontEndNames } from '@/types/const_routes';
-import { FrontEndRoutes } from '@/types/const_routes';
-import { mdiAccountPlus, mdiFood, mdiLogin, mdiMenu } from '@mdi/js';
-import { useDisplay } from 'vuetify';
+import { mdiAccountPlus, mdiFood, mdiLogin, mdiMenu } from '@mdi/js'
+import { useDisplay } from 'vuetify'
+import { FrontEndNames, FrontEndRoutes } from '@/types/const_routes'
 
-const { smAndDown } = useDisplay();
+const { smAndDown } = useDisplay()
 
 const alert_class = computed((): string => {
-	return smAndDown.value ? 'alert-bottom' : 'alert-top';
-});
+	return smAndDown.value ? 'alert-bottom' : 'alert-top'
+})
 
 const mobile = computed((): boolean => {
-	return smAndDown.value;
-});
+	return smAndDown.value
+})
 
 const drawer = computed({
 	get (): boolean {
-		return drawerModule().open;
+		return drawerModule().open
 	},
 	set (b: boolean): void {
-		drawerModule().set_open(b);
-	}
-});
+		drawerModule().set_open(b)
+	},
+})
 
-const online = computed(() => browserModule().online);
-const authed = computed(() => userModule().authenticated);
-const loading = computed(() => loadingModule().loading);
-const navTitleFontSize = computed(() => mobile.value ? 'text-h5' : 'text-h4');
-const toolbarHeight = computed(() => mobile.value ? 56 : 80);
-const userEmail = computed(() => userModule().email);
+const online = computed(() => browserModule().online)
+const authed = computed(() => userModule().authenticated)
+const loading = computed(() => loadingModule().loading)
+const navTitleFontSize = computed(() => mobile.value ? 'text-h5' : 'text-h4')
+const toolbarHeight = computed(() => mobile.value ? 56 : 80)
+const userEmail = computed(() => userModule().email)
 
 const registerLinks = [
 	{
 		icon: mdiFood,
 		text: FrontEndNames.MEALS,
-		route: FrontEndRoutes.MEALS
+		route: FrontEndRoutes.MEALS,
 	},
 	{
 		icon: mdiAccountPlus,
 		text: FrontEndNames.REGISTER,
-		route: FrontEndRoutes.REGISTER
+		route: FrontEndRoutes.REGISTER,
 	},
 	{
 		icon: mdiLogin,
 		text: FrontEndNames.SIGNIN,
-		route: FrontEndRoutes.SIGNIN
-	}
-];
+		route: FrontEndRoutes.SIGNIN,
+	},
+]
 
 </script>
 

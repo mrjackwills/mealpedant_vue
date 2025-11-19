@@ -1,7 +1,7 @@
 <template>
 	<section>
-		<v-row align='center' justify='center' class='ma-0 pa-0'>
-			<v-col cols='12' lg='8' class='pl-0 ml-0 text-body-1'>
+		<v-row align='center' class='ma-0 pa-0' justify='center'>
+			<v-col class='pl-0 ml-0 text-body-1' cols='12' lg='8'>
 				Two-Factor Authentication (2FA) is an additional layer of security to protect your Meal Pedant account.
 				When activated,
 				you will be required to enter a time sensitive code during login.
@@ -13,9 +13,9 @@
 			</v-col>
 		</v-row>
 		<v-expand-transition>
-			<v-row v-if='!setupProcessStarted' align='center' justify='center' class='ma-0 pa-0'>
-				<v-col cols='auto' class='ml-0 pl-0'>
-					<v-btn @click='start2FASetup' color='secondary' variant='flat' rounded>
+			<v-row v-if='!setupProcessStarted' align='center' class='ma-0 pa-0' justify='center'>
+				<v-col class='ml-0 pl-0' cols='auto'>
+					<v-btn color='secondary' rounded variant='flat' @click='start2FASetup'>
 						<v-icon :icon='mdiShieldPlus' />
 						enable 2fa
 					</v-btn>
@@ -29,16 +29,16 @@
 </template>
 
 <script setup lang='ts'>
-import { axios_authenticatedUser } from '@/services/axios';
-import { mdiShieldPlus } from '@mdi/js';
+import { mdiShieldPlus } from '@mdi/js'
+import { axios_authenticatedUser } from '@/services/axios'
 
-const setupProcessStarted = computed(() => twoFAModule().setupProcessStarted);
+const setupProcessStarted = computed(() => twoFAModule().setupProcessStarted)
 
-const start2FASetup = async (): Promise<void> => {
-	const secret = await axios_authenticatedUser.setupTwoFA_get();
+async function start2FASetup (): Promise<void> {
+	const secret = await axios_authenticatedUser.setupTwoFA_get()
 	if (secret) {
-		twoFAModule().set_secret(secret);
-		twoFAModule().set_setupProcessStarted(true);
+		twoFAModule().set_secret(secret)
+		twoFAModule().set_setupProcessStarted(true)
 	}
-};
+}
 </script>

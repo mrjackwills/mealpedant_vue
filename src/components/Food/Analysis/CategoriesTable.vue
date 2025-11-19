@@ -1,62 +1,90 @@
 <template>
-	<v-data-table-virtual :headers :height :items='tableData' :density
+	<v-data-table-virtual
 		ref='table'
-		item-key='name' fixed-header no-data-text='' hide-default-footer hover>
+		:density
+		fixed-header
+		:headers
+		:height
+		hide-default-footer
+		hover
+		item-key='name'
+		:items='tableData'
+		no-data-text=''
+	>
 
-		<template v-slot:[`item.category_name`]='{ item }'>
-			<v-row justify='start' align='center' class='ma-0 pa-0 text-red-lighten-4 fill-height'
-				:class='[{ "smalltext": smAndDown }, {"my-1": rowPadding}]'>
-				<v-col cols='auto' class='ma-0 pa-0'>
+		<template #[`item.category_name`]='{ item }'>
+			<v-row
+				align='center'
+				class='ma-0 pa-0 text-red-lighten-4 fill-height'
+				:class='[{ "smalltext": smAndDown }, {"my-1": rowPadding}]'
+				justify='start'
+			>
+				<v-col class='ma-0 pa-0' cols='auto'>
 					{{ formatCategoryName(item.category_name) }}
 				</v-col>
 			</v-row>
 		</template>
 
-		<template v-slot:[`item.t`]='{ item }'>
-			<v-row align='center' class='ma-0 pa-0 fill-height'
-				:justify='authenticated ? show_jack && show_dave ? "start" : "end" : "end"'
+		<template #[`item.t`]='{ item }'>
+			<v-row
+				v-intersect='(entries: boolean) => onIntersect(entries, item.category_id)'
+				align='center'
+				class='ma-0 pa-0 fill-height'
 				:class='[{ "smalltext": smAndDown }, {"my-1": rowPadding}]'
-				v-intersect='(entries: boolean) => onIntersect(entries, item.category_id)'>
+				:justify='authenticated ? show_jack && show_dave ? "start" : "end" : "end"'
+			>
 
-				<v-col class='ma-0 pa-0' cols='6' v-if='authenticated'
-					:class='show_jack && show_dave ? "text-mealtype" : show_jack && !show_dave ? "text-secondary" : "text-primary"'>
+				<v-col
+					v-if='authenticated'
+					class='ma-0 pa-0'
+					:class='show_jack && show_dave ? "text-mealtype" : show_jack && !show_dave ? "text-secondary" : "text-primary"'
+					cols='6'
+				>
 
-					<v-row align='center' justify='space-around' class='ma-0 pa-0'>
-						<v-col cols='6' class='ma-0 pa-0 font-weight-bol mono-num'>
+					<v-row align='center' class='ma-0 pa-0' justify='space-around'>
+						<v-col class='ma-0 pa-0 font-weight-bol mono-num' cols='6'>
 							{{ item.t }}
 						</v-col>
-						<v-col cols='6' class='ma-0 pa-0 font-italic mono-num'
-							v-tooltip:top='has_filter ? "% filtered meals" : "% all meals"'>
+						<v-col
+							v-tooltip:top='has_filter ? "% filtered meals" : "% all meals"'
+							class='ma-0 pa-0 font-italic mono-num'
+							cols='6'
+						>
 							{{ (100 / (total_meals) * item.t).toFixed(2) }}%
 						</v-col>
 					</v-row>
 
 				</v-col>
 
-				<v-col class='ma-0 pa-0' :cols='authenticated ? "6" : "8"'
-					v-if='authenticated ? show_dave && show_jack : true'>
+				<v-col
+					v-if='authenticated ? show_dave && show_jack : true'
+					class='ma-0 pa-0'
+					:cols='authenticated ? "6" : "8"'
+				>
 
 					<v-row align='center' class='ma-0 pa-0 ' justify='center'>
-						<v-col class='ma-0 pa-0 text-primary' cols='12' v-if='authenticated'>
-							<v-row align='center' justify='space-around' class='ma-0 pa-0'>
+						<v-col v-if='authenticated' class='ma-0 pa-0 text-primary' cols='12'>
+							<v-row align='center' class='ma-0 pa-0' justify='space-around'>
 								<v-col class='ma-0 pa-0 font-weight-bold text-right mono-num'>
 									{{ item.d }}
 								</v-col>
 
-								<v-col class='ma-0 pa-0 font-italic mono-num' v-tooltip:top='"% split"'>
+								<v-col v-tooltip:top='"% split"' class='ma-0 pa-0 font-italic mono-num'>
 									<span>{{ (100 / (item.t) *
 										item.d).toFixed(2) }}% </span>
 								</v-col>
 							</v-row>
 						</v-col>
 						<v-col class='ma-0 pa-0 text-secondary' cols='12'>
-							<v-row align='center' justify='space-around' class='ma-0 pa-0'>
+							<v-row align='center' class='ma-0 pa-0' justify='space-around'>
 								<v-col class='ma-0 pa-0 font-weight-bold text-right mono-num'>
 									{{ item.j }}
 								</v-col>
 
-								<v-col class='ma-0 pa-0 font-italic mono-num'
-									v-tooltip:top='authenticated ? "% split" : "% all meals"'>
+								<v-col
+									v-tooltip:top='authenticated ? "% split" : "% all meals"'
+									class='ma-0 pa-0 font-italic mono-num'
+								>
 									<span v-if='authenticated'>
 										{{ (100 / (item.t) *
 											item.j).toFixed(2) }}% </span>
@@ -70,33 +98,51 @@
 				</v-col>
 			</v-row>
 		</template>
-		<template v-if='tableData.length > 0' v-slot:bottom='{ }'>
-			<v-row class='ma-0 pa-0 py-1 px-4 ' justify='space-around' align='center'
-				:class='{ "smalltext": smAndDown }'>
+		<template v-if='tableData.length > 0' #bottom='{ }'>
+			<v-row
+				align='center'
+				class='ma-0 pa-0 py-1 px-4 '
+				:class='{ "smalltext": smAndDown }'
+				justify='space-around'
+			>
 
-				<v-col cols='5' class='ma-0 pa-0 text-start'>
+				<v-col class='ma-0 pa-0 text-start' cols='5'>
 					total:
 					<span class='text-mealtype font-weight-bold mono-num'>{{ total_categories }}</span>
 				</v-col>
 
-				<v-col cols='2' class='ma-0 pa-0 text-center' >
-					<v-row class='ma-0 pa-0 no-gutters' align='center' justify='space-around'>
+				<v-col class='ma-0 pa-0 text-center' cols='2'>
+					<v-row align='center' class='ma-0 pa-0 no-gutters' justify='space-around'>
 
-						<v-col cols='auto' class='ma-0 pa-0 text-center'>
-							<v-chip color='mealtype' @click='scrollTableStart' density='compact' :size='smAndDown?"x-small":"small"' :disabled='scroll_up_disabled' v-tooltip:top='"scroll start"'>
-								<v-icon :icon='mdiArrowCollapseUp' color='mealtype' :size='smAndDown?"x-small":"small"' />
+						<v-col class='ma-0 pa-0 text-center' cols='auto'>
+							<v-chip
+								v-tooltip:top='"scroll start"'
+								color='mealtype'
+								density='compact'
+								:disabled='scroll_up_disabled'
+								:size='smAndDown?"x-small":"small"'
+								@click='scrollTableStart'
+							>
+								<v-icon color='mealtype' :icon='mdiArrowCollapseUp' :size='smAndDown?"x-small":"small"' />
 							</v-chip>
 						</v-col>
 
-						<v-col cols='auto' class='ma-0 pa-0 text-center'>
-							<v-chip color='mealtype' @click='scrollTableEnd' density='compact' :size='smAndDown?"x-small":"small"' :disabled='scroll_down_disabled' v-tooltip:top='"scroll end"'>
-								<v-icon :icon='mdiArrowCollapseDown' color='mealtype' :size='smAndDown?"x-small":"small"' />
+						<v-col class='ma-0 pa-0 text-center' cols='auto'>
+							<v-chip
+								v-tooltip:top='"scroll end"'
+								color='mealtype'
+								density='compact'
+								:disabled='scroll_down_disabled'
+								:size='smAndDown?"x-small":"small"'
+								@click='scrollTableEnd'
+							>
+								<v-icon color='mealtype' :icon='mdiArrowCollapseDown' :size='smAndDown?"x-small":"small"' />
 							</v-chip>
 						</v-col>
 					</v-row>
 				</v-col>
 
-				<v-col cols='5' class='ma-0 pa-0 text-end'>
+				<v-col class='ma-0 pa-0 text-end' cols='5'>
 					<section v-if='has_filter'>
 						filtered:
 						<span class='font-weight-bold text-mealtype mono-num'>{{ tableData.length }}</span>
@@ -112,59 +158,59 @@
 </template>
 
 <script setup lang='ts'>
-import { formatCategoryName } from '@/vanillaTS/helpers';
-import { mdiArrowCollapseUp, mdiArrowCollapseDown } from '@mdi/js';
-import { useDisplay } from 'vuetify';
-import type { TCategoryTableDate } from '@/types';
+import type { TCategoryTableDate } from '@/types'
+import { mdiArrowCollapseDown, mdiArrowCollapseUp } from '@mdi/js'
+import { useDisplay } from 'vuetify'
+import { formatCategoryName } from '@/vanillaTS/helpers'
 
-const { smAndDown, platform } = useDisplay();
+const { smAndDown, platform } = useDisplay()
 
-const table = ref();
-const scroll_up_disabled = ref(false);
-const scroll_down_disabled = ref(false);
-const density = computed(() => authenticated.value ? platform.value.firefox ? 'compact' : 'comfortable' : 'compact');
-const rowPadding = computed(() => authenticated.value ? platform.value.firefox ? true : false : true);
-const first_id = computed(() => tableData.value[0]?.category_id);
-const last_id = computed(() => tableData.value[tableData.value.length - 1]?.category_id);
+const table = ref()
+const scroll_up_disabled = ref(false)
+const scroll_down_disabled = ref(false)
+const density = computed(() => authenticated.value ? (platform.value.firefox ? 'compact' : 'comfortable') : 'compact')
+const rowPadding = computed(() => authenticated.value ? (platform.value.firefox ? true : false) : true)
+const first_id = computed(() => tableData.value[0]?.category_id)
+const last_id = computed(() => tableData.value.at(-1)?.category_id)
 
-const onIntersect = (visible: boolean, category_id: number): void => {
-	if (first_id.value === category_id) scroll_up_disabled.value = visible;
-	if (last_id.value === category_id) scroll_down_disabled.value = visible;
-};
+function onIntersect (visible: boolean, category_id: number): void {
+	if (first_id.value === category_id) scroll_up_disabled.value = visible
+	if (last_id.value === category_id) scroll_down_disabled.value = visible
+}
 
-const scrollTableStart = (): void => {
-	scroll_up_disabled.value = true;
-	scroll_down_disabled.value = false;
-	table.value.scrollToIndex(0);
-};
+function scrollTableStart (): void {
+	scroll_up_disabled.value = true
+	scroll_down_disabled.value = false
+	table.value.scrollToIndex(0)
+}
 
-const scrollTableEnd = (): void => {
-	scroll_down_disabled.value = true;
-	scroll_up_disabled.value = false;
-	table.value.scrollToIndex(tableData.value.length - 1);
-	setTimeout(() => table.value.scrollToIndex(tableData.value.length - 1), 1);
-};
+function scrollTableEnd (): void {
+	scroll_down_disabled.value = true
+	scroll_up_disabled.value = false
+	table.value.scrollToIndex(tableData.value.length - 1)
+	setTimeout(() => table.value.scrollToIndex(tableData.value.length - 1), 1)
+}
 
-const mealStore = mealModule();
+const mealStore = mealModule()
 const height = computed((): string => {
-	if (tableData.value.length === 0) return '';
-	return '200';
-});
+	if (tableData.value.length === 0) return ''
+	return '200'
+})
 
-const authenticated = computed(() => userModule().authenticated);
-const total_meals = computed(() => mealStore.get_total_meals_visible());
-const has_filter = computed(() => mealStore.is_filtered);
-const show_dave = computed(() => mealStore.show_dave);
-const show_jack = computed(() => mealStore.show_jack);
-const total_categories = computed(() => mealStore.meal_categories.size);
+const authenticated = computed(() => userModule().authenticated)
+const total_meals = computed(() => mealStore.get_total_meals_visible())
+const has_filter = computed(() => mealStore.is_filtered)
+const show_dave = computed(() => mealStore.show_dave)
+const show_jack = computed(() => mealStore.show_jack)
+const total_categories = computed(() => mealStore.meal_categories.size)
 
-const b64 = computed(() => mealStore.filter_b64);
+const b64 = computed(() => mealStore.filter_b64)
 watch(b64, () => {
-	scrollTableStart();
-});
+	scrollTableStart()
+})
 
 const tableData = computed((): Array<TCategoryTableDate> => {
-	const data = new Map<number, TCategoryTableDate>();
+	const data = new Map<number, TCategoryTableDate>()
 
 	for (const i of mealStore.get_meals.meal_categories) {
 		data.set(i[0], {
@@ -172,29 +218,29 @@ const tableData = computed((): Array<TCategoryTableDate> => {
 			category_id: i[0],
 			t: 0,
 			j: 0,
-			d: 0
-		});
+			d: 0,
+		})
 	}
 	for (const day of mealStore.get_meals.date_meals) {
 		if (day.Dave) {
-			const exists = data.get(day.Dave.meal_category_id);
+			const exists = data.get(day.Dave.meal_category_id)
 			if (exists) {
-				exists.d += 1;
-				exists.t += 1;
+				exists.d += 1
+				exists.t += 1
 			}
 		}
 		if (day.Jack) {
-			const exists = data.get(day.Jack.meal_category_id);
+			const exists = data.get(day.Jack.meal_category_id)
 			if (exists) {
-				exists.j += 1;
-				exists.t += 1;
+				exists.j += 1
+				exists.t += 1
 			}
 		}
 	}
-	return Array.from(data.values()).sort((a, b) => b.t - a.t);
-});
+	return Array.from(data.values()).toSorted((a, b) => b.t - a.t)
+})
 
-const originalLength = computed(() => mealStore.date_meals.length);
+const originalLength = computed(() => mealStore.date_meals.length)
 
 const headers = [
 	{
@@ -202,16 +248,16 @@ const headers = [
 		align: 'start',
 		key: 'category_name',
 		sortable: false,
-		width: '20%'
+		width: '20%',
 	},
 	{
 		title: 'Quantity',
 		key: 't',
 		align: 'end',
 		sortable: false,
-		width: '80%'
-	}
-] as const;
+		width: '80%',
+	},
+] as const
 
 </script>
 

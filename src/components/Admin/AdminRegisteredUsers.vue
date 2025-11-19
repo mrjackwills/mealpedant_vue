@@ -1,113 +1,161 @@
 <template>
-	<v-row justify='center' class='' width='100%'>
+	<v-row class='' justify='center' width='100%'>
 
-		<v-col cols='12' md='10' id='datatable' v-touch='{
-			left: () => toggleDrawer(true),
-			right: () => toggleDrawer(false),
-		}'>
+		<v-col
+			id='datatable'
+			v-touch='{
+				left: () => toggleDrawer(true),
+				right: () => toggleDrawer(false),
+			}'
+			cols='12'
+			md='10'
+		>
 
-			<v-data-table-virtual :headers='registeredUsersHeaders' :items='registeredUsers' height='300'
+			<v-data-table-virtual
+				id='datatable'
+				class='elevation-1 mt-4'
+				density='compact'
+				:headers='registeredUsersHeaders'
+				height='300'
+				:items='registeredUsers'
 				:mobile='smAndDown'
-				class='elevation-1 mt-4' density='compact' id='datatable'>
-				<template v-slot:[`item.active`]='{ item }'>
-					<UserActive v-model:active='item.active' v-model:email='item.email' patchName='active' />
+			>
+				<template #[`item.active`]='{ item: item_active }'>
+					<UserActive v-model:active='item_active.active' v-model:email='item_active.email' patch-name='active' />
 				</template>
 
-				<template v-slot:[`item.admin`]='{ item }'>
-					<UserActive v-model:active='item.admin' v-model:email='item.email' :readOnly='true' />
+				<template #[`item.admin`]='{ item: item_admin }'>
+					<UserActive v-model:active='item_admin.admin' v-model:email='item_admin.email' :read-only='true' />
 				</template>
 
-				<template v-slot:[`item.tfa`]='{ item }'>
-					<UserActive v-model:active='item.two_fa_active' v-model:email='item.email' :removeOnly='true'
-						patchName='two_fa_secret' />
+				<template #[`item.tfa`]='{ item: item_tfa }'>
+					<UserActive
+						v-model:active='item_tfa.two_fa_active'
+						v-model:email='item_tfa.email'
+						patch-name='two_fa_secret'
+						:remove-only='true'
+					/>
 				</template>
 
-				<template v-slot:[`item.login_attempt_number`]='{ item }'>
-					<v-row align='center' justify='center' class='ma-0 pa-0' dense>
-						<v-col cols='auto' class='ma-0 pa-0' dense>
-							<v-btn v-if='item.login_attempt_number && item.login_attempt_number > 0'
-								@click='resetAttempt(item.email)' class='fab-fix' fab size='small' variant='text'>
-								<v-icon size='small' color='mealtype' :icon='mdiClose' />
+				<template #[`item.login_attempt_number`]='{ item: item_log }'>
+					<v-row align='center' class='ma-0 pa-0' dense justify='center'>
+						<v-col class='ma-0 pa-0' cols='auto' dense>
+							<v-btn
+								v-if='item_log.login_attempt_number && item_log.login_attempt_number > 0'
+								class='fab-fix'
+								fab
+								size='small'
+								variant='text'
+								@click='resetAttempt(item_log.email)'
+							>
+								<v-icon color='mealtype' :icon='mdiClose' size='small' />
 							</v-btn>
 						</v-col>
-						<v-col cols='auto' class='ma-0 pa-0'
-							v-if='item.login_attempt_number && item.login_attempt_number >= 1'>
-							{{ item.login_attempt_number }}
+						<v-col
+							v-if='item_log.login_attempt_number && item_log.login_attempt_number >= 1'
+							class='ma-0 pa-0'
+							cols='auto'
+						>
+							{{ item_log.login_attempt_number }}
 						</v-col>
 					</v-row>
 				</template>
 
-				<template v-slot:[`item.last`]='{ item }'>
-					<v-row v-for='(chosen, index) in [item.login_ip, item.login_success]' :key='index' align='center'
-						class='ma-0 pa-0' justify='start' denssty='compact'>
-						<v-col cols='auto' class='ma-0 pa-0'>
-							<span :class='index === 1 && !chosen ? "text-mealtype" : ""' class='smalltext'>
+				<template #[`item.last`]='{ item: itam_last }'>
+					<v-row
+						v-for='(chosen, index) in [itam_last.login_ip, itam_last.login_success]'
+						:key='index'
+						align='center'
+						class='ma-0 pa-0'
+						denssty='compact'
+						justify='start'
+					>
+						<v-col class='ma-0 pa-0' cols='auto'>
+							<span class='smalltext' :class='index === 1 && !chosen ? "text-mealtype" : ""'>
 								{{ chosen }}
 							</span>
 						</v-col>
 					</v-row>
 				</template>
 
-				<template v-slot:[`item.passwordReset`]='{ item }'>
-					<UserPassword :email='item.email' :passwordResetDate='item.password_reset_date'
-						:password_reset_id='item.password_reset_id'
-						:password_creation_ip='item.password_reset_creation_ip' :reset_string='item.reset_string' />
+				<template #[`item.passwordReset`]='{ item: item_password }'>
+					<UserPassword
+						:email='item_password.email'
+						:password-creation-ip='item_password.password_reset_creation_ip'
+						:password-reset-date='item_password.password_reset_date'
+						:password-reset-it='item_password.password_reset_id'
+						:reset_string='item_password.reset_string'
+					/>
 				</template>
 
-				<template v-slot:[`item.sessions`]='{ item, internalItem, toggleExpand }'>
-					<v-btn @click='showRow(item.email, toggleExpand, internalItem)' variant='text' size='small' fab>
-						<v-icon :icon='activeSessionsIcon(item.email)' />
+				<template #[`item.sessions`]='{ item: item_sessions, internalItem, toggleExpand }'>
+					<v-btn fab size='small' variant='text' @click='showRow(item_sessions.email, toggleExpand, internalItem)'>
+						<v-icon :icon='activeSessionsIcon(item_sessions.email)' />
 					</v-btn>
 				</template>
 
-				<template v-slot:expanded-row='{ item, columns }'>
-					<tr v-if='expandedEmail === item.email'>
+				<template #expanded-row='{ item: item_expand, columns }'>
+					<tr v-if='expandedEmail === item_expand.email'>
 						<td :colspan='columns.length'>
 
-							<v-row justify='center' class='ma-0 pa-0 my-4'>
-								<v-col cols='11' class='ma-0 pa-0'>
+							<v-row class='ma-0 pa-0 my-4' justify='center'>
+								<v-col class='ma-0 pa-0' cols='11'>
 									<section v-if='sessionData.length > 0'>
 
-										<v-row justify='center' class='' v-for='(session, index) in sessionData'
-											:key='index'>
-											<v-row justify='center' class='ma-0 pa-0 text-caption'>
-												<v-col cols='12' class='ma-0 pa-0'>
+										<v-row
+											v-for='(session, index) in sessionData'
+											:key='index'
+											class=''
+											justify='center'
+										>
+											<v-row class='ma-0 pa-0 text-caption' justify='center'>
+												<v-col class='ma-0 pa-0' cols='12'>
 
-													<v-row justify='center' class='ma-0 pa-0'>
-														<v-col cols='auto' class='ma-0 pa-0' v-if='!session.current'
-															@click='removeSession(session.ulid, item.email)'>
-															<ButtonIcon v-ripple :icon='mdiClose' size='small'
-																class='cl' color='mealtype' margin='mr-3' />
+													<v-row class='ma-0 pa-0' justify='center'>
+														<v-col
+															v-if='!session.current'
+															class='ma-0 pa-0'
+															cols='auto'
+															@click='removeSession(session.ulid, item_expand.email)'
+														>
+															<ButtonIcon
+																v-ripple
+																class='cl'
+																color='mealtype'
+																:icon='mdiClose'
+																margin='mr-3'
+																size='small'
+															/>
 														</v-col>
 
-														<v-col cols='auto' class='ma-0 pa-0'>
+														<v-col class='ma-0 pa-0' cols='auto'>
 															<span class='text-primary mr-8'>
 																{{ session.login_date }}
 															</span>
 														</v-col>
-														<v-col cols='auto' class='ma-0 pa-0'>
+														<v-col class='ma-0 pa-0' cols='auto'>
 															<span class='text-secondary'> {{ session.end_date }}
 															</span>
 														</v-col>
 													</v-row>
 												</v-col>
-												<v-col cols='12' class='ma-0 pa-0'>
+												<v-col class='ma-0 pa-0' cols='12'>
 													<span class='smalltext text-center'>
 														{{ session.ip }}
 													</span>
 												</v-col>
-												<v-col cols='12' class='ma-0 pa-0'>
+												<v-col class='ma-0 pa-0' cols='12'>
 													<span class='smalltext text-center'>
 														{{ session.user_agent }}
 													</span>
 												</v-col>
-												<v-col cols='12' class='ma-0 pa-0'>
+												<v-col class='ma-0 pa-0' cols='12'>
 													<span class='smalltext text-center'>
 														{{ session.ulid }}
 													</span>
 												</v-col>
 
-												<v-col cols='12' class='ma-0 pa-0' v-if='session.current'>
+												<v-col v-if='session.current' class='ma-0 pa-0' cols='12'>
 													<span class='smalltext text-center text-mealtype'>CURRENT</span>
 												</v-col>
 											</v-row>
@@ -115,7 +163,7 @@
 										</v-row>
 									</section>
 
-									<v-row justify='center' v-else>
+									<v-row v-else justify='center'>
 										<v-col cols='auto'>
 											no sessions
 										</v-col>
@@ -132,141 +180,141 @@
 </template>
 
 <script setup lang='ts'>
-import { axios_admin } from '@/services/axios';
-import { mdiClose, mdiChevronDown, mdiChevronUp } from '@mdi/js';
-import { snackError } from '@/services/snack';
-import type { PV, TAdminSession, TAllUserInfo } from '@/types';
-import type { VDataTableRow } from 'vuetify/components/VDataTable';
-import { useDisplay } from 'vuetify';
+import type { VDataTableRow } from 'vuetify/components/VDataTable'
+import type { PV, TAdminSession, TAllUserInfo } from '@/types'
+import { mdiChevronDown, mdiChevronUp, mdiClose } from '@mdi/js'
+import { useDisplay } from 'vuetify'
+import { axios_admin } from '@/services/axios'
+import { snackError } from '@/services/snack'
 
-const { smAndDown } = useDisplay();
-const expandedEmail = ref(undefined as undefined | string);
-const expandedRow = ref(false);
+const { smAndDown } = useDisplay()
+const expandedEmail = ref(undefined as undefined | string)
+const expandedRow = ref(false)
 
-const sessionData = ref([] as Array<TAdminSession>);
+const sessionData = ref([] as Array<TAdminSession>)
 
-const getSessions = async (email: string): PV => {
+async function getSessions (email: string): PV {
 	try {
-		loading.value = true;
-		const session = await axios_admin.session_get(email);
-		sessionData.value = session;
-	} catch (e) {
-		const message = e instanceof Error ? e.message : 'ERROR';
-		snackError({ message });
+		loading.value = true
+		const session = await axios_admin.session_get(email)
+		sessionData.value = session
+	} catch (error) {
+		const message = error instanceof Error ? error.message : 'ERROR'
+		snackError({ message })
 	} finally {
-		loading.value = false;
+		loading.value = false
 	}
-};
+}
 
 // DataTableItem isn't exported in an easy way, hence this
-type item = NonNullable<VDataTableRow['$props']['item']>;
+type item = NonNullable<VDataTableRow['$props']['item']>
 
-const showRow = async (email: string, fn: (x: item) => void, da: item): PV => {
+async function showRow (email: string, fn: (x: item) => void, da: item): PV {
 	if (expandedEmail.value === email && expandedRow.value) {
-		fn(da);
-		expandedEmail.value = undefined;
-		expandedRow.value = false;
+		fn(da)
+		expandedEmail.value = undefined
+		expandedRow.value = false
 	} else if (!expandedEmail.value && !expandedRow.value) {
-		await getSessions(email);
+		await getSessions(email)
 
-		expandedEmail.value = email;
+		expandedEmail.value = email
 
-		expandedRow.value = true;
-		fn(da);
+		expandedRow.value = true
+		fn(da)
 	} else if (expandedEmail.value !== email && expandedRow.value) {
-		await getSessions(email);
-		expandedEmail.value = email;
-		expandedRow.value = true;
+		await getSessions(email)
+		expandedEmail.value = email
+		expandedRow.value = true
 	}
-};
+}
 
 onBeforeUnmount(() => {
-	drawerModule().set_disabled(false);
-});
+	drawerModule().set_disabled(false)
+})
 
 const loading = computed({
 	get (): boolean {
-		return loadingModule().loading;
+		return loadingModule().loading
 	},
 	set (b: boolean): void {
-		loadingModule().set_loading(b);
-	}
-});
-const registeredUsers = computed((): TAllUserInfo => adminModule().registeredUsers);
+		loadingModule().set_loading(b)
+	},
+})
+const registeredUsers = computed((): TAllUserInfo => adminModule().registeredUsers)
 
-const expanded = ref([]);
+const expanded = ref([])
 const registeredUsersHeaders = [
 	{
 		title: 'Active',
 		value: 'active',
 		align: 'start',
-		sortable: true
+		sortable: true,
 	},
 	{
 		title: 'Email',
 		value: 'email',
 		align: 'start',
-		sortable: true
+		sortable: true,
 	},
 	{
 		title: 'Admin',
 		value: 'admin',
 		align: 'start',
-		sortable: true
+		sortable: true,
 	},
 	{
 		title: '2FA',
 		value: 'tfa',
 		align: 'start',
-		sortable: false
+		sortable: false,
 	},
 	{
 		title: 'Attempts',
 		value: 'login_attempt_number',
 		align: 'start',
-		sortable: false
+		sortable: false,
 	},
 	{
 		title: 'Last Attempt',
 		value: 'last',
 		align: 'start',
-		sortable: false
+		sortable: false,
 	},
 	{
 		title: 'Sessions',
 		value: 'sessions',
 		align: 'start',
-		sortable: false
+		sortable: false,
 	},
 	{
 		title: 'Password Reset',
 		value: 'passwordReset',
 		align: 'start',
-		sortable: false
-	}
-] as const;
+		sortable: false,
+	},
+] as const
 
-const toggleDrawer = (status: boolean): void => {
-	drawerModule().set_disabled(status);
-};
+function toggleDrawer (status: boolean): void {
+	drawerModule().set_disabled(status)
+}
 
-const activeSessionsIcon = (email: string): string => {
-	return expandedEmail.value === email && expandedRow.value ? mdiChevronUp : mdiChevronDown;
-};
-const resetAttempt = async (email: string): PV => {
+function activeSessionsIcon (email: string): string {
+	return expandedEmail.value === email && expandedRow.value ? mdiChevronUp : mdiChevronDown
+}
+async function resetAttempt (email: string): PV {
 	await axios_admin.user_patch({
 		patch: { attempt: true },
-		email
-	});
-	await axios_admin.user_get();
-};
+		email,
+	})
+	await axios_admin.user_get()
+}
 
-const removeSession = async (ulid: string, email: string): PV => {
-	await axios_admin.session_delete(ulid);
-	sessionData.value = await axios_admin.session_get(email);
-	if (sessionData.value.length === 0) expanded.value = [];
-	loading.value = false;
-};
+async function removeSession (ulid: string, email: string): PV {
+	await axios_admin.session_delete(ulid)
+	sessionData.value = await axios_admin.session_get(email)
+	if (sessionData.value.length === 0) expanded.value = []
+	loading.value = false
+}
 
 </script>
 

@@ -1,19 +1,19 @@
 <template>
-	<v-row justify='center' class='no-gutters ma-0 pa-0'>
-		<v-col cols='12' sm='8' class='ma-0 pa-0'>
+	<v-row class='no-gutters ma-0 pa-0' justify='center'>
+		<v-col class='ma-0 pa-0' cols='12' sm='8'>
 			<v-data-table-virtual
+				class='elevation-1 mt-4'
+				density='compact'
 				:headers
+				height='220'
 				:items='backup'
 				:mobile='smAndDown'
-				class='elevation-1 mt-4'
-				height='220'
-				density='compact'
 				no-data-text='no backups found'
 			>
-				<template v-slot:item='{item}'>
+				<template #item='{item}'>
 					<tr>
 						<td class='text-left cl' @click='downloadFile(item.file_name)'>
-							<ButtonIcon :icon='mdiDownload' :size='mdAndDown?"x-small":""' margin='mr-1'/>
+							<ButtonIcon :icon='mdiDownload' margin='mr-1' :size='mdAndDown?"x-small":""' />
 							<span :class='smAndDown?"smalltext":"text-caption"'>{{ item.file_name }}</span>
 						</td>
 						<td class='text-right'>
@@ -26,27 +26,27 @@
 				</template>
 			</v-data-table-virtual>
 		</v-col>
-		<v-col cols='12' class='ma-0 pa-0'>
-			<v-row justify='space-around' align='center' class='no-gutters ma-0 pa-0 mt-n4'>
-				<v-col cols='auto' class='ma-0 pa-0 mt-5'>
+		<v-col class='ma-0 pa-0' cols='12'>
+			<v-row align='center' class='no-gutters ma-0 pa-0 mt-n4' justify='space-around'>
+				<v-col class='ma-0 pa-0 mt-5' cols='auto'>
 					<div class='text-center'>
 						<v-checkbox
 							v-model='withPhotos'
-							:disabled='localLoading'
-							color='primary'
-							label='include photos'
 							class=''
+							color='primary'
+							:disabled='localLoading'
+							label='include photos'
 						/>
 					</div>
 				</v-col>
-				<v-col cols='auto' class=''>
+				<v-col class='' cols='auto'>
 					<v-btn
-						@click='createBackup'
 						:block='smAndDown'
 						:color='localLoading?"":"secondary"'
 						:disabled='localLoading'
-						:variant='localLoading?"outlined":"flat"'
 						rounded
+						:variant='localLoading?"outlined":"flat"'
+						@click='createBackup'
 					>
 						<ButtonIcon :icon='mdiFileStar' />
 						Create new Backup
@@ -59,31 +59,31 @@
 </template>
 
 <script setup lang='ts'>
-import type { PV, TBackup } from '@/types';
-import { snackSuccess } from '@/services/snack';
-import { bytes_to_mb } from '@/vanillaTS/helpers';
-import { env } from '@/vanillaTS/env';
+import type { PV, TBackup } from '@/types'
 import {
 	mdiCloseCircleOutline,
 	mdiCloudCheck,
 	mdiDeleteCircleOutline,
 	mdiDownload,
-	mdiFileStar
-} from '@mdi/js';
-import { axios_admin } from '@/services/axios';
-import { useDisplay } from 'vuetify';
-const { mdAndDown, smAndDown } = useDisplay();
+	mdiFileStar,
+} from '@mdi/js'
+import { useDisplay } from 'vuetify'
+import { axios_admin } from '@/services/axios'
+import { snackSuccess } from '@/services/snack'
+import { env } from '@/vanillaTS/env'
+import { bytes_to_mb } from '@/vanillaTS/helpers'
+const { mdAndDown, smAndDown } = useDisplay()
 
-const backup = computed((): TBackup => adminModule().backup);
+const backup = computed((): TBackup => adminModule().backup)
 
 const loading = computed({
 	get (): boolean {
-		return loadingModule().loading;
+		return loadingModule().loading
 	},
 	set (b: boolean): void {
-		loadingModule().set_loading(b);
-	}
-});
+		loadingModule().set_loading(b)
+	},
+})
 
 const headers = [
 	{
@@ -91,70 +91,70 @@ const headers = [
 		align: 'start',
 		sortable: true,
 		value: 'filename',
-		width: '70%'
+		width: '70%',
 	},
 	{
 		title: 'size',
 		align: 'end',
 		sortable: true,
 		value: 'file_size',
-		width: '15%'
+		width: '15%',
 	},
 	{
 		title: 'delete',
 		align: 'end',
 		sortable: false,
-		width: '15%'
-	}
-] as const;
-const localLoading = ref(false);
-const withPhotos = ref(true);
+		width: '15%',
+	},
+] as const
+const localLoading = ref(false)
+const withPhotos = ref(true)
 
 // / Request to create new backup, use checkbox data to include photos or not, automatically refreshes backup file list
-const createBackup = async (): PV => {
-	loading.value = true;
-	localLoading.value = true;
-	const response = await axios_admin.backup_post(withPhotos.value);
+async function createBackup (): PV {
+	loading.value = true
+	localLoading.value = true
+	const response = await axios_admin.backup_post(withPhotos.value)
 	if (response) {
-		await axios_admin.backup_get();
+		await axios_admin.backup_get()
 		snackSuccess({
 			message: 'new backup created',
-			icon: mdiCloudCheck
-		});
+			icon: mdiCloudCheck,
+		})
 	}
-	loading.value = false;
-	localLoading.value = false;
-};
+	loading.value = false
+	localLoading.value = false
+}
 
 /*
  * Request to delete selected backupfile, automatically refreshes backup file list
  *  @param {string} filename valid filename of format /^mealpedant_\d{4}-\d{2}-\d{2}_\d{2}\.\d{2}\.\d{2}_(PHOTOS_)?SQL_REDIS_LOGS_[0-9a-fA-F]{8}\.tar\.gpg$/
  */
-const deleteFile = async (fileName: string): PV => {
-	if (loading.value) return;
-	loading.value = true;
-	const response = await axios_admin.backup_delete(fileName);
+async function deleteFile (fileName: string): PV {
+	if (loading.value) return
+	loading.value = true
+	const response = await axios_admin.backup_delete(fileName)
 	if (response) {
-		await axios_admin.backup_get();
+		await axios_admin.backup_get()
 		snackSuccess({
 			message: `deleted: ${fileName}`,
-			icon: mdiDeleteCircleOutline
-		});
+			icon: mdiDeleteCircleOutline,
+		})
 	}
-	loading.value = false;
-};
+	loading.value = false
+}
 
 /*
  * Add href to body of backup link, then click to download
  *  @param {string} filename valid filename of format /^mealpedant_\d{4}-\d{2}-\d{2}_\d{2}\.\d{2}\.\d{2}_(PHOTOS_)?SQL_REDIS_LOGS_[0-9a-fA-F]{8}\.tar\.gpg$/
  */
-const downloadFile = async (filename: string): PV => {
-	const downloadLink = document.createElement('a');
-	downloadLink.setAttribute('href', `${env.domain_api}/admin/backup/${filename}`);
-	downloadLink.style.display = 'none';
-	document.body.appendChild(downloadLink);
-	downloadLink.click();
-	document.body.removeChild(downloadLink);
-	loading.value = false;
-};
+async function downloadFile (filename: string): PV {
+	const downloadLink = document.createElement('a')
+	downloadLink.setAttribute('href', `${env.domain_api}/admin/backup/${filename}`)
+	downloadLink.style.display = 'none'
+	document.body.append(downloadLink)
+	downloadLink.click()
+	downloadLink.remove()
+	loading.value = false
+}
 </script>

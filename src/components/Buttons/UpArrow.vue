@@ -1,33 +1,42 @@
 <template>
-	<transition name='fade' mode='out-in'>
-		<v-btn v-if='scrolled' @click='goToTop' color='error' class='mr-1 cl up_arrow' position='fixed' size='small'
-			v-tooltip:top='"Scroll to top"' :icon='mdiArrowCollapseUp' dark />
+	<transition mode='out-in' name='fade'>
+		<v-btn
+			v-if='scrolled'
+			v-tooltip:top='"Scroll to top"'
+			class='mr-1 cl up_arrow'
+			color='error'
+			dark
+			:icon='mdiArrowCollapseUp'
+			position='fixed'
+			size='small'
+			@click='goToTop'
+		/>
 	</transition>
 </template>
 
 <script setup lang='ts'>
-import { mdiArrowCollapseUp } from '@mdi/js';
+import { mdiArrowCollapseUp } from '@mdi/js'
 
 onMounted(() => {
-	window.addEventListener('scroll', scrollEvent);
-});
+	window.addEventListener('scroll', scrollEvent)
+})
 
 onBeforeUnmount(() => {
-	window.removeEventListener('scroll', scrollEvent);
-});
+	window.removeEventListener('scroll', scrollEvent)
+})
 
-const scrolled = ref(false);
+const scrolled = ref(false)
 
-const scrollEvent = (): void => {
-	scrolled.value = window.scrollY > 200 ? true : false;
-};
+function scrollEvent (): void {
+	scrolled.value = window.scrollY > 200 ? true : false
+}
 
-const goToTop = (): void => {
+function goToTop (): void {
 	window.scrollTo({
 		top: 0,
-		behavior: 'smooth'
-	});
-};
+		behavior: 'smooth',
+	})
+}
 </script>
 
 <style scoped>

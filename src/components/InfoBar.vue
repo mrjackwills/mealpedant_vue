@@ -1,16 +1,16 @@
 <template>
-	<v-row align='center' justify='center' class='pa-0 ma-0'>
-		<v-col cols='12' md='6' class='pa-0 ma-1'>
-			<v-alert class='pa-0 ma-0 pa-3' :color >
-				<v-row justify='space-between' align='center' class='ma-0 pa-0'>
-					<v-col cols='1' lg='auto' class='pa-0 ma-0'>
-						<v-icon small color='white' :icon='mdiInformation' />
+	<v-row align='center' class='pa-0 ma-0' justify='center'>
+		<v-col class='pa-0 ma-1' cols='12' md='6'>
+			<v-alert class='pa-0 ma-0 pa-3' :color>
+				<v-row align='center' class='ma-0 pa-0' justify='space-between'>
+					<v-col class='pa-0 ma-0' cols='1' lg='auto'>
+						<v-icon color='white' :icon='mdiInformation' small />
 					</v-col>
-					<v-col cols='10' lg='auto' class='text-white pa-0 ma-0 text-center text-overline'>
+					<v-col class='text-white pa-0 ma-0 text-center text-overline' cols='10' lg='auto'>
 						{{ message }}
 					</v-col>
-					<v-col cols='1' lg='auto' class='pa-0 ma-0'>
-						<v-icon @click='infoClose' :icon='mdiClose' color='white' small />
+					<v-col class='pa-0 ma-0' cols='1' lg='auto'>
+						<v-icon color='white' :icon='mdiClose' small @click='infoClose' />
 					</v-col>
 				</v-row>
 			</v-alert>
@@ -19,14 +19,14 @@
 </template>
 
 <script setup lang='ts'>
-import { mdiClose, mdiInformation } from '@mdi/js';
+import { mdiClose, mdiInformation } from '@mdi/js'
 
-const infoClose = (): void => {
-	infobarModule().remove_message(props.message);
-};
+function infoClose (): void {
+	infobarModule().remove_message(props.message)
+}
 
 const props = withDefaults(defineProps<{
-	message: string;
-	color?: string;
-}>(), { color: 'secondary' });
+	message: string
+	color?: string
+}>(), { color: 'secondary' })
 </script>

@@ -1,7 +1,6 @@
-import { defineStore } from 'pinia';
-import { ModuleName } from '@/types/const_module';
-import type { u, su, TPerson } from '@/types';
-
+import type { su, TPerson, u } from '@/types'
+import { defineStore } from 'pinia'
+import { ModuleName } from '@/types/const_module'
 
 export const mealViewModule = defineStore(ModuleName.MealView, {
 
@@ -18,69 +17,69 @@ export const mealViewModule = defineStore(ModuleName.MealView, {
 		dialog_visible: false,
 		original: true,
 		showInfo: true,
-		tableHeight: 300
+		tableHeight: 300,
 	}),
 
 	actions: {
 
 		set_button_analysis (x: boolean) {
-			this.button_analysis = x;
+			this.button_analysis = x
 		},
 
 		set_button_date (x: boolean) {
-			this.button_date = x;
+			this.button_date = x
 		},
 
 		set_button_filters (x: boolean) {
-			this.button_filters = x;
+			this.button_filters = x
 		},
 
 		set_button_search (x: boolean) {
-			this.button_search = x;
+			this.button_search = x
 		},
 
 		set_dialog_visible (x: boolean) {
-			this.dialog_visible = x;
+			this.dialog_visible = x
 		},
 
 		set_table_height (x: number) {
-			this.tableHeight = x;
+			this.tableHeight = x
 		},
 
 		set_showInfo (x: boolean) {
-			this.showInfo = x;
+			this.showInfo = x
 		},
 
 		set_original (x: boolean) {
-			this.original = x;
+			this.original = x
 		},
 
 		set_photo_date (x: su) {
-			this.dialog_photo_date = x;
+			this.dialog_photo_date = x
 		},
 
 		clear_photo () {
-			this.dialog_meal_description = '';
-			this.dialog_photo_person = undefined;
-			this.dialog_photo_date = undefined;
-			this.dialog_photo_url_converted = undefined;
-			this.dialog_photo_url_original = undefined;
+			this.dialog_meal_description = ''
+			this.dialog_photo_person = undefined
+			this.dialog_photo_date = undefined
+			this.dialog_photo_url_converted = undefined
+			this.dialog_photo_url_original = undefined
 		},
 
 		set_dialog_photo_person (x: u<TPerson>) {
-			this.dialog_photo_person = x;
+			this.dialog_photo_person = x
 		},
 
 		set_dialog_photo_meal_description (x: string) {
-			this.dialog_meal_description = x;
+			this.dialog_meal_description = x
 		},
 
 		set_dialog_photo_url_converted (x: su) {
-			this.dialog_photo_url_converted = x;
+			this.dialog_photo_url_converted = x
 		},
 
 		set_dialog_photo_url_original (x: su) {
-			this.dialog_photo_url_original = x;
-		}
-	}
-});
+			this.dialog_photo_url_original = x
+		},
+	},
+})

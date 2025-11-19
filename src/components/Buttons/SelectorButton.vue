@@ -1,13 +1,13 @@
 <template>
-	<v-col cols='12' class='ma-0 pa-0'>
-		<v-row justify='space-around' class='ma-0 pa-0 py-0'>
-			<v-col cols='11' sm='7' md='3' class='pa-0 mb-n2'>
+	<v-col class='ma-0 pa-0' cols='12'>
+		<v-row class='ma-0 pa-0 py-0' justify='space-around'>
+			<v-col class='pa-0 mb-n2' cols='11' md='3' sm='7'>
 				<CustomSearchSelector />
 			</v-col>
-			<v-col cols='11' sm='7' md='3' class='pa-0 mb-n2'>
+			<v-col class='pa-0 mb-n2' cols='11' md='3' sm='7'>
 				<VariantSelector />
 			</v-col>
-			<v-col cols='11' sm='7' md='3' class='pa-0 mb-n2'>
+			<v-col class='pa-0 mb-n2' cols='11' md='3' sm='7'>
 				<CategorySelector />
 			</v-col>
 		</v-row>

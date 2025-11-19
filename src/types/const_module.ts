@@ -1,5 +1,3 @@
-import { ConstT } from '@/types';
-
 export const ModuleName = {
 	Admin: 'admin',
 	Browser: 'browser',
@@ -14,7 +12,5 @@ export const ModuleName = {
 	Snack: 'snackbar',
 	TableData: 'tableData',
 	TwoFa: 'twoFA',
-	User: 'user'
-} as const;
-
-export type ModuleName = ConstT<typeof ModuleName>;
+	User: 'user',
+} as const
