@@ -71,7 +71,7 @@
 				:date='item.date'
 				:meal-category-id='item.Dave.meal_category_id'
 				:meal-description-id='item.Dave.meal_description_id'
-				person='Dave'
+				:person='TPerson.DAVE'
 				:photo='item.Dave.photo'
 				:restaurant='item.Dave.restaurant == 1'
 				:takeaway='item.Dave.takeaway == 1'
@@ -85,7 +85,7 @@
 				:date='item.date'
 				:meal-category-id='item.Jack.meal_category_id'
 				:meal-description-id='item.Jack.meal_description_id'
-				person='Jack'
+				:person='TPerson.JACK'
 				:photo='item.Jack.photo'
 				:restaurant='item.Jack.restaurant == 1'
 				:takeaway='item.Jack.takeaway == 1'
@@ -163,10 +163,10 @@
 </template>
 
 <script setup lang='ts'>
-import type { DateMeal } from '@/types'
 import { mdiArrowCollapseDown, mdiArrowCollapseUp, mdiClose, mdiInformation, mdiSwapVertical } from '@mdi/js'
 import { useDisplay, useLayout } from 'vuetify'
 import { VRow } from 'vuetify/components'
+import { type DateMeal, TPerson } from '@/types'
 import { days, genesisDate, months } from '@/vanillaTS/globalConst'
 const { smAndDown, mdAndDown } = useDisplay()
 const mealStore = mealModule()
@@ -243,7 +243,7 @@ function calc_table_height (): void {
 }
 
 const computedDateFont = computed(() => mdAndDown.value ? 'smallesttext' : 'smalltext')
-const headerClass = (x: string | undefined): string => x === 'Dave' ? 'dave-header' : (x === 'Jack' ? 'jack-header' : '')
+const headerClass = (x: string | undefined): string => x === TPerson.DAVE ? 'dave-header' : (x === TPerson.JACK ? 'jack-header' : '')
 
 const totalMeals = computed(() => mealStore.date_meals.length)
 const filteredDays = computed(() => mealStore.filtered_date_meals.length)
@@ -263,8 +263,8 @@ const headers = computed(() => {
 		align: 'start' as const,
 		class: 'dave-header',
 		sortable: false,
-		title: 'Dave',
-		key: 'Dave',
+		title: TPerson.DAVE,
+		key: TPerson.DAVE,
 		width: show_jack.value ? '45%' : '90%',
 
 	})
@@ -273,8 +273,8 @@ const headers = computed(() => {
 		align: 'start' as const,
 		class: 'jack-header',
 		sortable: false,
-		title: 'Jack',
-		key: 'Jack',
+		title: TPerson.JACK,
+		key: TPerson.JACK,
 		width: show_dave.value ? '45%' : '90%',
 	})
 	return headers

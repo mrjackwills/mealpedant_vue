@@ -1,4 +1,4 @@
-import type { su, TPerson, u } from '@/types'
+import type { su, TPersonVal, u } from '@/types'
 import { defineStore } from 'pinia'
 import { ModuleName } from '@/types/const_module'
 
@@ -10,7 +10,7 @@ export const mealViewModule = defineStore(ModuleName.MealView, {
 		button_filters: false,
 		button_search: false,
 		dialog_meal_description: '',
-		dialog_photo_person: undefined as u<TPerson>,
+		dialog_photo_person: undefined as u<TPersonVal>,
 		dialog_photo_date: undefined as su,
 		dialog_photo_url_converted: undefined as su,
 		dialog_photo_url_original: undefined as su,
@@ -67,7 +67,7 @@ export const mealViewModule = defineStore(ModuleName.MealView, {
 			this.dialog_photo_url_original = undefined
 		},
 
-		set_dialog_photo_person (x: u<TPerson>) {
+		set_dialog_photo_person (x: u<TPersonVal>) {
 			this.dialog_photo_person = x
 		},
 

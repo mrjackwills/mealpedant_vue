@@ -40,7 +40,7 @@
 							:disabled='!show_jack'
 							hide-details
 							:model-value='show_dave'
-							@update:model-value='update_person("Dave")'
+							@update:model-value='update_person(TPerson.DAVE)'
 						>
 							<template #label>
 								<span class='text-black'>Dave</span>
@@ -63,7 +63,7 @@
 							:disabled='!show_dave'
 							hide-details
 							:model-value='show_jack'
-							@update:model-value='update_person("Jack")'
+							@update:model-value='update_person(TPerson.JACK)'
 						>
 							<template #label>
 								<span class='text-black'>Jack</span>
@@ -81,9 +81,9 @@
 </template>
 
 <script setup lang='ts'>
-import type { TPerson } from '@/types'
 import { mdiCamera } from '@mdi/js'
 import { useDisplay } from 'vuetify'
+import { TPerson, type TPersonVal } from '@/types'
 const { smAndDown } = useDisplay()
 
 const mealStore = mealModule()
@@ -98,8 +98,8 @@ const only_photos = computed(() => mealStore.search_by.only_photos)
 const update_photos = (): void => mealStore.set_search_by_photo()
 
 // If other person is already disabled, then don't disable the second
-function update_person (person: TPerson): void {
-	if ((person === 'Jack' && !show_dave.value) || (person === 'Dave' && !show_jack.value)) return
+function update_person (person: TPersonVal): void {
+	if ((person === TPerson.JACK && !show_dave.value) || (person === TPerson.DAVE && !show_jack.value)) return
 	mealStore.set_search_by_person(person)
 }
 </script>

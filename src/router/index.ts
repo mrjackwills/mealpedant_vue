@@ -1,8 +1,8 @@
-import type { PV } from '@/types'
 import { createRouter, createWebHistory, type NavigationGuardNext, type RouteLocationNormalized, type RouteRecordRaw } from 'vue-router'
 import EmptyComponent from '@/components/EmptyComponent.vue'
 import { axios_admin, axios_authenticatedUser, axios_incognito } from '@/services/axios'
 import { snackError, snackSuccess } from '@/services/snack'
+import { type PV, TPerson } from '@/types'
 import { FrontEndNames, FrontEndRoutes } from '@/types/const_routes'
 import Home from '@/views/HomeView.vue'
 
@@ -42,7 +42,7 @@ async function adminEditMeal (to: RouteLocationNormalized, _from: RouteLocationN
 		const dateRegex = /([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))/
 
 		if (to.query.date && to.query.person) {
-			const personValid = to.query.person.toString() === 'Jack' || to.query.person.toString() === 'Dave'
+			const personValid = to.query.person.toString() === TPerson.JACK || to.query.person.toString() === TPerson.DAVE
 			const dateValid = dateRegex.test(to.query.date.toString())
 			if (personValid && dateValid) {
 				adminModule().set_date(to.query.date.toString())
@@ -52,7 +52,7 @@ async function adminEditMeal (to: RouteLocationNormalized, _from: RouteLocationN
 				next(FrontEndRoutes.ERROR)
 			}
 		} else {
-			const personValid = adminModule().person === 'Jack' || adminModule().person === 'Dave'
+			const personValid = adminModule().person === TPerson.JACK || adminModule().person === TPerson.DAVE
 			const dateValid = dateRegex.test(adminModule().date)
 			if (personValid && dateValid) {
 				next()

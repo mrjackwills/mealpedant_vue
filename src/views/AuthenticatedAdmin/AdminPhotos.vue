@@ -9,7 +9,7 @@
 							v-for='(item, index) in totals'
 							:key='index'
 							class='ma-0 pa-0'
-							:class='{"smalltext": mdAndDown}'
+							:class='{ "smalltext": mdAndDown }'
 							justify='space-around'
 						>
 
@@ -152,7 +152,11 @@
 											{{ bytes_to_mb(item.size_in_bytes_converted ?? 0) }}mb
 										</a>
 									</v-col>
-									<v-col class='cl ma-0 pa-0' cols='auto' @click='deletePhoto(item.file_name_converted)'>
+									<v-col
+										class='cl ma-0 pa-0'
+										cols='auto'
+										@click='deletePhoto(item.file_name_converted)'
+									>
 										<v-chip color='mealtype' size='x-small' variant='flat'>
 											delete
 										</v-chip>
@@ -201,7 +205,11 @@
 											{{ bytes_to_mb(item.size_in_bytes_original ?? 0) }}mb
 										</a>
 									</v-col>
-									<v-col class='cl ma-0 pa-0' cols='auto' @click='deletePhoto(item.file_name_original)'>
+									<v-col
+										class='cl ma-0 pa-0'
+										cols='auto'
+										@click='deletePhoto(item.file_name_original)'
+									>
 										<v-chip color='mealtype' size='x-small' variant='flat'>
 											delete
 										</v-chip>
@@ -223,10 +231,10 @@
 
 <script setup lang='ts'>
 
-import type { PV, TAdminPhoto } from '@/types'
 import { mdiImageSizeSelectActual, mdiImageSizeSelectLarge } from '@mdi/js'
 import { useDisplay } from 'vuetify'
 import { axios_admin } from '@/services/axios'
+import { type PV, type TAdminPhoto, TPerson } from '@/types'
 import { FrontEndRoutes } from '@/types/const_routes'
 import { env } from '@/vanillaTS/env'
 import { bytes_to_mb } from '@/vanillaTS/helpers'
@@ -235,14 +243,14 @@ const { mdAndDown } = useDisplay()
 const totals = computed(() => [
 	{
 		class: 'primary',
-		original: bytes_to_mb(totalDave.value[0]),
-		converted: bytes_to_mb(totalDave.value[1]),
+		original: bytes_to_mb(totalDave.value[0] ?? 0),
+		converted: bytes_to_mb(totalDave.value[1] ?? 0),
 		total: totalDave.value[2],
 	},
 	{
 		class: 'secondary',
-		original: bytes_to_mb(totalJack.value[0]),
-		converted: bytes_to_mb(totalJack.value[1]),
+		original: bytes_to_mb(totalJack.value[0] ?? 0),
+		converted: bytes_to_mb(totalJack.value[1] ?? 0),
 		total: totalJack.value[2],
 	},
 	{
@@ -286,19 +294,19 @@ const totalOriginal = computed(() => photo_data.value.reduce((total, i) => total
 const totalConverted = computed(() => photo_data.value.reduce((total, i) => total + (i.size_in_bytes_converted ?? 0), 0))
 
 const totalJack = computed(() => photo_data.value.reduce((acc, { person, size_in_bytes_original = 0, size_in_bytes_converted = 0 }) => {
-	if (person === 'Jack') {
-		acc[0] += size_in_bytes_original ?? 0
-		acc[1] += size_in_bytes_converted ?? 0
-		acc[2] += 1
+	if (person === TPerson.JACK) {
+		if (acc[0]) acc[0] += size_in_bytes_original ?? 0
+		if (acc[1]) acc[1] += size_in_bytes_converted ?? 0
+		if (acc[2]) acc[2] += 1
 	}
 	return acc
 }, [0, 0, 0]))
 
 const totalDave = computed(() => photo_data.value.reduce((acc, { person, size_in_bytes_original = 0, size_in_bytes_converted = 0 }) => {
-	if (person === 'Dave') {
-		acc[0] += size_in_bytes_original ?? 0
-		acc[1] += size_in_bytes_converted ?? 0
-		acc[2] += 1
+	if (person === TPerson.DAVE) {
+		if (acc[0]) acc[0] += size_in_bytes_original ?? 0
+		if (acc[1]) acc[1] += size_in_bytes_converted ?? 0
+		if (acc[2]) acc[2] += 1
 	}
 	return acc
 }, [0, 0, 0]))

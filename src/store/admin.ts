@@ -24,6 +24,7 @@ export const adminModule = defineStore(ModuleName.Admin, {
 			this.date = x
 		},
 
+		// TODO what's this used for?
 		set_person (x: string) {
 			this.person = x
 		},

@@ -1,5 +1,10 @@
 <template>
-	<v-dialog v-model='dialog' eager :max-width='maxWidth' scroll-strategy='none'>
+	<v-dialog
+		v-model='dialog'
+		eager
+		:max-width='maxWidth'
+		scroll-strategy='none'
+	>
 		<v-card v-intersect='onIntersect'>
 			<v-img
 				v-if='photoUrlConverted'

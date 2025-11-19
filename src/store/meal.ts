@@ -1,8 +1,9 @@
-import type { c_MealInfo, c_search_by, DateMeal, MealCategoryMap, MealDescriptionMap, MealHistoryValue, MealInfo, search_by, TMealVariant, TPerson, TPersonFood } from '@/types'
+import type { c_MealInfo, c_search_by, DateMeal, MealCategoryMap, MealDescriptionMap, MealHistoryValue, MealInfo, search_by, TMealVariant, TPersonFood, TPersonVal } from '@/types'
 import { defineStore } from 'pinia'
 import router from '@/router'
-
 import { snackError } from '@/services/snack'
+
+import { TPerson } from '@/types'
 import { ModuleName } from '@/types/const_module'
 import { genesisDateString, todayDateString } from '@/vanillaTS/helpers'
 
@@ -273,8 +274,8 @@ export const mealModule = defineStore(ModuleName.Meal, {
 		},
 
 		// Toggle person, then search
-		set_search_by_person (person: TPerson) {
-			if (person === 'Jack') {
+		set_search_by_person (person: TPersonVal) {
+			if (person === TPerson.JACK) {
 				this.search_by.include_jack = !this.search_by.include_jack
 			} else {
 				this.search_by.include_dave = !this.search_by.include_dave
@@ -371,8 +372,8 @@ export const mealModule = defineStore(ModuleName.Meal, {
 			const desc_id = new Set([...this.meal_descriptions.entries()].filter(([, i]) => this.normalise_string(i).includes(search_term)).map(([id]) => id))
 
 			for (const meal of this.date_meals) {
-				for (const person of ['Jack' as const, 'Dave' as const]) {
-					if ((!search_by.include_dave && person === 'Dave') || (!search_by.include_jack && person === 'Jack')) {
+				for (const person of [TPerson.DAVE, TPerson.JACK]) {
+					if ((!search_by.include_dave && person === TPerson.DAVE) || (!search_by.include_jack && person === TPerson.JACK)) {
 						continue
 					}
 					if (meal[person]) {
@@ -463,7 +464,7 @@ export const mealModule = defineStore(ModuleName.Meal, {
 			filtered_date_meals: Map<string, BothTPersonFood>,
 			filtered_meal_variants: Set<TMealVariant>,
 			meal: DateMeal,
-			person: TPerson,
+			person: TPersonVal,
 			tmp_cat_id: Set<number>,
 			tmp_desc_id: Set<number>,
 		) {
@@ -473,7 +474,7 @@ export const mealModule = defineStore(ModuleName.Meal, {
 		},
 
 		// Add a given meals description & category id's to the temp sets
-		add_description_category_id (temp_category_id_set: Set<number>, temp_meal_description_id_set: Set<number>, meal: DateMeal, person: TPerson) {
+		add_description_category_id (temp_category_id_set: Set<number>, temp_meal_description_id_set: Set<number>, meal: DateMeal, person: TPersonVal) {
 			if (meal[person]) {
 				temp_category_id_set.add(meal[person].meal_category_id)
 				temp_meal_description_id_set.add(meal[person].meal_description_id)
@@ -481,7 +482,7 @@ export const mealModule = defineStore(ModuleName.Meal, {
 		},
 
 		// Check if a given datemeal/person in order to populate the filtered_meal_variants
-		add_variant (filtered_meal_variants: Set<TMealVariant>, meal: DateMeal, person: TPerson) {
+		add_variant (filtered_meal_variants: Set<TMealVariant>, meal: DateMeal, person: TPersonVal) {
 			if (meal[person]?.restaurant) {
 				filtered_meal_variants.add('restaurant')
 			}
@@ -514,20 +515,20 @@ export const mealModule = defineStore(ModuleName.Meal, {
 		 * Add a filtered meal to the filtered array, using the index of a meal already in the array,
 		 * else add a new entry for a given person
 		 */
-		add_date_meal (filtered_date_meals: Map<string, BothTPersonFood>, meal: DateMeal, person: TPerson) {
+		add_date_meal (filtered_date_meals: Map<string, BothTPersonFood>, meal: DateMeal, person: TPersonVal) {
 			const exists = filtered_date_meals.get(meal.date)
 			if (meal.Jack) {
 				// TODO Use a type here or object const
 				if (exists) {
 					exists.Jack = meal.Jack
-				} else if (person === 'Jack') {
+				} else if (person === TPerson.JACK) {
 					filtered_date_meals.set(meal.date, { Jack: meal.Jack })
 				}
 			}
 			if (meal.Dave) {
 				if (exists) {
 					exists.Dave = meal.Dave
-				} else if (person === 'Dave') {
+				} else if (person === TPerson.DAVE) {
 					filtered_date_meals.set(meal.date, { Dave: meal.Dave })
 				}
 			}

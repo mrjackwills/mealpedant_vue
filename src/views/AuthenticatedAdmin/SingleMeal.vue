@@ -43,7 +43,7 @@
 					<!-- Person -->
 					<v-col class='ma-0 pa-0 mr-md-3 mt-2' cols='12' md='6'>
 						<v-row class='ma-0 pa-0' justify='space-between'>
-							<v-col v-for='(item, index) in ["Dave", "Jack"]' :key='index' class='ma-0 pa-0' cols='auto'>
+							<v-col v-for='(item, index) in [TPerson.DAVE, TPerson.JACK]' :key='index' class='ma-0 pa-0' cols='auto'>
 								<v-radio-group v-model='meal.person' row>
 									<v-radio color='primary' density='compact' :label='item' :value='item' />
 								</v-radio-group>
@@ -264,7 +264,7 @@
 </template>
 
 <script setup lang='ts'>
-import type { PV, TAuthObject, TMealDatePerson, TMealPatch, TPerson, u } from '@/types'
+import type { PV, TAuthObject, TMealDatePerson, TMealPatch, TPersonVal, u } from '@/types'
 import { mdiAttachment, mdiCalendar, mdiCamera, mdiClose, mdiCloudUpload, mdiDatabaseEdit, mdiDeleteOutline, mdiFormatListBulletedType, mdiMessageText, mdiPlusCircle, mdiRestore } from '@mdi/js'
 import useVuelidate from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
@@ -273,6 +273,7 @@ import { VBtn } from 'vuetify/components'
 import { axios_adminMeal, axios_adminPhoto } from '@/services/axios'
 import { dialoger } from '@/services/dialog'
 import { snackError, snackSuccess } from '@/services/snack'
+import { TPerson } from '@/types'
 import { FrontEndRoutes } from '@/types/const_routes'
 import { env } from '@/vanillaTS/env'
 import { convert_date, genesisDateString, todayDateString } from '@/vanillaTS/helpers'
@@ -329,7 +330,7 @@ function gen_update_meal (): TMealPatch {
 onBeforeMount(async () => {
 	loading.value = true
 	await mealStorage.seed_meal_pinia()
-	const person = adminModule().person as TPerson
+	const person = adminModule().person as TPersonVal
 	const date = adminModule().date
 
 	if (person && date) {
@@ -418,7 +419,7 @@ function default_meal (): TMealDatePerson {
 		restaurant: false,
 		takeaway: false,
 		vegetarian: false,
-		person: '' as TPerson,
+		person: '' as TPersonVal,
 	}
 }
 

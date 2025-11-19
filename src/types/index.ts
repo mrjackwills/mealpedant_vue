@@ -21,7 +21,12 @@ export type TPasswordPatch = Record<'resetId' | 'password', string> & { token?: 
 
 export type TRegisterUser = Record<'email' | 'full_name' | 'invite' | 'password', string>
 
-export type TPerson = 'Dave' | 'Jack'
+export const TPerson = {
+	JACK: 'Jack',
+	DAVE: 'Dave',
+} as const
+
+export type TPersonVal = (typeof TPerson)[keyof typeof TPerson]
 
 export type TTFASetupPatch = { always_required: boolean } & Partial<TAuthObject>
 
@@ -73,7 +78,7 @@ export type TMealPatch = {
 	original_date: string
 }
 
-type TBaseMeal = Record<'date' | 'category' | 'description', string> & Record<TMealVariant, boolean> & { person: TPerson }
+type TBaseMeal = Record<'date' | 'category' | 'description', string> & Record<TMealVariant, boolean> & { person: TPersonVal }
 
 export type TMealDatePerson = TBaseMeal & Record<'photo_original' | 'photo_converted', string | undefined>
 
@@ -103,7 +108,7 @@ export type TMealDelete = {
 
 export type TSingleMeal = {
 	date: string
-	person: TPerson
+	person: TPersonVal
 }
 
 export type TServerStats = Record<'rss' | 'virt', string> & Record<'uptime' | 'uptime_app', number>

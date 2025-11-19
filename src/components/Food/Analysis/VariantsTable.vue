@@ -79,8 +79,8 @@
 </template>
 
 <script setup lang='ts'>
-import type { TCategoryTotals } from '@/types'
 import { useDisplay } from 'vuetify'
+import { type TCategoryTotals, TPerson } from '@/types'
 import { formatCategoryName } from '@/vanillaTS/helpers'
 
 const { smAndDown, platform } = useDisplay()
@@ -140,7 +140,7 @@ const show_dave = computed(() => mealStore.show_dave)
 const tableData = computed((): TCategoryTotals => {
 	const totals = default_totals()
 	for (const item of mealStore.get_meals.date_meals) {
-		for (const person of ['Jack' as const, 'Dave' as const]) {
+		for (const person of [TPerson.DAVE, TPerson.JACK]) {
 			for (const v of ['restaurant' as const, 'takeaway' as const, 'vegetarian' as const]) {
 				if (item?.[person]?.[v]) {
 					const totalsIndex = totals.findIndex(i => i.variant.toLowerCase().startsWith(v))
