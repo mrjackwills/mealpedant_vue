@@ -37,7 +37,6 @@ const title = computed(() => browserModule().pageTitle)
 
 const { isSwiping, direction } = useSwipe(swipe)
 
-// check for updates every x minutes using an interval?
 function check_pwa (): void {
 	if ('serviceWorker' in navigator) {
 		registerSW({
@@ -53,7 +52,7 @@ onBeforeMount(async () => {
 	check_pwa()
 	await axios_incognito.online_get()
 	init.value = true
-	service_interval.value = setInterval(check_pwa, 1000 * 60 * 60)
+	service_interval.value = setInterval(check_pwa, 1000 * 60 * 20)
 })
 
 watch(isSwiping, (i: boolean) => {
@@ -94,7 +93,7 @@ function appUpdate (): void {
 		loading: true,
 		timeout: 4500,
 	})
-	window.setTimeout(() => updateServiceWorker(), 5000)
+	setTimeout(() => updateServiceWorker(), 5000)
 }
 
 </script>
