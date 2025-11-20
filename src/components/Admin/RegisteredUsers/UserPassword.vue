@@ -1,42 +1,53 @@
 <template>
 	<div v-if='passwordResetDate'>
-		<v-row justify='start' align='center' class='ma-0 pa-0' dense>
-			<v-col cols='12' class='ma-0 pa-0'>
-				<span class='smalltext'>{{ password_creation_ip }}</span>
+		<v-row align='center' class='ma-0 pa-0' dense justify='start'>
+			<v-col class='ma-0 pa-0' cols='12'>
+				<span class='smalltext'>{{ passwordCreationIp }}</span>
 			</v-col>
-			<v-col cols='12' class='ma-0 pa-0'>
+			<v-col class='ma-0 pa-0' cols='12'>
 				<span class='smalltext'>{{ passwordResetDate }}</span>
 			</v-col>
 		</v-row>
-		<v-row justify='start' align='center' class='ma-0 pa-0'>
-			<v-col cols='auto' class='pa-0 ma-0'>
-				<v-btn @click='copyString' class='ma-0 pa-0 fab-fix mr-6 text-black' color='primary' size='small'
-					variant='text'>
-					<v-icon size='x-small' color='primary' :icon='mdiContentCopy' />
+		<v-row align='center' class='ma-0 pa-0' justify='start'>
+			<v-col class='pa-0 ma-0' cols='auto'>
+				<v-btn
+					class='ma-0 pa-0 fab-fix mr-6 text-black'
+					color='primary'
+					size='small'
+					variant='text'
+					@click='copyString'
+				>
+					<v-icon color='primary' :icon='mdiContentCopy' size='x-small' />
 					<span class='text-overline ml-1 text-primary'>copy</span>
 				</v-btn>
 			</v-col>
-			<v-col cols='auto' class='pa-0 ma-0'>
-				<v-btn @click='revoke' class='ma-0 pa-0 fab-fix' color='secondary' size='small' variant='text'>
-					<v-icon size='small' :icon='mdiClose' />
+			<v-col class='pa-0 ma-0' cols='auto'>
+				<v-btn
+					class='ma-0 pa-0 fab-fix'
+					color='secondary'
+					size='small'
+					variant='text'
+					@click='revoke'
+				>
+					<v-icon :icon='mdiClose' size='small' />
 					<span class='text-overline ml-1 text-secondary'>revoke</span>
 				</v-btn>
 			</v-col>
 		</v-row>
 	</div>
 	<div v-else>
-		<v-row justify='start' align='center' class='ma-0 pa-0'>
-			<v-col cols='auto' class='pa-0 ma-0 mr-6'>
-				<v-btn @click='force' class='ma-0 pa-0 fab-fix' color='mealtype' variant='text'>
-					<v-icon size='small' :icon='mdiLockReset' />
+		<v-row align='center' class='ma-0 pa-0' justify='start'>
+			<v-col class='pa-0 ma-0 mr-6' cols='auto'>
+				<v-btn class='ma-0 pa-0 fab-fix' color='mealtype' variant='text' @click='force'>
+					<v-icon :icon='mdiLockReset' size='small' />
 					<span class='ml-1 text-mealtype'>force reset</span>
 				</v-btn>
 			</v-col>
 		</v-row>
-		<v-row justify='start' align='center' class='ma-0 pa-0 mt-n4'>
-			<v-col cols='auto' class='pa-0 ma-0'>
+		<v-row align='center' class='ma-0 pa-0 mt-n4' justify='start'>
+			<v-col class='pa-0 ma-0' cols='auto'>
 				<v-switch v-model='withEmail' :color='withEmail ? "mealtype" : ""'>
-					<template v-slot:label>
+					<template #label>
 						<span class='text-overline'>send email</span>
 					</template>
 				</v-switch>
@@ -46,47 +57,47 @@
 </template>
 
 <script setup lang='ts'>
-import { axios_admin } from '@/services/axios';
-import { env } from '@/vanillaTS/env';
-import { useClipboard } from '@vueuse/core';
+import type { PV } from '@/types'
 import {
 	mdiClose,
 	mdiContentCopy,
-	mdiLockReset
-} from '@mdi/js';
-import { PV } from '@/types';
+	mdiLockReset,
+} from '@mdi/js'
+import { useClipboard } from '@vueuse/core'
+import { axios_admin } from '@/services/axios'
+import { env } from '@/vanillaTS/env'
 
-const withEmail = ref(false);
+const withEmail = ref(false)
 
-const copyString = (): void => {
-	useClipboard().copy(`${env.domain_www}/user/reset/${props.reset_string}`);
-};
+function copyString (): void {
+	useClipboard().copy(`${env.domain_www}/user/reset/${props.resetString}`)
+}
 
-const force = async (): PV => {
-	if (!props.password_reset_id) {
+async function force (): PV {
+	if (!props.passwordResetId) {
 		await axios_admin.user_patch({
 			patch: { reset: true },
-			email: props.email
-		});
-		await axios_admin.user_get();
+			email: props.email,
+		})
+		await axios_admin.user_get()
 	}
-};
-const revoke = async (): PV => {
-	if (props.password_reset_id) {
+}
+async function revoke (): PV {
+	if (props.passwordResetId) {
 		await axios_admin.user_patch({
-			patch: { password_reset_id: props.password_reset_id },
-			email: props.email
-		});
-		await axios_admin.user_get();
+			patch: { password_reset_id: props.passwordResetId },
+			email: props.email,
+		})
+		await axios_admin.user_get()
 	}
-};
+}
 
 const props = defineProps<{
-	passwordResetDate?: string;
-	password_reset_id?: number;
-	password_creation_ip?: string;
-	reset_string?: string;
-	email: string;
-}>();
+	passwordResetDate?: string
+	passwordResetId?: number
+	passwordCreationIp?: string
+	resetString?: string
+	email: string
+}>()
 
 </script>

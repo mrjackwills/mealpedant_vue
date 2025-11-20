@@ -1,27 +1,27 @@
-import { axios_authenticatedFood, axios_incognito } from '@/services/axios';
-import { c_MealInfo, PV } from '@/types';
+import type { c_MealInfo, PV } from '@/types'
+import { axios_authenticatedFood, axios_incognito } from '@/services/axios'
 
 class MealStorage {
-	readonly #hash_name = 'hash';
+	readonly #hash_name = 'hash'
 
-	readonly #meal_name = 'meal';
+	readonly #meal_name = 'meal'
 
 	// Delete hash and meals from the browser localStorage
 	delete (): void {
-		window.localStorage.removeItem(this.#hash_name);
-		window.localStorage.removeItem(this.#meal_name);
+		window.localStorage.removeItem(this.#hash_name)
+		window.localStorage.removeItem(this.#meal_name)
 	}
 
 	// Retrieve the all meals hash from local storage
 	hash_get (): string | null {
-		return window.localStorage.getItem(this.#hash_name);
+		return window.localStorage.getItem(this.#hash_name)
 	}
 
 	// Storage the all meals hash into local storage
 	hash_set (latest_hash: string): void {
 		if (latest_hash.length > 0) {
-			mealModule().set_hash(latest_hash);
-			window.localStorage.setItem(this.#hash_name, latest_hash);
+			mealModule().set_hash(latest_hash)
+			window.localStorage.setItem(this.#hash_name, latest_hash)
 		}
 	}
 
@@ -30,14 +30,14 @@ class MealStorage {
 	 * Need to store as compressed, as maps don't stringify
 	 */
 	meals_get (): c_MealInfo | undefined {
-		const meals = window.localStorage.getItem(this.#meal_name);
+		const meals = window.localStorage.getItem(this.#meal_name)
 		if (meals) {
 			try {
-				const output = JSON.parse(meals);
-				return output;
+				const output = JSON.parse(meals)
+				return output
 			} catch {
-				window.localStorage.removeItem(this.#meal_name);
-				return undefined;
+				window.localStorage.removeItem(this.#meal_name)
+				return undefined
 			}
 		}
 	}
@@ -47,46 +47,44 @@ class MealStorage {
 	 * Need to store as compressed, as maps don't stringify
 	 */
 	meals_set (input: c_MealInfo): void {
-		const input_json = JSON.stringify(input);
-		window.localStorage.setItem(this.#meal_name, input_json);
-	}
-
-	async #get_set_meals_to_pinia (authenticated: boolean, current_meals?: c_MealInfo): PV {
-		if (current_meals) {
-			this.meals_set(current_meals);
-			mealModule().set(current_meals);
-		} else {
-			const current_meals = authenticated ? await axios_authenticatedFood.all_get() : await axios_incognito.meals_get();
-			this.meals_set(current_meals);
-			mealModule().set(current_meals);
-		}
+		const input_json = JSON.stringify(input)
+		window.localStorage.setItem(this.#meal_name, input_json)
 	}
 
 	// Check hash and get meals, save to storage, else return and insert into pinia
 	async seed_meal_pinia (): Promise<void> {
-		loadingModule().set_loading(true);
-		const authenticated = userModule().authenticated;
-		const hash = this.hash_get();
+		loadingModule().set_loading(true)
+		const authenticated = userModule().authenticated
+		const hash = this.hash_get()
 		try {
-			const latest_hash = authenticated ? await axios_authenticatedFood.mealhash_get() : await axios_incognito.mealhash_get();
-			this.hash_set(latest_hash);
+			const latest_hash = authenticated ? await axios_authenticatedFood.mealhash_get() : await axios_incognito.mealhash_get()
+			this.hash_set(latest_hash)
 			if (hash && hash === latest_hash) {
-				const meals_in_storage = this.meals_get();
-				if (meals_in_storage) {
-					await this.#get_set_meals_to_pinia(authenticated, meals_in_storage);
-				} else {
-					await this.#get_set_meals_to_pinia(authenticated);
-				}
+				const meals_in_storage = this.meals_get()
+				await (meals_in_storage ? this.#get_set_meals_to_pinia(authenticated, meals_in_storage) : this.#get_set_meals_to_pinia(authenticated))
 			} else {
-				await this.#get_set_meals_to_pinia(authenticated);
+				await this.#get_set_meals_to_pinia(authenticated)
 			}
 		} catch {
-			const meals_in_storage = this.meals_get();
-			if (meals_in_storage) await this.#get_set_meals_to_pinia(authenticated, meals_in_storage);
+			const meals_in_storage = this.meals_get()
+			if (meals_in_storage) {
+				await this.#get_set_meals_to_pinia(authenticated, meals_in_storage)
+			}
 		}
 
-		loadingModule().set_loading(false);
+		loadingModule().set_loading(false)
+	}
+
+	async #get_set_meals_to_pinia (authenticated: boolean, current_meals?: c_MealInfo): PV {
+		if (current_meals) {
+			this.meals_set(current_meals)
+			mealModule().set(current_meals)
+		} else {
+			const current_meals = authenticated ? await axios_authenticatedFood.all_get() : await axios_incognito.meals_get()
+			this.meals_set(current_meals)
+			mealModule().set(current_meals)
+		}
 	}
 }
 
-export const mealStorage = new MealStorage();
+export const mealStorage = new MealStorage()

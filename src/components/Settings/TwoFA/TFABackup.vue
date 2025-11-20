@@ -1,7 +1,7 @@
 <template>
 	<section>
-		<v-row align='center' justify='center' class='ma-0 pa-0' v-if='!backup'>
-			<v-col cols='12' md='8' class='pa-0 mb-4'>
+		<v-row v-if='!backup' align='center' class='ma-0 pa-0' justify='center'>
+			<v-col class='pa-0 mb-4' cols='12' md='8'>
 				Backups enable a user to login to their account in situations where their two factor authentication app
 				is unavailable.
 				Each backup code can only be used once, and must be safely stored by the user.
@@ -12,11 +12,17 @@
 			</v-col>
 		</v-row>
 		<v-expand-transition>
-			<v-row v-if='backupArray.length === 0' align='center' justify='center' class='ma-0 pa-0'>
+			<v-row v-if='backupArray.length === 0' align='center' class='ma-0 pa-0' justify='center'>
 				<v-col class='ma-0 pa-0' cols='12' lg='4'>
 					<v-row justify='center'>
 						<v-col cols='auto'>
-							<v-btn @click='buttonPress' :disabled='localLoading' color='secondary' variant='flat' rounded>
+							<v-btn
+								color='secondary'
+								:disabled='localLoading'
+								rounded
+								variant='flat'
+								@click='buttonPress'
+							>
 								<v-icon :icon='backupButtonIcon' />
 								{{ backupButtonText }}
 							</v-btn>
@@ -28,15 +34,21 @@
 		<v-expand-transition>
 			<section v-if='backupArray.length > 0'>
 				<section>
-					<v-row align='center' justify='center' class='ma-0 pa-0'>
+					<v-row align='center' class='ma-0 pa-0' justify='center'>
 
-						<v-col cols='auto' class='ma-0 pa-0'>
+						<v-col class='ma-0 pa-0' cols='auto'>
 							These backup tokens need to be stored securely, each token can only be used once
 						</v-col>
 
 					</v-row>
-					<v-row justify='center' align='center' dense no-gutters class='mt-4'>
-						<v-col cols='12' md='auto' class='ma-0 pa-0'>
+					<v-row
+						align='center'
+						class='mt-4'
+						dense
+						justify='center'
+						no-gutters
+					>
+						<v-col class='ma-0 pa-0' cols='12' md='auto'>
 							<v-row class='ma-0 pa-0' justify='space-between'>
 								<v-col cols='5'>
 									<div v-for='(item, index) in backupArray.slice(0, 5)' :key='index'>
@@ -52,29 +64,47 @@
 							</v-row>
 						</v-col>
 					</v-row>
-					<v-row justify='space-around' align='center' dense no-gutters class='mt-4'>
+					<v-row
+						align='center'
+						class='mt-4'
+						dense
+						justify='space-around'
+						no-gutters
+					>
 
 						<v-col cols='auto'>
-							<v-btn @click='close' color='error' variant='flat' rounded>
+							<v-btn color='error' rounded variant='flat' @click='close'>
 								<v-icon :icon='mdiClose' />
 								close
 							</v-btn>
 						</v-col>
-						<v-col cols='auto' class='mx-2' :class='{ "my-2": smAndDown }'>
-							<v-btn @click='downloadCodes' color='primary' :dark='true' variant='flat'
-								rounded class='text-black'>
+						<v-col class='mx-2' :class='{ "my-2": smAndDown }' cols='auto'>
+							<v-btn
+								class='text-black'
+								color='primary'
+								:dark='true'
+								rounded
+								variant='flat'
+								@click='downloadCodes'
+							>
 								<v-icon color='black' :icon='mdiDownload' />
 								download
 							</v-btn>
 
 						</v-col>
-						<v-col cols='auto' id='tooltip'>
-							<v-btn @click='copyCodes' color='secondary' variant='flat' rounded>
+						<v-col id='tooltip' cols='auto'>
+							<v-btn color='secondary' rounded variant='flat' @click='copyCodes'>
 								<v-icon :icon='mdiContentCopy' />
 								copy all
 							</v-btn>
-							<v-tooltip v-if='showTooltip' :open-on-click='true' :open-on-hover='false'
-								activator='parent' location='top center' content-class='tooltip'>
+							<v-tooltip
+								v-if='showTooltip'
+								activator='parent'
+								content-class='tooltip'
+								location='top center'
+								:open-on-click='true'
+								:open-on-hover='false'
+							>
 								<span>copied to clipboard</span>
 							</v-tooltip>
 
@@ -87,98 +117,97 @@
 </template>
 
 <script setup lang='ts'>
-import { axios_authenticatedUser } from '@/services/axios';
-import { dialoger } from '@/services/dialog';
-import { mdiClose, mdiContentCopy, mdiDownload, mdiShieldKey, mdiShieldRefresh } from '@mdi/js';
-import type { PV, TAuthObject } from '@/types';
-import { useClipboard } from '@vueuse/core';
-import { useDisplay } from 'vuetify';
-const { smAndDown } = useDisplay();
+import type { PV, TAuthObject } from '@/types'
+import { mdiClose, mdiContentCopy, mdiDownload, mdiShieldKey, mdiShieldRefresh } from '@mdi/js'
+import { useClipboard } from '@vueuse/core'
+import { useDisplay } from 'vuetify'
+import { axios_authenticatedUser } from '@/services/axios'
+import { dialoger } from '@/services/dialog'
+const { smAndDown } = useDisplay()
 
 onBeforeUnmount(() => {
-	clearTimeout(tooltipTimeout.value);
-});
+	clearTimeout(tooltipTimeout.value)
+})
 
-const backup = computed(() => twoFAModule().backup_count > 0);
-const backupButtonIcon = computed(() => backup.value ? mdiShieldRefresh : mdiShieldKey);
-const backupButtonText = computed(() => backup.value ? 'refresh backup tokens' : 'generate backup tokens');
+const backup = computed(() => twoFAModule().backup_count > 0)
+const backupButtonIcon = computed(() => backup.value ? mdiShieldRefresh : mdiShieldKey)
+const backupButtonText = computed(() => backup.value ? 'refresh backup tokens' : 'generate backup tokens')
 const loading = computed({
 	get (): boolean {
-		return loadingModule().loading;
+		return loadingModule().loading
 	},
 	set (b: boolean): void {
-		loadingModule().set_loading(b);
-	}
-});
+		loadingModule().set_loading(b)
+	},
+})
 
-const backupArray = ref([] as Array<string>);
-const localLoading = ref(false);
-const showTooltip = ref(false);
-const tooltipTimeout = ref(0);
+const backupArray = ref([] as Array<string>)
+const localLoading = ref(false)
+const showTooltip = ref(false)
+const tooltipTimeout = ref(0)
 
-const backupCodes = (): string => {
-	if (!backupArray.value) return '';
-	let output = `Meal Pedant Two-Factor backup tokens\nStore these somewhere secure\n`;
+function backupCodes (): string {
+	if (!backupArray.value) return ''
+	let output = `Meal Pedant Two-Factor backup tokens\nStore these somewhere secure\n`
 	for (const [index, item] of Object.entries(backupArray.value)) {
-		if (Number(index) + 1 === backupArray.value.length) output += `\n${item}`;
-		else output += `\n${item}\n`;
+		output += Number(index) + 1 === backupArray.value.length ? `\n${item}` : `\n${item}\n`
 	}
-	return output;
-};
-const close = (): void => {
-	backupArray.value = [];
-	twoFAModule().set_backupProcess(false);
-};
+	return output
+}
+function close (): void {
+	backupArray.value = []
+	twoFAModule().set_backupProcess(false)
+}
 
 // Copy the 2fa codes, create multi-line string with description as first line
-const copyCodes = (): void => {
-	useClipboard().copy(backupCodes());
-	showTooltip.value = true;
+function copyCodes (): void {
+	useClipboard().copy(backupCodes())
+	showTooltip.value = true
 	tooltipTimeout.value = window.setTimeout(() => {
-		showTooltip.value = false;
-	}, 1750);
-};
+		showTooltip.value = false
+	}, 1750)
+}
 
 // Download the 2fa codes as .txt, all clientside, create multi-line string with description as first line
-const downloadCodes = (): void => {
-	const downloadCodes = document.createElement('a');
-	downloadCodes.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(backupCodes()));
-	downloadCodes.setAttribute('download', 'Meal_Pedant_2FA_backup_tokens.txt');
-	downloadCodes.style.display = 'none';
-	document.body.appendChild(downloadCodes);
-	downloadCodes.click();
-	document.body.removeChild(downloadCodes);
-};
+function downloadCodes (): void {
+	const downloadCodes = document.createElement('a')
+	downloadCodes.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(backupCodes()))
+	downloadCodes.setAttribute('download', 'Meal_Pedant_2FA_backup_tokens.txt')
+	downloadCodes.style.display = 'none'
+	document.body.append(downloadCodes)
+	downloadCodes.click()
+	downloadCodes.remove()
+}
 
 // Generate button - dialog warning overwrite if backups already exist, else just generate
-const buttonPress = async (): PV => {
+async function buttonPress (): PV {
 	if (backup.value) {
 		dialoger({
 			message: 'Refreshing will revoke all currently active backup tokens, do you wish to continue?',
 			buttonText: 'refresh',
 			title: 'Confirm',
 			passwordRequired: true,
-			confirmFunction: generateBackups
-		});
+			confirmFunction: generateBackups,
+		})
 	} else {
-		generateBackups();
+		generateBackups()
 	}
-};
+}
 
 // Post request to generate new backup tokens
-const generateBackups = async (authObject?: TAuthObject): PV => {
-	loading.value = true;
-	localLoading.value = true;
-	twoFAModule().set_backupProcess(true);
+async function generateBackups (authObject?: TAuthObject): PV {
+	loading.value = true
+	localLoading.value = true
+	twoFAModule().set_backupProcess(true)
 	if (backup.value && authObject) {
-		const response = await axios_authenticatedUser.twoFA_patch(authObject);
-		if (response) backupArray.value = response;
+		const response = await axios_authenticatedUser.twoFA_patch(authObject)
+		if (response) backupArray.value = response
 	} else if (!backup.value) {
-		const backups = await axios_authenticatedUser.twoFA_post();
-		if (backups) backupArray.value = backups;
+		const backups = await axios_authenticatedUser.twoFA_post()
+		if (backups) backupArray.value = backups
 	}
-	loading.value = false;
-	localLoading.value = false;
-	await axios_authenticatedUser.authenticated_get();
-};
+	loading.value = false
+	localLoading.value = false
+	await axios_authenticatedUser.authenticated_get()
+}
 </script>

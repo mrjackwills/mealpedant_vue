@@ -1,6 +1,6 @@
-import { defineStore } from 'pinia';
-import { ModuleName } from '@/types/const_module';
-import type { u, TServerStats, TBackup, TLimit, TAllUserInfo, TLogs, TAdminPhoto } from '@/types';
+import type { TAdminPhoto, TAllUserInfo, TBackup, TLimit, TLogs, TPersonVal, TServerStats, u } from '@/types'
+import { defineStore } from 'pinia'
+import { ModuleName } from '@/types/const_module'
 
 export const adminModule = defineStore(ModuleName.Admin, {
 
@@ -13,43 +13,43 @@ export const adminModule = defineStore(ModuleName.Admin, {
 		registeredUsers: [] as TAllUserInfo,
 		allPhotos: [] as Array<TAdminPhoto>,
 		date: '',
-		person: ''
+		person: undefined as u<TPersonVal>,
 	}),
 
 	actions: {
 		set_all_photos (a: Array<TAdminPhoto>) {
-			this.allPhotos = a;
+			this.allPhotos = a
 		},
 		set_date (x: string) {
-			this.date = x;
+			this.date = x
 		},
 
-		set_person (x: string) {
-			this.person = x;
+		set_person (x: u<TPersonVal>) {
+			this.person = x
 		},
 
 		set_email (b: Array<string>) {
-			this.email = b;
+			this.email = b
 		},
 
 		set_logs (b: Array<TLogs>) {
-			this.logs = b;
+			this.logs = b
 		},
 
 		set_backup (b: TBackup) {
-			this.backup = b;
+			this.backup = b
 		},
 
 		set_limit (b: TLimit) {
-			this.limit = b;
+			this.limit = b
 		},
 
 		set_memory (b: TServerStats) {
-			this.memory = b;
+			this.memory = b
 		},
 
 		set_registeredUsers (b: TAllUserInfo) {
-			this.registeredUsers = b;
-		}
-	}
-});
+			this.registeredUsers = b
+		},
+	},
+})

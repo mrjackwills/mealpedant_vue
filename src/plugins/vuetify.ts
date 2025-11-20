@@ -1,8 +1,8 @@
-import 'vuetify/styles';
-import '@/scss/variables.scss';
+import { createVuetify, type ThemeDefinition } from 'vuetify'
+import { aliases, mdi } from 'vuetify/iconsets/mdi-svg'
 
-import { aliases, mdi } from 'vuetify/iconsets/mdi-svg';
-import { createVuetify, type ThemeDefinition } from 'vuetify';
+import 'vuetify/styles'
+import '@/scss/variables.scss'
 
 const customDarkTheme: ThemeDefinition = {
 	dark: true,
@@ -15,19 +15,19 @@ const customDarkTheme: ThemeDefinition = {
 		offwhite: '#ffeecb',
 		dark: '#1e1e1e',
 		navmenu: '#363636',
-		appbar: '#272727'
-	}
-};
+		appbar: '#272727',
+	},
+}
 
 export default createVuetify({
 	icons: {
 		defaultSet: 'mdi',
 		aliases,
-		sets: { mdi }
+		sets: { mdi },
 	},
 
 	theme: {
 		defaultTheme: 'customDarkTheme',
-		themes: { customDarkTheme }
-	}
-});
+		themes: { customDarkTheme },
+	},
+})

@@ -1,10 +1,16 @@
-### 2025-09-24
+### 2025-11-20
 
 ### Chores
-+ GitHub workflow updated, [431f39a2319071bd0a6d95ad5e6c187e9ae4a3e5], [c1248d259f9831c334df34a56b3ff3ee1a8bf05b]
-+ dependencies updated, [383fa5799e98da8b775646e1af3d8d57ebdccbd7], [631d27a34cd1d01f33b844bed17ac48f67e09fbf]
++ dependencies updated, [b821415e38c6bcc80e418fdafecf7ae9e0b0019c], [f438a628f85011652120304d568b553978d3637d]
++ linting, [cc582a6cdf12acdbe874ebb63d3e528163a3507b]
++ use const object instead of "Jack" & "Dave", [3d7b35615dce4be6795178942c395adf3ceebb4e], [c204aa3e50c06d0102b4ebb8118082b24d87d822]
 
-### Refactors
-+ use :x instead of :x='x', [389a160d354447ec946590043d90f2a6fb80a1d5], [1878d8961b0bae4083f2b132700f6410cede1c74]
+### Features
++ use a photo cache to preload images, [0884032204c121338cc463f8af9c9996cc4fb0e4]
++ use webp and cache, [c0cd54d94943203ff4035b65748b63a3ddff118a]
+
+### Fixes
++ footer github link typo, [a8c88dba4f841deaca3c906b2157d9869c6c7d15]
++ update structured data schema, [191dd2396692d4bc5dad8c815a814f5ab38f75d1]
 
 see <a href='https://github.com/mrjackwills/mealpedant_vue/blob/main/CHANGELOG.md'>CHANGELOG.md</a> for more details

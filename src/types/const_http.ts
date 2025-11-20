@@ -3,8 +3,6 @@
  * Hypertext Transfer Protocol (HTTP) response status codes.
  */
 
-import { ConstT } from '@/types';
-
 export const HttpCode = {
 	CONTINUE: 100,
 	SWITCHING_PROTOCOLS: 101,
@@ -66,7 +64,5 @@ export const HttpCode = {
 	INSUFFICIENT_STORAGE: 507,
 	LOOP_DETECTED: 508,
 	NOT_EXTENDED: 510,
-	NETWORK_AUTHENTICATION_REQUIRED: 511
-} as const;
-
-export type HttpCode = ConstT<typeof HttpCode>;
+	NETWORK_AUTHENTICATION_REQUIRED: 511,
+} as const

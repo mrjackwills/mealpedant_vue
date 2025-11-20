@@ -1,19 +1,25 @@
 <template>
-	<section class='mt-5' v-if='!backupProcess'>
-		<v-row class='ma-0 pa-0' align='center' justify='center'>
-			<v-col cols='12' md='8' class='ma-0 pa-0'>
-				<v-row class='ma-0 pa-0' align='center' justify='center'>
-					<v-col cols='auto' class='ma-0 pa-0' @click='toggle'>
-						<v-switch v-model='arVal' :disabled='backupProcess' class='ma-0 pa-0' label='' color='primary'
-							density='compact'>
-							<template v-slot:label>
+	<section v-if='!backupProcess' class='mt-5'>
+		<v-row align='center' class='ma-0 pa-0' justify='center'>
+			<v-col class='ma-0 pa-0' cols='12' md='8'>
+				<v-row align='center' class='ma-0 pa-0' justify='center'>
+					<v-col class='ma-0 pa-0' cols='auto' @click='toggle'>
+						<v-switch
+							v-model='arVal'
+							class='ma-0 pa-0'
+							color='primary'
+							density='compact'
+							:disabled='backupProcess'
+							label=''
+						>
+							<template #label>
 								<span class=''>Extra Two-Factor Authentication prompts</span>
 							</template>
 						</v-switch>
 					</v-col>
 				</v-row>
-				<v-row class='ma-0 pa-0 mt-n4' align='center' justify='center'>
-					<v-col cols='12' class='ma-0 pa-0'>
+				<v-row align='center' class='ma-0 pa-0 mt-n4' justify='center'>
+					<v-col class='ma-0 pa-0' cols='12'>
 						When enabled, a Two Factor Authentication token will be required at all password prompts.
 						Otherwise, a Two
 						Factor Authentication token will only be required at login.
@@ -25,76 +31,76 @@
 </template>
 
 <script setup lang='ts'>
-import { axios_authenticatedUser } from '@/services/axios';
-import { dialoger } from '@/services/dialog';
-import { mdiDeleteCircle } from '@mdi/js';
-import { snackSuccess } from '@/services/snack';
-import type { PV, TAuthObject } from '@/types';
+import type { PV, TAuthObject } from '@/types'
+import { mdiDeleteCircle } from '@mdi/js'
+import { axios_authenticatedUser } from '@/services/axios'
+import { dialoger } from '@/services/dialog'
+import { snackSuccess } from '@/services/snack'
 
-const arVal = ref(false);
+const arVal = ref(false)
 
 onMounted(() => {
-	arVal.value = always_required.value;
-});
+	arVal.value = always_required.value
+})
 
 const always_required = computed({
 	get (): boolean {
-		return twoFAModule().alwaysRequired;
+		return twoFAModule().alwaysRequired
 	},
 	set (b: boolean): void {
-		twoFAModule().set_alwaysRequired(b);
-	}
-});
+		twoFAModule().set_alwaysRequired(b)
+	},
+})
 
 watch(always_required, () => {
-	arVal.value = always_required.value;
-});
+	arVal.value = always_required.value
+})
 
 watch(arVal, () => {
-	arVal.value = always_required.value;
-});
+	arVal.value = always_required.value
+})
 
-const backupProcess = computed(() => twoFAModule().backupProcess);
+const backupProcess = computed(() => twoFAModule().backupProcess)
 const loading = computed({
 	get (): boolean {
-		return loadingModule().loading;
+		return loadingModule().loading
 	},
 	set (b: boolean): void {
-		loadingModule().set_loading(b);
-	}
-});
+		loadingModule().set_loading(b)
+	},
+})
 
-const confirm_function = async (authObject: TAuthObject): PV => {
-	loading.value = true;
+async function confirm_function (authObject: TAuthObject): PV {
+	loading.value = true
 	const success = await axios_authenticatedUser.setupTwoFA_patch({
 		...authObject,
-		always_required: false
-	});
+		always_required: false,
+	})
 	if (success) snackSuccess({
 		message: 'extra two-factor authentication prompts removed',
-		icon: mdiDeleteCircle
-	});
-	loading.value = false;
-};
+		icon: mdiDeleteCircle,
+	})
+	loading.value = false
+}
 
-const show_dialog = (): void => {
+function show_dialog (): void {
 	dialoger({
 		message: 'are you sure you want to remove the extra two-factor authentication prompts?',
 		buttonText: 'confirm',
 		title: 'Confirm',
 		passwordRequired: true,
-		confirmFunction: confirm_function
-	});
-};
+		confirmFunction: confirm_function,
+	})
+}
 
-const toggle = async (): PV => {
-	if (!always_required.value) {
-		loading.value = true;
-		const success = await axios_authenticatedUser.setupTwoFA_patch({ always_required: true });
-		if (success) snackSuccess({ message: 'extra two-factor authentication prompts enabled' });
-		loading.value = false;
+async function toggle (): PV {
+	if (always_required.value) {
+		show_dialog()
 	} else {
-		show_dialog();
+		loading.value = true
+		const success = await axios_authenticatedUser.setupTwoFA_patch({ always_required: true })
+		if (success) snackSuccess({ message: 'extra two-factor authentication prompts enabled' })
+		loading.value = false
 	}
-};
+}
 </script>

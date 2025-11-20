@@ -1,36 +1,21 @@
-/* eslint-disable @typescript-eslint/consistent-type-definitions */
-// Components
-import App from './App.vue';
-import { createPinia } from 'pinia';
+import { createHead } from '@vueuse/head'
 
-// Composables
-import { createApp } from 'vue';
-import vuetify from './plugins/vuetify';
-import router from './router';
-import { createHead } from '@vueuse/head';
-import piniaPluginPersistedstate from 'pinia-plugin-persistedstate';
-import { markRaw } from 'vue';
-import type { Router } from 'vue-router';
+import { createPinia } from 'pinia'
+import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
+import App from './App.vue'
+import vuetify from './plugins/vuetify'
+import router from './router'
 
-const app = createApp(App);
-const head = createHead();
+const app = createApp(App)
+const head = createHead()
 
-declare module 'pinia' {
-	export interface Pinia { router: () => Router }
-	export interface PiniaCustomProperties { router: Router }
-}
+const pinia = createPinia()
 
-const pinia = createPinia();
-pinia.use(({ store }) => {
-	store.router = markRaw(router);
-});
-pinia.router = (): Router => router;
+pinia.use(piniaPluginPersistedstate)
 
-pinia.use(piniaPluginPersistedstate);
-
-app.
-	use(head).
-	use(router).
-	use(vuetify).
-	use(pinia).
-	mount('#mealpedant_app');
+app
+	.use(head)
+	.use(router)
+	.use(vuetify)
+	.use(pinia)
+	.mount('#mealpedant_app')

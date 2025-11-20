@@ -24,12 +24,10 @@
 				"christian-kohler.path-intellisense",
 				"dbaeumer.vscode-eslint",
 				"citreae535.sparse-crates",
-				"foxundermoon.shell-format",
 				"gruntfuggly.todo-tree",
 				"meganrogge.template-string-converter",
 				"mutantdino.resourcemonitor",
 				"tamasfe.even-better-toml",
-				"timonwong.shellcheck",
 				"redhat.vscode-yaml",
 				"vue.volar",
 				"yoavbls.pretty-ts-errors"
