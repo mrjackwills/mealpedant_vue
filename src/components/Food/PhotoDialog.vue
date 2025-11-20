@@ -22,9 +22,7 @@
 				<v-img
 					v-show='false'
 					alt='cached photo'
-					class='grey darken-4'
 					eager
-					max-height='0'
 					:src='`${item}`'
 				/>
 			</template>

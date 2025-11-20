@@ -518,7 +518,6 @@ export const mealModule = defineStore(ModuleName.Meal, {
 		add_date_meal (filtered_date_meals: Map<string, BothTPersonFood>, meal: DateMeal, person: TPersonVal) {
 			const exists = filtered_date_meals.get(meal.date)
 			if (meal.Jack) {
-				// TODO Use a type here or object const
 				if (exists) {
 					exists.Jack = meal.Jack
 				} else if (person === TPerson.JACK) {

@@ -124,6 +124,7 @@ watch(is_filtered, (i: boolean) => {
 
 const init = ref(false)
 
+const seedInterval = ref(0)
 onBeforeMount(async () => {
 	loadingModule().set_loading(true)
 	await mealStorage.seed_meal_pinia()
@@ -136,6 +137,14 @@ onBeforeMount(async () => {
 	if (mealStore.search_by.term) browserModule().set_pageTitle(mealStore.search_by.term)
 	loadingModule().set_loading(false)
 	init.value = true
+	/// TODO fix this when the meals are currently filtered
+	seedInterval.value = setInterval(async () => {
+		await mealStorage.seed_meal_pinia()
+	}, 1000 * 60)
+})
+
+onBeforeUnmount(() => {
+	clearInterval(seedInterval.value)
 })
 
 const show_filters = computed({

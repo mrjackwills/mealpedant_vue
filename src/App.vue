@@ -47,11 +47,13 @@ function check_pwa (): void {
 		})
 	}
 }
+const service_interval = ref(0)
 
 onBeforeMount(async () => {
 	check_pwa()
 	await axios_incognito.online_get()
 	init.value = true
+	service_interval.value = setInterval(check_pwa, 1000 * 60 * 60)
 })
 
 watch(isSwiping, (i: boolean) => {

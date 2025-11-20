@@ -79,7 +79,6 @@
 							<v-img
 								v-if='(item.file_name_converted)'
 								alt='A photograph of a meal'
-								eager
 								lazy-src='@/assets/tile_svg.svg'
 								max-height='15rem'
 								:src='env.gen_photo_url(item.file_name_converted)'
@@ -132,7 +131,6 @@
 							<v-img
 								v-if='(item.file_name_converted)'
 								alt='A photograph of a meal'
-								eager
 								lazy-src='@/assets/tile_svg.svg'
 								max-height='15rem'
 								:src='env.gen_photo_url(item.file_name_converted)'
@@ -185,7 +183,6 @@
 							<v-img
 								v-if='(item.file_name_original)'
 								alt='A photograph of a meal'
-								eager
 								lazy-src='@/assets/tile_svg.svg'
 								max-height='15rem'
 								:src='env.gen_photo_url(item.file_name_original)'
@@ -277,7 +274,7 @@ onBeforeMount(async () => {
 	await get_data()
 })
 
-// // Delete an unused photo
+// Delete an unused photo
 async function deletePhoto (name: string): PV {
 	await axios_admin.photo_delete(name)
 	await get_data()
@@ -293,23 +290,33 @@ const photo_data = computed(() => adminModule().allPhotos)
 const totalOriginal = computed(() => photo_data.value.reduce((total, i) => total + (i.size_in_bytes_original ?? 0), 0))
 const totalConverted = computed(() => photo_data.value.reduce((total, i) => total + (i.size_in_bytes_converted ?? 0), 0))
 
-const totalJack = computed(() => photo_data.value.reduce((acc, { person, size_in_bytes_original = 0, size_in_bytes_converted = 0 }) => {
-	if (person === TPerson.JACK) {
-		if (acc[0]) acc[0] += size_in_bytes_original ?? 0
-		if (acc[1]) acc[1] += size_in_bytes_converted ?? 0
-		if (acc[2]) acc[2] += 1
-	}
-	return acc
-}, [0, 0, 0]))
+const totalJack = computed(() =>
+	photo_data.value.reduce<[number, number, number]>(
+		(acc, { person, size_in_bytes_original = 0, size_in_bytes_converted = 0 }) => {
+			if (person === TPerson.JACK) {
+				acc[0] += size_in_bytes_original ?? 0
+				acc[1] += size_in_bytes_converted ?? 0
+				acc[2] += 1
+			}
+			return acc
+		},
+		[0, 0, 0],
+	),
+)
 
-const totalDave = computed(() => photo_data.value.reduce((acc, { person, size_in_bytes_original = 0, size_in_bytes_converted = 0 }) => {
-	if (person === TPerson.DAVE) {
-		if (acc[0]) acc[0] += size_in_bytes_original ?? 0
-		if (acc[1]) acc[1] += size_in_bytes_converted ?? 0
-		if (acc[2]) acc[2] += 1
-	}
-	return acc
-}, [0, 0, 0]))
+const totalDave = computed(() =>
+	photo_data.value.reduce<[number, number, number]>(
+		(acc, { person, size_in_bytes_original = 0, size_in_bytes_converted = 0 }) => {
+			if (person === TPerson.DAVE) {
+				acc[0] += size_in_bytes_original ?? 0
+				acc[1] += size_in_bytes_converted ?? 0
+				acc[2] += 1
+			}
+			return acc
+		},
+		[0, 0, 0],
+	),
+)
 
 const init = ref(false)
 
