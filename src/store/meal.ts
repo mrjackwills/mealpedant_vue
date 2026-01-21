@@ -54,8 +54,8 @@ function uncompress_meals (input: c_MealInfo): MealInfo | undefined {
 				const dave: TPersonFood = {
 					meal_description_id: i.d.m,
 					meal_category_id: i.d.c,
+					restaurant: i.d.r,
 				}
-				dave.restaurant = i.d.r
 				if (i.d.v) {
 					dave.vegetarian = i.d.v
 				}

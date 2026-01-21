@@ -78,7 +78,6 @@ export default defineConfig({
 				preload: true,
 				injectTo: 'head-prepend',
 			},
-
 		}),
 		// vueDevTools(),
 		VitePWA(pwaOptions),
