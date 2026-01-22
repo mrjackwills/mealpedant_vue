@@ -27,7 +27,7 @@
 
 		<template #headers='{ columns, isSorted, getSortIcon, toggleSort }'>
 			<tr v-if='tableData.length > 0' class='header_bg' style='height:10px!important'>
-				<template v-for='column in columns' :key='column.key'>
+				<template v-for='column in columns' :key='`${column.key}`'>
 					<td
 						class='unselectable ma-0 pa-0'
 						:class='{ "cl": column.sortable }'
@@ -250,15 +250,14 @@ const filteredDays = computed(() => mealStore.filtered_date_meals.length)
 
 const authenticated = computed(() => userModule().authenticated)
 const headers = computed(() => {
-	const headers = []
-	headers.push({
+	const headers = [{
 		align: 'start' as const,
 		class: '',
 		sortable: true,
 		title: 'Date',
 		key: 'date',
 		width: '10%',
-	})
+	}]
 	if (show_dave.value) headers.push({
 		align: 'start' as const,
 		class: 'dave-header',
