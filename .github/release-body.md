@@ -1,16 +1,13 @@
-### 2025-11-20
+### 2026-01-22
 
 ### Chores
-+ dependencies updated, [b821415e38c6bcc80e418fdafecf7ae9e0b0019c], [f438a628f85011652120304d568b553978d3637d]
-+ linting, [cc582a6cdf12acdbe874ebb63d3e528163a3507b]
-+ use const object instead of "Jack" & "Dave", [3d7b35615dce4be6795178942c395adf3ceebb4e], [c204aa3e50c06d0102b4ebb8118082b24d87d822]
++ dependencies updated, [6d74fa88e728453d2b96d01fca0ee2545093846b], [bf7c304c6c9f4d64ba95eeae9cb1ec209979f7b6]
++ linting fix, [b94e9c11b6d2bfd29d2be7251f9ea07d1fa5f21d]
 
 ### Features
-+ use a photo cache to preload images, [0884032204c121338cc463f8af9c9996cc4fb0e4]
-+ use webp and cache, [c0cd54d94943203ff4035b65748b63a3ddff118a]
++ meta tags for link previews, [12f3ef234980b436fd888c7c9b0d9595f2f627ea]
 
-### Fixes
-+ footer github link typo, [a8c88dba4f841deaca3c906b2157d9869c6c7d15]
-+ update structured data schema, [191dd2396692d4bc5dad8c815a814f5ab38f75d1]
+### Reverts
++ remove MealView auto update, [b921c271841cd24e3fd97acf48c26a02af957fa0]
 
 see <a href='https://github.com/mrjackwills/mealpedant_vue/blob/main/CHANGELOG.md'>CHANGELOG.md</a> for more details
