@@ -14,11 +14,11 @@
 				:indeterminate='loading'
 				width='100%'
 			/>
-			<v-card-title class='text-mealtype text-uppercase text-h6'>{{ title }}</v-card-title>
+			<v-card-title class='text-mealtype text-uppercase text-headline-small'>{{ title }}</v-card-title>
 			<v-card-text class=''>{{ message }}</v-card-text>
 
 			<section v-if='passwordRequired || twoFA_always_required'>
-				<v-row align='center' class='ma-0 pa-0 mt-n4' justify='center'>
+				<v-row class='ma-0 pa-0 mt-n4 justify-center'>
 					<v-col class='ma-0 pa-0' cols='11' lg='6' md='9'>
 						<v-form autocomplete='off' @submit.prevent>
 
@@ -62,9 +62,9 @@
 			</section>
 
 			<v-card-actions>
-				<v-row align='center' class='ma-0 pa-0 mb-2' justify='center'>
+				<v-row class='ma-0 pa-0 mb-2 justify-center align-center'>
 					<v-col class='ma-0 pa-0' cols='12' md='8'>
-						<v-row align='center' class='ma-0 pa-0' justify='space-around'>
+						<v-row class='ma-0 pa-0 justify-space-around align-center'>
 							<v-col class='ma-0 pa-0 text-center' cols='6'>
 								<v-btn
 									color='error'

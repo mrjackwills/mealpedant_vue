@@ -3,17 +3,16 @@
 		id='footer'
 		absolute
 		app
-		class='ma-0 pa-0'
+		class='ma-0 pa-0 order-3'
 		color='transparent'
 		name='footer'
-		:order='3'
 	>
-		<v-row align='center' class='no-gutters ma-0 pa-0' justify='center'>
+		<v-row class='ma-0 pa-0 justify-center' density='compact'>
 
-			<v-col class='no-gutters unselectable ma-0 pa-0 my-2' cols='auto'>
+			<v-col class='unselectable ma-0 pa-0 my-2' cols='auto' density='compact'>
 
 				<v-chip
-					class='smalltext'
+					class=''
 					color='offwhite'
 					density='compact'
 					:ripple='false'
@@ -21,14 +20,14 @@
 					variant='flat'
 				>
 					<section v-if='showBuild' class='' @click='buildInfo'>
-						<span class='smalltext'>site: {{ env.app_version }}</span>
-						<span class='smalltext ml-1'>built: {{ env.build_date }}</span>
-						<span class='smalltext ml-1'>api: {{ apiVersion }}</span>
+						<span class=''>site: {{ env.app_version }}</span>
+						<span class=' ml-1'>built: {{ env.build_date }}</span>
+						<span class=' ml-1'>api: {{ apiVersion }}</span>
 					</section>
 
 					<section v-else>
-						<!-- <a :href target='_blank' rel='noopener noreferrer' class='text-caption'> -->
-						<a class='text-caption' href='https://www.github.com/mrjackwills' rel='noopener noreferrer' target='_blank'>
+						<!-- <a :href target='_blank' rel='noopener noreferrer' class='text-body-small'> -->
+						<a class='text-body-small text-black' href='https://www.github.com/mrjackwills' rel='noopener noreferrer' target='_blank'>
 							<v-icon class='mr-2' color='black' href='' :icon='mdiGithub' />
 						</a>
 						<span class='' @click='buildInfo'>

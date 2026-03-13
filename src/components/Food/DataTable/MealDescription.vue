@@ -1,9 +1,8 @@
 <template>
 	<v-col
-		class='ma-0 pa-0'
+		class='ma-0 pa-0 justify-start'
 		:class='computedFont'
 		cols='12'
-		justify='start'
 		@mouseover='loadPhoto'
 	>
 		<router-link v-if='admin' :class='[categoryColor, { "cl": admin }]' :to='editHref'> {{ formatCategoryName(category) }}</router-link>
@@ -27,26 +26,25 @@
 	<v-col class='ma-0 pa-0' :class='computedFont' cols='12'>
 		{{ formatDescription(description) }}
 	</v-col>
-	<v-col v-if='photo?.converted' align='self-end' class='ma-0 pa-0' cols='12'>
+	<v-col v-if='photo?.converted' class='align-self-end ma-0 pa-0' cols='12'>
 		<v-chip
 			v-intersect='onIntersect'
-			class='ma-0 pa-0 mt-1 mb-2 px-2'
+			class='ma-0 pa-0 mt-1 mb-2 px-1'
 			color='mealtype'
 			density='compact'
 			size='small'
 			variant='flat'
 			@click='showPhoto'
 		>
-			<v-row align='center' class='ma-0 pa-0' justify='center'>
-				<v-col class='ma-0 pa-0 mr-1' cols='auto'>
+			<v-row class='ma-0 pa-0 justify-center align-center' density='compact'>
+				<v-col class='ma-0 pa-0' cols='auto'>
 					<v-icon
 						color='black'
 						:icon='mdiCamera'
 						:size='smAndDown?"x-small":"small"'
-						style='vertical-align: middle;'
 					/>
 				</v-col>
-				<v-col class='ma-0 pa-0 text-black text-caption' :class='computedFont' cols='auto'>
+				<v-col class='ma-0 pa-0 text-black text-body-small' :class='computedFont' cols='auto'>
 					view
 				</v-col>
 			</v-row>
@@ -65,7 +63,7 @@ const { mdAndDown, smAndDown } = useDisplay()
 const admin = computed(() => userModule().admin)
 const category = computed(() => mealModule().get_category_by_id(props.mealCategoryId))
 const categoryColor = computed(() => props.person === TPerson.DAVE ? 'text-primary ' : 'text-secondary')
-const computedFont = computed(() => mdAndDown ? '' : 'text-body-1')
+const computedFont = computed(() => mdAndDown ? '' : 'text-body-large')
 const description = computed(() => mealModule().get_description_by_id(props.mealDescriptionId))
 const formatDescription = (description: string): string => `${description.slice(0, 1).toUpperCase()}${description.slice(1)}`
 const mealViewStore = mealViewModule()

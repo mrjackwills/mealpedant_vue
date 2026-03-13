@@ -9,10 +9,6 @@
 
 $snackbar-action-margin : 0px !important;
 
-.v-btn {
-	text-transform: lowercase !important;
-}
-
 .mono-num {
 	font-variant-numeric: tabular-nums;
 }
@@ -21,6 +17,7 @@ html,
 .v-snackbar__content,
 [class*='text-'] {
 	font-family: 'Hammersmith One', sans-serif !important;
+	// color: white;
 }
 
 .v-progress-linear__bar__indeterminate--active .short,

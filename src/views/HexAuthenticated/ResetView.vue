@@ -1,9 +1,9 @@
 <template>
-	<v-container class='fill-height' fluid>
-		<v-row align='center' justify='center' wrap>
+	<v-container class='' fluid>
+		<v-row class='justify-center' wrap>
 			<v-col cols='12' md='9'>
 				<p class='text-center mb-2' :class='fontSize'>Please enter a new password</p>
-				<v-row align='center' justify='center' wrap>
+				<v-row class='justify-center' wrap>
 					<v-col cols='12' md='5' sm='8'>
 						<v-form method='post' @submit.prevent>
 							<v-text-field
@@ -40,6 +40,7 @@
 									:label='item.label'
 									:prepend-inner-icon='item.icon'
 									required
+									variant='underlined'
 									@blur='touch(item.model)'
 									@input='touch(item.model)'
 								/>
@@ -83,7 +84,7 @@ onBeforeUnmount(() => {
 })
 
 const disabled = computed(() => twoFA_active.value && !user.value.token)
-const fontSize = computed(() => mdAndDown.value ? 'text-subtitle-1' : 'text-h5')
+const fontSize = computed(() => mdAndDown.value ? 'text-body-large' : 'text-headline-medium')
 
 const loading = computed({
 	get (): boolean {

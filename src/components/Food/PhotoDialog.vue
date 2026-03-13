@@ -29,40 +29,38 @@
 			<v-card-actions>
 
 				<v-container class='ma-0 pa-0' fluid>
-					<v-row align='center' class='no-gutters ma-0 pa-0 mx-2' justify='space-around'>
+					<v-row class='ma-0 pa-0 justify-space-around align-center' density='compact'>
 
-						<v-col class='pa-0 ma-0' cols='1'>
+						<v-col class='pa-0 ma-0 text-center' cols='1'>
 							<v-chip
 								v-if='authenticated'
-								align='center'
-								class=''
+								class='align-center ma-0 pa-0'
 								color='mealtype'
 								density='compact'
 								size='small'
 								variant='flat'
 								@click='downloadOriginalFromStatic'
 							>
-								<v-icon class='rotated' :icon='mdiPublish' size='small' style='vertical-align: middle' />
+								<v-icon class='rotated ma-0 pa-0 ma-2' :icon='mdiPublish' size='small' />
 							</v-chip>
 						</v-col>
 
-						<v-col class='ma-0 pa-0 text-body-2 text-center' cols='10'>
+						<v-col class='ma-0 pa-0 text-body-medium text-center' cols='10'>
 							<span class='text-red-lighten-4 mr-1'>{{ photoDate }}</span>
 							<span class='text-uppercase'>{{ mealDescription.slice(0, 1) }}</span>
 							<span>{{ mealDescription.slice(1) }}</span>
 						</v-col>
 
-						<v-col align='center' class='pa-0 ma-0 text-right' cols='1'>
+						<v-col class='align-center pa-0 ma-0 text-center' cols='1'>
 							<v-chip
-								align='center'
-								class=''
+								class='align-center ma-0 pa-0'
 								color='error'
 								density='compact'
 								size='small'
 								variant='flat'
 								@click.stop='closeDialog'
 							>
-								<v-icon class='ma-0 pa-0' :icon='mdiClose' size='small' />
+								<v-icon class='ma-0 pa-0 ma-2' :icon='mdiClose' size='small' />
 							</v-chip>
 						</v-col>
 

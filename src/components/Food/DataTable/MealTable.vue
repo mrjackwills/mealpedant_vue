@@ -11,16 +11,13 @@
 		:items='tableData'
 		no-data-text='no meals'
 	>
-		<template v-if='!authenticated && showInfo' #top='{ }'>
-			<v-row ref='infobar' align='center' class='bg-infobar ma-0 pa-0 fill-height unselectable' justify='center'>
+		<template v-if='!authenticated' #top='{ }'>
+			<v-row ref='infobar' class='bg-infobar ma-0 pa-0 fill-height unselectable justify-center align-center'>
 				<v-col class='ma-0 pa-0 text-center' cols='1' md='auto'>
 					<v-icon :icon='mdiInformation' :size='smAndDown?"x-small":"small"' />
 				</v-col>
-				<v-col class='ma-0 pa-0 px-2 text-center' :class='{ "smalltext": smAndDown }' cols='10' md='auto'>
+				<v-col class='ma-0 pa-0 px-2 text-center mt-md-1' :class='{ "smalltext": smAndDown }' cols='10' md='auto'>
 					Access to both datasets requires registration
-				</v-col>
-				<v-col class='ma-0 pa-0 cl text-center' cols='1' md='auto' @click='showInfo=false'>
-					<v-icon :icon='mdiClose' :size='smAndDown?"x-small":"small"' />
 				</v-col>
 			</v-row>
 		</template>
@@ -47,17 +44,21 @@
 		</template>
 
 		<template #[`item.date`]='{ item }'>
-			<v-row v-intersect='(entries: boolean) => onIntersect(entries, item.date)' align='start' class='no-gutters ma-0 pa-0 text-red-lighten-4 py-2' justify='start'>
-				<v-col class='pa-0 ma-0 ml-1' :class='computedDateFont' cols='12'>
+			<v-row
+				v-intersect='(entries: boolean) => onIntersect(entries, item.date)'
+				class='ma-0 pa-0 text-red-lighten-4 justify-start align-start'
+				density='compact'
+			>
+				<v-col class='pa-0 ma-0 ml-1' :class='computedDateFont' cols='12' density='compact'>
 					{{ filteredDay(item.date) }}
 				</v-col>
-				<v-col class='pa-0 ma-0 ml-1' :class='computedDateFont' cols='12'>
+				<v-col class='pa-0 ma-0 ml-1 mt-n2' :class='computedDateFont' cols='12' density='compact'>
 					{{ filteredDate(item.date) }}
 				</v-col>
-				<v-col class='pa-0 ma-0 ml-1' :class='computedDateFont' cols='12'>
+				<v-col class='pa-0 ma-0 ml-1 mt-n2' :class='computedDateFont' cols='12' density='compact'>
 					{{ filteredYear(item.date) }}
 				</v-col>
-				<v-col class='pa-0 ma-0 ml-1' :class='computedDateFont' cols='12'>
+				<v-col class='pa-0 ma-0 ml-1 mt-n2 mb-2' :class='computedDateFont' cols='12' density='compact'>
 					day: {{ filteredDayNumber(item.date) }}
 				</v-col>
 			</v-row>
@@ -94,7 +95,7 @@
 		</template>
 
 		<template #no-data>
-			<v-row class='' justify='center'>
+			<v-row class=' justify-center'>
 				<v-col class='text-center mt-4' cols='12'>
 					<span class='text-white'>No meals found with current filters</span>
 				</v-col>
@@ -107,7 +108,7 @@
 		</template>
 
 		<template #bottom>
-			<v-row align='center' class='ma-0 pa-0 my-2 mx-4' :class='{ "smalltext": smAndDown }' justify='space-around'>
+			<v-row class='ma-0 pa-0 my-2 mx-4 justify-space-around' :class='{ "smalltext": smAndDown }'>
 
 				<v-col class='ma-0 pa-0' cols='5'>
 					<span>total: </span>
@@ -115,7 +116,7 @@
 				</v-col>
 
 				<v-col class='ma-0 pa-0 text-center' cols='2'>
-					<v-row align='center' class='ma-0 pa-0 no-gutters' justify='space-around'>
+					<v-row class='ma-0 pa-0 justify-space-around' density='compact'>
 
 						<v-col class='ma-0 pa-0 text-center' cols='auto'>
 							<v-chip
@@ -163,7 +164,8 @@
 </template>
 
 <script setup lang='ts'>
-import { mdiArrowCollapseDown, mdiArrowCollapseUp, mdiClose, mdiInformation, mdiSwapVertical } from '@mdi/js'
+import { mdiArrowCollapseDown, mdiArrowCollapseUp, mdiInformation, mdiSwapVertical } from '@mdi/js'
+import { useElementSize } from '@vueuse/core'
 import { useDisplay, useLayout } from 'vuetify'
 import { VRow } from 'vuetify/components'
 import { type DateMeal, TPerson } from '@/types'
@@ -172,15 +174,6 @@ const { smAndDown, mdAndDown } = useDisplay()
 const mealStore = mealModule()
 
 const { getLayoutItem } = useLayout()
-
-const showInfo = computed({
-	get (): boolean {
-		return mealViewModule().showInfo
-	},
-	set (b: boolean): void {
-		mealViewModule().set_showInfo(b)
-	},
-})
 
 const first_date = computed(() => tableData.value[0]?.date)
 const last_date = computed(() => tableData.value.at(-1)?.date)
@@ -220,7 +213,10 @@ const has_filter = computed(() => mealStore.is_filtered)
 
 const size = computed(() => mealViewModule().tableHeight)
 
-const tableHeight = computed(() => `${size.value}px`)
+const el = useTemplateRef('infobar')
+
+const { height: infobar_height } = useElementSize(el)
+const tableHeight = computed(() => `${size.value - infobar_height.value}px`)
 
 const props = defineProps<{ slotHeight: number }>()
 
@@ -228,16 +224,9 @@ watch(() => props.slotHeight, () => {
 	calc_table_height()
 })
 
-const infobar = ref(null as null | VRow)
-const infobar_height = ref(0)
-
-onMounted(() => {
-	if (infobar.value) infobar_height.value = infobar.value.$el.clientHeight
-})
-
-// / Calculate the table height based on inner window height, table location, and footer size
+// Calculate the table height based on inner window height, table location, and footer size
 function calc_table_height (): void {
-	const suffix = 1.35
+	const suffix = 1.45
 	const new_size = window.innerHeight - props.slotHeight - footer_height() * suffix - header_height() * suffix - infobar_height.value
 	if (new_size > size.value) mealViewModule().set_table_height(new_size)
 }

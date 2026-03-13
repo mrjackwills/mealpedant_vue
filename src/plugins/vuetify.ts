@@ -20,6 +20,12 @@ const customDarkTheme: ThemeDefinition = {
 }
 
 export default createVuetify({
+	defaults: {
+		VRow: {
+			density: 'compact',
+			// class: 'align-center',
+		},
+	},
 	icons: {
 		defaultSet: 'mdi',
 		aliases,

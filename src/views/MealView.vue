@@ -1,6 +1,6 @@
 <template>
 	<v-expand-transition>
-		<v-row v-if='init' class='ma-0 pa-0 min-height' justify='center'>
+		<v-row v-if='init' class='ma-0 pa-0 min-height justify-center'>
 			<v-col class='ma-0 pa-0' cols='11'>
 				<section v-if='is_admin'>
 					<InfoBar
@@ -10,14 +10,15 @@
 						:message='item.message'
 					/>
 				</section>
+
 				<section ref='upper_section'>
 
 					<section v-if='lgAndUp' class='mt-4 ma-0 pa-0'>
-						<v-row class='no-gutters' justify='center'>
+						<v-row class='justify-center' density='compact'>
 							<SelectorButton class='ma-0 pa-0' />
 						</v-row>
 
-						<v-row align='center' class='pa-0 ma-0 mt-n8' justify='center'>
+						<v-row class='pa-0 ma-0 mt-n8 justify-center'>
 							<v-col class='ma-0 pa-0' cols='7'>
 								<DateRow />
 							</v-col>
@@ -30,34 +31,34 @@
 
 					<section v-if='!lgAndUp'>
 
-						<v-row align='center' class='ma-0 pa-0' justify='center'>
+						<v-row class='ma-0 pa-0 justify-center' density='compact'>
 							<v-col class='ma-0 pa-0 py-0' cols='12'>
 								<GenericButton button-name='search' />
 							</v-col>
 
-							<v-col class='ma-0 pa-0 py-0' cols='12'>
+							<v-col class='ma-0 pa-0 py-0 mt-n2' cols='12'>
 								<v-expand-transition>
-									<v-row v-if='show_search' class='ma-0 pa-0 py-0' justify='center'>
+									<v-row v-if='show_search' class='ma-0 pa-0 py-0 justify-center'>
 										<SelectorButton />
 									</v-row>
 								</v-expand-transition>
 							</v-col>
 
-							<v-col class='ma-0 pa-0 py-0' cols='12'>
+							<v-col class='ma-0 pa-0 py-0 mt-n2' cols='12'>
 								<GenericButton button-name='date' />
 							</v-col>
 
-							<v-col class='pa-0' cols='12'>
+							<v-col class='pa-0 mt-n2' cols='12'>
 								<v-expand-transition>
 									<DateRow v-if='foodDate' />
 								</v-expand-transition>
 							</v-col>
 
-							<v-col class='ma-0 pa-0 py-0' cols='12'>
+							<v-col class='ma-0 pa-0 py-0 mt-n2' cols='12'>
 								<GenericButton button-name='filters' />
 							</v-col>
 
-							<v-col class='pa-0' cols='12'>
+							<v-col class='pa-0 mt-n2' cols='12'>
 								<v-expand-transition>
 									<FilterButtons v-if='show_filters' class='' />
 								</v-expand-transition>
@@ -66,13 +67,13 @@
 
 					</section>
 
-					<v-row align='center' class='ma-0 pa-0' justify='center'>
+					<v-row class='ma-0 pa-0 justify-center'>
 						<v-col class='ma-0 pa-0 py-0' cols='12'>
 							<GenericButton button-name='analysis' />
 						</v-col>
 					</v-row>
 					<v-expand-transition>
-						<v-row v-show='show_analysis' align='center' class='ma-0 pa-0' justify='center'>
+						<v-row v-show='show_analysis' class='ma-0 pa-0 justify-center'>
 							<v-col class='ma-0 pa-0' cols='12' md='11'>
 								<AnalysisSection />
 							</v-col>
@@ -81,7 +82,7 @@
 
 				</section>
 
-				<v-row align='center' class='ma-0 pa-0' justify='center'>
+				<v-row class='ma-0 pa-0 justify-center'>
 					<v-col class='ma-0 pa-0' cols='12'>
 						<v-expand-transition>
 							<MealTable :slot-height />

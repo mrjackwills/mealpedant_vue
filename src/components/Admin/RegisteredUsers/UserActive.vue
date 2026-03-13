@@ -1,5 +1,5 @@
 <template>
-	<v-row align='center' class='ma-0 pa-0' justify='start'>
+	<v-row class='ma-0 pa-0 justify-start'>
 		<v-col class='ma-0 pa-0' cols='auto'>
 			<v-switch
 				v-model='newActive'
@@ -11,7 +11,7 @@
 		</v-col>
 	</v-row>
 	<v-expand-x-transition>
-		<v-row align='center' class='ma-0 pa-0' justify='start'>
+		<v-row class='ma-0 pa-0 justify-start'>
 			<v-col v-if='showSave' class='ma-0 pa-0 heartbeat' cols='auto'>
 				<v-btn
 					class='ma-0 pa-0'

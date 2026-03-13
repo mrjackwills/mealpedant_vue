@@ -1,5 +1,5 @@
 <template>
-	<v-row class='ma-0 pa-0' justify='start'>
+	<v-row class='ma-0 pa-0 justify-start'>
 		<v-col class='ma-0 pa-0' :class='[{ "ml-8": mdAndUp }, headingSize]' cols='auto'>
 			Two Factor Authentication
 		</v-col>
@@ -38,7 +38,7 @@ const active = computed(() => twoFAStore.active)
 const backupText = computed(() => backup_count.value > 0 ? `Backups enabled - ${backup_count.value} remaining` : 'Backup tokens not enabled')
 const backup_count = computed(() => twoFAStore.backup_count)
 const backupProcess = computed(() => twoFAStore.backupProcess)
-const headingSize = computed(() => mdAndDown.value ? 'text-h5' : 'text-h4')
+const headingSize = computed(() => mdAndDown.value ? 'text-headline-medium' : 'text-headline-large')
 const loading = computed({
 	get (): boolean {
 		return loadingModule().loading

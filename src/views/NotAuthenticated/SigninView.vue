@@ -1,6 +1,6 @@
 <template>
-	<v-container class='fill-height' fluid>
-		<v-row align='center' justify='center'>
+	<v-container class='' fluid>
+		<v-row class='justify-center'>
 			<v-col cols='12' md='4' sm='8'>
 				<v-form v-if='!twoFARequired' method='post' @submit.prevent>
 					<v-text-field
@@ -23,7 +23,7 @@
 				</v-form>
 
 				<v-expand-transition>
-					<v-row v-if='twoFARequired' class='ma-0 pa-0' justify='center'>
+					<v-row v-if='twoFARequired' class='ma-0 pa-0 justify-center'>
 						<v-col class='ma-0 pa-0' cols='12' md='9'>
 							<v-text-field
 								v-model='user.token'
@@ -42,7 +42,7 @@
 					</v-row>
 				</v-expand-transition>
 
-				<v-row align='center' class='ma-0 pa-0' :class='twoFARequired?"mt-4":"mt-n4"' justify='space-around'>
+				<v-row class='ma-0 pa-0 justify-space-around align-center' :class='twoFARequired?"mt-4":"mt-n4"'>
 
 					<v-col class='ma-0 pa-0 text-center' cols='auto'>
 						<v-btn
@@ -86,7 +86,7 @@
 
 					<v-col v-if='!twoFARequired' class='text-center ma-0 pa-0' cols='12'>
 						<router-link
-							class='text-white text-right text-body-2 text-decoration-underline'
+							class='text-white text-right text-body-medium text-decoration-underline'
 							:to='localLoading?"":FrontEndRoutes.FORGOTPASSWORD'
 						>
 							forgot password

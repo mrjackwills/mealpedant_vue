@@ -1,8 +1,8 @@
 <template>
-	<v-row justify='center'>
-		<v-col cols='12' grow md='6' sm='8'>
+	<v-row class='justify-center'>
+		<v-col cols='12' md='6' sm='8'>
 			<v-form @submit.prevent>
-				<v-row class='no-gutters' justify='space-between' wrap>
+				<v-row class='justify-space-between' density='compact' wrap>
 					<v-col class='ma-0 pa-0' cols='9'>
 						<v-select
 							v-model='email.emails'
@@ -20,7 +20,7 @@
 							@input='touch(`emails`)'
 						/>
 					</v-col>
-					<v-col class='ma-0 pa-0 mt-4' cols='auto' justify='end'>
+					<v-col class='ma-0 pa-0 mt-4 justify-end' cols='auto'>
 						<v-switch
 							v-model='all'
 							color='primary'
@@ -50,7 +50,7 @@
 				</v-row>
 			</v-form>
 
-			<v-row justify='space-around'>
+			<v-row class='justify-space-around'>
 				<v-col class='mt-3' cols='auto'>
 					<div class='text-center'>
 						<v-btn

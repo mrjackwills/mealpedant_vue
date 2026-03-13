@@ -1,17 +1,17 @@
 <template>
 	<v-alert
 		id='offline_alert'
-		class='ma-0 pa-0 no-gutters'
+		class='ma-0 pa-0'
 		color='error'
+		density='compact'
 		height='40px'
 		tile
 		width='100%'
 	>
 		<v-row
 			app
-			class='error cl'
+			class='error cl justify-center'
 			color='error'
-			justify='center'
 			@click='goOnline'
 		>
 			<v-col class='' cols='auto'>

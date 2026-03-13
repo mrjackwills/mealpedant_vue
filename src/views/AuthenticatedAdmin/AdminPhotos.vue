@@ -1,20 +1,19 @@
 <template>
-	<v-container v-if='init' class='fill-height' fluid>
-		<v-row class='ma-0 pa-0' justify='space-around'>
-			<v-col class='ma-0 pa-0text-center' cols='12'>
-				<v-row class='ma-0 pa-0 bg-black' justify='space-around'>
+	<v-container v-if='init' class='' fluid>
+		<v-row class='ma-0 pa-0 justify-space-around'>
+			<v-col class='ma-0 pa-0 text-center' cols='12'>
+				<v-row class='ma-0 pa-0 bg-black justify-space-around'>
 					<v-col class='ma-0 pa-0 bg-black' cols='12'>
 
 						<v-row
 							v-for='(item, index) in totals'
 							:key='index'
-							class='ma-0 pa-0'
+							class='ma-0 pa-0 justify-space-around'
 							:class='{ "smalltext": mdAndDown }'
-							justify='space-around'
 						>
 
 							<v-col class='ma-0 pa-0' cols='3' md='2'>
-								<v-row class='ma-0 pa-0' justify='space-around'>
+								<v-row class='ma-0 pa-0 justify-space-around'>
 									<v-col :class='`ma-0 pa-0 text-left text-${item.class}`' cols='5'>
 										original:
 									</v-col>
@@ -25,7 +24,7 @@
 							</v-col>
 
 							<v-col class='ma-0 pa-0 text-center' cols='3' md='2'>
-								<v-row class='ma-0 pa-0' justify='space-around'>
+								<v-row class='ma-0 pa-0 justify-space-around'>
 									<v-col :class='`ma-0 pa-0 text-left text-${item.class}`' cols='5'>
 										converted:
 									</v-col>
@@ -36,7 +35,7 @@
 							</v-col>
 
 							<v-col class='ma-0 pa-0' cols='1'>
-								<v-row class='ma-0 pa-0' justify='space-around'>
+								<v-row class='ma-0 pa-0 justify-space-around'>
 									<v-col :class='`ma-0 pa-0 text-left text-${item.class}`' cols='5'>
 										#
 									</v-col>
@@ -51,11 +50,11 @@
 				</v-row>
 			</v-col>
 		</v-row>
-		<v-row class='ma-0 pa-0' justify='space-around'>
+		<v-row class='ma-0 pa-0 justify-space-around mt-2'>
 			<v-col
 				v-for='(item, index) in photo_data'
 				:key='index'
-				class='text-body-1 d-flex child-flex'
+				class='text-body-large d-flex child-flex'
 				cols='9'
 				lg='4'
 				sm='5'
@@ -67,7 +66,7 @@
 
 						<v-col class='ma-0 pa-0' cols='12'>
 							<span :class='item.person === "Dave" ? "text-primary" : "text-secondary"'>
-								<v-row class='ma-0 pa-0' justify='space-around'>
+								<v-row class='ma-0 pa-0 justify-space-around'>
 									<v-col class='ma-0 pa-0 cl' cols='auto'>
 										<a :href='editHref(item)'>{{ item.meal_date }} {{ item.person }}</a>
 									</v-col>
@@ -87,7 +86,7 @@
 
 						<v-col class='ma-0 pa-0' cols='12'>
 							<span :class='item.person === "Dave" ? "text-primary" : "text-secondary"'>
-								<v-row class='ma-0 pa-0' justify='space-around'>
+								<v-row class='ma-0 pa-0 justify-space-around'>
 									<v-col class='ma-0 pa-0 cl' cols='auto'>
 										<a
 											v-if='item.file_name_converted'
@@ -119,7 +118,7 @@
 
 						<v-col class='ma-0 pa-0' cols='12'>
 							<span class='text-mealtype'>
-								<v-row class='ma-0 pa-0' justify='space-around'>
+								<v-row class='ma-0 pa-0 justify-space-around'>
 									<v-col class='ma-0 pa-0 cl' cols='auto'>
 										unused
 									</v-col>
@@ -139,7 +138,7 @@
 
 						<v-col class='ma-0 pa-0' cols='12'>
 							<span class='text-mealtype'>
-								<v-row class='ma-0 pa-0' justify='space-around'>
+								<v-row class='ma-0 pa-0 justify-space-around'>
 									<v-col class='ma-0 pa-0 cl' cols='auto'>
 										<a
 											v-if='item.file_name_converted'
@@ -171,7 +170,7 @@
 
 						<v-col class='ma-0 pa-0' cols='12'>
 							<span class='text-mealtype'>
-								<v-row class='ma-0 pa-0' justify='space-around'>
+								<v-row class='ma-0 pa-0 justify-space-around'>
 									<v-col class='ma-0 pa-0 cl' cols='auto'>
 										unused
 									</v-col>
@@ -191,7 +190,7 @@
 
 						<v-col class='ma-0 pa-0' cols='12'>
 							<span class='text-mealtype'>
-								<v-row class='ma-0 pa-0' justify='space-around'>
+								<v-row class='ma-0 pa-0 justify-space-around'>
 									<v-col class='ma-0 pa-0 cl' cols='auto'>
 										<a
 											v-if='item.file_name_original'
@@ -329,7 +328,7 @@ async function get_data (): PV {
 }
 </script>
 
-<style>
+<style scoped>
 a {
 	all: unset;
 }

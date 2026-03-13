@@ -1,5 +1,5 @@
 <template>
-	<v-row class='' justify='center' width='100%'>
+	<v-row class=' justify-center' width='100%'>
 
 		<v-col
 			id='datatable'
@@ -38,8 +38,8 @@
 				</template>
 
 				<template #[`item.login_attempt_number`]='{ item: item_log }'>
-					<v-row align='center' class='ma-0 pa-0' dense justify='center'>
-						<v-col class='ma-0 pa-0' cols='auto' dense>
+					<v-row class='ma-0 pa-0 justify-center' density='compact'>
+						<v-col class='ma-0 pa-0' cols='auto' density='compact'>
 							<v-btn
 								v-if='item_log.login_attempt_number && item_log.login_attempt_number > 0'
 								class='fab-fix'
@@ -65,10 +65,8 @@
 					<v-row
 						v-for='(chosen, index) in [itam_last.login_ip, itam_last.login_success]'
 						:key='index'
-						align='center'
-						class='ma-0 pa-0'
+						class='ma-0 pa-0 justify-start'
 						denssty='compact'
-						justify='start'
 					>
 						<v-col class='ma-0 pa-0' cols='auto'>
 							<span class='smalltext' :class='index === 1 && !chosen ? "text-mealtype" : ""'>
@@ -98,20 +96,19 @@
 					<tr v-if='expandedEmail === item_expand.email'>
 						<td :colspan='columns.length'>
 
-							<v-row class='ma-0 pa-0 my-4' justify='center'>
+							<v-row class='ma-0 pa-0 my-4 justify-center'>
 								<v-col class='ma-0 pa-0' cols='11'>
 									<section v-if='sessionData.length > 0'>
 
 										<v-row
 											v-for='(session, index) in sessionData'
 											:key='index'
-											class=''
-											justify='center'
+											class='justify-center'
 										>
-											<v-row class='ma-0 pa-0 text-caption' justify='center'>
+											<v-row class='ma-0 pa-0 text-body-small justify-center'>
 												<v-col class='ma-0 pa-0' cols='12'>
 
-													<v-row class='ma-0 pa-0' justify='center'>
+													<v-row class='ma-0 pa-0 justify-center'>
 														<v-col
 															v-if='!session.current'
 															class='ma-0 pa-0'
@@ -163,7 +160,7 @@
 										</v-row>
 									</section>
 
-									<v-row v-else justify='center'>
+									<v-row v-else class='justify-center'>
 										<v-col cols='auto'>
 											no sessions
 										</v-col>
@@ -197,7 +194,9 @@ async function getSessions (email: string): PV {
 	try {
 		loading.value = true
 		const session = await axios_admin.session_get(email)
-		sessionData.value = session
+		if (session) {
+			sessionData.value = session
+		}
 	} catch (error) {
 		const message = error instanceof Error ? error.message : 'ERROR'
 		snackError({ message })
@@ -311,8 +310,11 @@ async function resetAttempt (email: string): PV {
 
 async function removeSession (ulid: string, email: string): PV {
 	await axios_admin.session_delete(ulid)
-	sessionData.value = await axios_admin.session_get(email)
-	if (sessionData.value.length === 0) expanded.value = []
+	const session = await axios_admin.session_get(email)
+	if (session) {
+		sessionData.value = session
+		if (sessionData.value.length === 0) expanded.value = []
+	}
 	loading.value = false
 }
 

@@ -4,7 +4,6 @@
 		:color
 		:icon
 		:size
-		style='vertical-align: middle;'
 	/>
 </template>
 

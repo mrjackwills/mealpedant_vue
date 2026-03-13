@@ -1,5 +1,5 @@
 <template>
-	<v-row class='ma-0 pa-0 mb-1' justify='center'>
+	<v-row class='ma-0 pa-0 mb-1 justify-center'>
 		<v-col
 			class='pa-0 my-0'
 			cols='12'
@@ -8,10 +8,10 @@
 			xl='2'
 		>
 			<v-btn block variant='text' @click='buttonSection = !buttonSection'>
-				<v-row align='center' class='ma-0 pa-0' justify='space-between'>
+				<v-row class='ma-0 pa-0 justify-space-between'>
 
 					<v-col class='text-left ma-0 pa-0' cols='5' md='auto'>
-						<v-icon class='mr-1' :icon='buttonIcon' medium style='vertical-align: middle;' />
+						<v-icon class='mr-1' :icon='buttonIcon' size='medium' />
 					</v-col>
 					<v-col class='text-left ma-0 pa-0' cols='4' md='auto'>
 						<span v-if='buttonSection && lgAndUp'>hide</span>
@@ -19,7 +19,7 @@
 						{{ buttonName }}
 					</v-col>
 					<v-col class='ma-0 pa-0 text-right' cols='3' md='auto'>
-						<v-icon class='mr-1' medium style='vertical-align: middle;'>{{ showHideIcon }}</v-icon>
+						<v-icon class='mr-1' size='medium'>{{ showHideIcon }}</v-icon>
 					</v-col>
 
 				</v-row>

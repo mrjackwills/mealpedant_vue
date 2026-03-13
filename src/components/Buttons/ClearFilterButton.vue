@@ -7,7 +7,7 @@
 		variant='flat'
 		@click='reset'
 	>
-		<v-row align='center' class='px-2' justify='space-around'>
+		<v-row class='px-1 justify-space-around' density='compact'>
 			<v-col class='ma-0 pa-0' cols='auto'>
 				<ButtonIcon color='white' :icon='mdiClose' margin='mr-1' :size='chip_size' />
 			</v-col>

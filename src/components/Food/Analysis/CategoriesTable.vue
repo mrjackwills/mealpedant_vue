@@ -14,10 +14,8 @@
 
 		<template #[`item.category_name`]='{ item }'>
 			<v-row
-				align='center'
-				class='ma-0 pa-0 text-red-lighten-4 fill-height'
-				:class='[{ "smalltext": smAndDown }, {"my-1": rowPadding}]'
-				justify='start'
+				class='ma-0 pa-0 text-red-lighten-4 fill-height justify-start'
+				:class='[{ "smalltext": smAndDown }]'
 			>
 				<v-col class='ma-0 pa-0' cols='auto'>
 					{{ formatCategoryName(item.category_name) }}
@@ -28,12 +26,10 @@
 		<template #[`item.t`]='{ item }'>
 			<v-row
 				v-intersect='(entries: boolean) => onIntersect(entries, item.category_id)'
-				align='center'
 				class='ma-0 pa-0 fill-height'
-				:class='[{ "smalltext": smAndDown }, {"my-1": rowPadding}]'
-				:justify='authenticated ? show_jack && show_dave ? "start" : "end" : "end"'
+				:class='[{ "smalltext": smAndDown }, justify]'
+				style='min-height: 3rem;'
 			>
-
 				<v-col
 					v-if='authenticated'
 					class='ma-0 pa-0'
@@ -41,7 +37,7 @@
 					cols='6'
 				>
 
-					<v-row align='center' class='ma-0 pa-0' justify='space-around'>
+					<v-row class='ma-0 pa-0 justify-space-around'>
 						<v-col class='ma-0 pa-0 font-weight-bol mono-num' cols='6'>
 							{{ item.t }}
 						</v-col>
@@ -62,9 +58,9 @@
 					:cols='authenticated ? "6" : "8"'
 				>
 
-					<v-row align='center' class='ma-0 pa-0 ' justify='center'>
+					<v-row class='ma-0 pa-0 justify-center'>
 						<v-col v-if='authenticated' class='ma-0 pa-0 text-primary' cols='12'>
-							<v-row align='center' class='ma-0 pa-0' justify='space-around'>
+							<v-row class='ma-0 pa-0 justify-space-around'>
 								<v-col class='ma-0 pa-0 font-weight-bold text-right mono-num'>
 									{{ item.d }}
 								</v-col>
@@ -76,7 +72,7 @@
 							</v-row>
 						</v-col>
 						<v-col class='ma-0 pa-0 text-secondary' cols='12'>
-							<v-row align='center' class='ma-0 pa-0' justify='space-around'>
+							<v-row class='ma-0 pa-0 justify-space-around'>
 								<v-col class='ma-0 pa-0 font-weight-bold text-right mono-num'>
 									{{ item.j }}
 								</v-col>
@@ -100,10 +96,8 @@
 		</template>
 		<template v-if='tableData.length > 0' #bottom='{ }'>
 			<v-row
-				align='center'
-				class='ma-0 pa-0 py-1 px-4 '
+				class='ma-0 pa-0 py-1 px-4 justify-space-around'
 				:class='{ "smalltext": smAndDown }'
-				justify='space-around'
 			>
 
 				<v-col class='ma-0 pa-0 text-start' cols='5'>
@@ -112,7 +106,7 @@
 				</v-col>
 
 				<v-col class='ma-0 pa-0 text-center' cols='2'>
-					<v-row align='center' class='ma-0 pa-0 no-gutters' justify='space-around'>
+					<v-row class='ma-0 pa-0 justify-space-around' density='compact'>
 
 						<v-col class='ma-0 pa-0 text-center' cols='auto'>
 							<v-chip
@@ -169,9 +163,13 @@ const table = ref()
 const scroll_up_disabled = ref(false)
 const scroll_down_disabled = ref(false)
 const density = computed(() => authenticated.value ? (platform.value.firefox ? 'compact' : 'comfortable') : 'compact')
-const rowPadding = computed(() => authenticated.value ? (platform.value.firefox ? true : false) : true)
 const first_id = computed(() => tableData.value[0]?.category_id)
 const last_id = computed(() => tableData.value.at(-1)?.category_id)
+
+const justify = computed(() => {
+	const suffix = authenticated.value ? (show_jack.value && show_dave.value ? 'start' : 'end') : 'end'
+	return `justify-${suffix}`
+})
 
 function onIntersect (visible: boolean, category_id: number): void {
 	if (first_id.value === category_id) scroll_up_disabled.value = visible

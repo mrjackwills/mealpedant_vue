@@ -1,6 +1,6 @@
 <template>
 	<v-col class='ma-0 pa-0 mt-lg-12' cols='auto'>
-		<v-row align='center' class='no-gutters ma-0 pa-0' justify='space-evenly'>
+		<v-row class='ma-0 pa-0 justify-space-evenly' density='compact'>
 
 			<v-col class='ma-0 pa-0' cols='auto'>
 				<v-chip

@@ -5,13 +5,13 @@
 		letters, numbers, and symbols, and ideally utilise password manager.
 		<br>
 		<a
-			class='text-caption text-white'
+			class='text-body-small text-white'
 			href='https://haveibeenpwned.com/Passwords'
 			rel='noopener noreferrer'
 			target='_blank'
 		>
 			(password checking powered by hipb
-			<v-icon :icon='mdiOpenInNew' style='vertical-align: middle;' x-small />)
+			<v-icon :icon='mdiOpenInNew' size='x-small' />)
 		</a>
 	</div>
 </template>
@@ -21,5 +21,5 @@ import { mdiOpenInNew } from '@mdi/js'
 import { useDisplay } from 'vuetify'
 const { mdAndDown } = useDisplay()
 
-const pSize = computed(() => mdAndDown ? 'text-caption' : 'text-body-2')
+const pSize = computed(() => mdAndDown ? 'text-body-small' : 'text-body-medium')
 </script>

@@ -1,8 +1,8 @@
 <template>
 	<section v-if='!backupProcess' class='mt-5'>
-		<v-row align='center' class='ma-0 pa-0' justify='center'>
+		<v-row class='ma-0 pa-0 justify-center'>
 			<v-col class='ma-0 pa-0' cols='12' md='8'>
-				<v-row align='center' class='ma-0 pa-0' justify='center'>
+				<v-row class='ma-0 pa-0 justify-center'>
 					<v-col class='ma-0 pa-0' cols='auto' @click='toggle'>
 						<v-switch
 							v-model='arVal'
@@ -18,7 +18,7 @@
 						</v-switch>
 					</v-col>
 				</v-row>
-				<v-row align='center' class='ma-0 pa-0 mt-n4' justify='center'>
+				<v-row class='ma-0 pa-0 mt-n4 justify-center'>
 					<v-col class='ma-0 pa-0' cols='12'>
 						When enabled, a Two Factor Authentication token will be required at all password prompts.
 						Otherwise, a Two

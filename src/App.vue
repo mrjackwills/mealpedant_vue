@@ -1,7 +1,8 @@
 <template>
 	<v-app id='mealpedant' ref='swipe' class=''>
-		<NavMenu v-if='smAndDown || authenticated' :order='smAndDown ? "1" : "2"' />
-		<AppBar :order='smAndDown ? "2" : "1"' />
+		<NavMenu v-if='smAndDown' />
+		<AppBar />
+		<NavMenu v-if='!smAndDown && authenticated' />
 		<v-main class='d-flex align-center justify-center'>
 			<router-view :key='route_name' />
 			<TheFooter />
@@ -25,7 +26,6 @@ import { snackSuccess } from '@/services/snack'
 const { smAndDown } = useDisplay()
 const { updateServiceWorker } = useRegisterSW()
 
-const authenticated = computed(() => userModule().authenticated)
 const description = computed(() => browserModule().description)
 const drawStore = drawerModule()
 const init = ref(false)
@@ -34,6 +34,7 @@ const route_name = computed(() => router.currentRoute.value.name)
 const router = useRouter()
 const swipe = ref<HTMLElement | null>(null)
 const title = computed(() => browserModule().pageTitle)
+const authenticated = computed(() => userModule().authenticated)
 
 const { isSwiping, direction } = useSwipe(swipe)
 

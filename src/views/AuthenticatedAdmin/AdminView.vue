@@ -1,14 +1,20 @@
 <template>
-	<v-row class='no-gutters mx-3' justify='center' wrap>
+	<v-row class='mx-3 justify-center' density='compact' wrap>
 		<v-col class='cl' cols='12'>
-			<v-row align='center' class='no-gutters' justify='center' wrap>
+			<v-row class=' justify-center' density='compact' wrap>
 				<v-col cols='12' sm='8'>
 					<router-link :to='FrontEndRoutes.ADMIN_PHOTO'>
-						<v-row align='center' class='no-gutters'>
+						<v-row class='' density='compact'>
 							<v-col class='' cols='12'>
-								<v-row v-ripple align='center' class='no-gutters' wrap>
+								<v-row
+									v-ripple
+									class='align-center'
+									density='compact'
+									wrap
+								>
 									<v-col class='mr-2' cols='auto'>
-										<h2 class='text-white unselectable'>Photos</h2>
+										<span class='cl text-headline-medium unselectable text-white'>Photos</span>
+
 									</v-col>
 								</v-row>
 							</v-col>
@@ -19,23 +25,23 @@
 			</v-row>
 		</v-col>
 		<v-col v-for='(item, index) in adminRows' :key='index' cols='12'>
-			<v-row align='center' class='no-gutters' justify='center' wrap>
+			<v-row class=' justify-center pa-0 ma-0' density='compact' wrap>
 				<v-col cols='12' sm='8'>
-					<v-row align='center' class='no-gutters'>
+					<v-row class='' density='compact'>
 						<v-col cols='12'>
 							<v-row
 								v-ripple
-								align='center'
-								class='no-gutters'
+								class='align-center'
+								density='compact'
 								wrap
 								@click='clicker(item.axios, item.show)'
 							>
 								<v-col class='mr-2' cols='auto'>
-									<h2 class='cl unselectable'>{{ item.title }}</h2>
+									<span class='cl text-headline-medium unselectable'>{{ item.title }}</span>
 								</v-col>
 								<v-spacer />
 								<v-col :class='{ "ml-md-12": returnThis(item.show) }' cols='auto'>
-									<v-icon style='vertical-align: middle;'>{{ returnThis(item.icon) }}</v-icon>
+									<v-icon>{{ returnThis(item.icon) }}</v-icon>
 								</v-col>
 							</v-row>
 						</v-col>
@@ -46,7 +52,7 @@
 				<v-expand-transition>
 					<div v-if='returnThis(item.show)'>
 						<v-col class='pa-0' cols='12'>
-							<v-row class='no-gutters' justify='center'>
+							<v-row class=' justify-center' density='compact'>
 								<v-col
 									v-if='returnThis(item.show)'
 									class='mx-md-12 pa-0'
@@ -72,7 +78,7 @@
 					</div>
 				</v-expand-transition>
 			</v-col>
-			<v-row v-if='index !== adminRows.length - 1' class='no-gutters ' justify='center'>
+			<v-row v-if='index !== adminRows.length - 1' class=' justify-center' density='compact'>
 				<v-col cols='12' sm='8'>
 					<v-divider />
 				</v-col>
