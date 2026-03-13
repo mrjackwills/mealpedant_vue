@@ -11,7 +11,7 @@
 		:timeout
 		:top='position.y === "top"'
 	>
-		<v-row v-intersect='onIntersect' align='center' class='no-gutters ma-0 pa-0' justify='center'>
+		<v-row v-intersect='onIntersect' class='ma-0 pa-0 justify-center' density='compact'>
 			<v-col class='pa-0 ma-0' cols='1'>
 				<v-progress-circular
 					v-if='loading'
@@ -51,7 +51,7 @@ const color = computed(() => snackbarStore.color)
 const icon = computed(() => snackbarStore.icon)
 const loading = computed(() => snackbarStore.loading)
 const message = computed(() => snackbarStore.message)
-const messageSize = computed(() => mdAndUp.value ? 'text-body-1' : 'text-body-2')
+const messageSize = computed(() => mdAndUp.value ? 'text-body-large' : 'text-body-medium')
 const position = computed(() => snackbarStore.position)
 const timeout = computed(() => snackbarStore.timeout)
 const visible = computed({

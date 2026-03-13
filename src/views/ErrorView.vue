@@ -1,10 +1,10 @@
 <template>
-	<v-container class='ma-0 pa-0 no-gutters fill-height' fluid>
-		<v-row align='center' justify='center'>
-			<v-col class='cl text-h3 text-center text-white' cols='10'>
+	<v-container class='ma-0 pa-0' density='compact' fluid>
+		<v-row class='justify-center'>
+			<v-col class='cl text-display-small text-center text-white' cols='10'>
 				Error - page not found
 			</v-col>
-			<v-col align='center' cols='10' justify='center'>
+			<v-col class='align-center justify-center text-center mt-4' cols='auto'>
 				<v-btn
 					class='cl'
 					color='error'
@@ -13,7 +13,7 @@
 					:to='FrontEndRoutes.BASE'
 					variant='flat'
 				>
-					<v-row align='center' justify='center'>
+					<v-row class='justify-center align-center'>
 						<v-col class='pa-1' cols='auto'>
 							<ButtonIcon color='white' :icon='mdiHome' size='large' />
 						</v-col>

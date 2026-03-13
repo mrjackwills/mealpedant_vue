@@ -1,15 +1,15 @@
 <template>
 	<section>
-		<v-row class='ma-0 pa-0 my-0' justify='start'>
+		<v-row class='ma-0 pa-0 my-0 justify-start'>
 			<v-col class='ma-0 pa-0' :class='[{ "ml-8": mdAndUp }, headingSize]' cols='auto'>
 				Change Password
 			</v-col>
 		</v-row>
-		<v-row class='my-0' justify='center'>
+		<v-row class='my-0 justify-center'>
 			<v-col cols='12' md='6' sm='8'>
 				<v-form method='post' @submit.prevent>
 					<v-text-field v-show='false' autocomplete='email' label='email' type='email' />
-					<v-row justify='center' wrap>
+					<v-row class='justify-center' wrap>
 						<v-col v-for='(item, index) in textFields' :key='index' class='pa-1' cols='12'>
 							<v-text-field
 								:append-inner-icon='item.appendIcon'
@@ -55,7 +55,7 @@
 				</v-form>
 			</v-col>
 			<v-col class='ma-0 pa-0 mt-2' cols='12'>
-				<v-row align='center' class='ma-a pa- 0' justify='center'>
+				<v-row class='ma-a pa- 0 justify-center'>
 
 					<v-col class='ma-0 pa-0' cols='auto'>
 						<v-btn
@@ -95,11 +95,11 @@
 					</v-col>
 
 				</v-row>
-				<v-row align='center' class='ma-0 pa-0 mt-4' justify='center'>
+				<v-row class='ma-0 pa-0 mt-4 justify-center'>
 					<v-col class='ma-0 pa-0' cols='auto'>
 						<v-checkbox v-model='user.remove_sessions' color='' density='compact' hide-details>
 							<template #label>
-								<span class='text-body-2'>remove other sessions</span>
+								<span class='text-body-medium'>remove other sessions</span>
 							</template>
 						</v-checkbox>
 					</v-col>
@@ -134,7 +134,7 @@ const disabled = computed(() => v$.value.$invalid
   || (twoFA_always_required.value && user.value.token && user.value.token.length < 6)
 	? true
 	: false)
-const headingSize = computed(() => mdAndDown.value ? 'text-h5' : 'text-h4')
+const headingSize = computed(() => mdAndDown.value ? 'text-headline-medium' : 'text-headline-large')
 
 const loading = computed({
 	get (): boolean {

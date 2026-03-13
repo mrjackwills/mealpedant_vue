@@ -1,12 +1,12 @@
 <template>
-	<v-container v-if='dataReady' class='fill-height' fluid>
-		<v-row align='center' class='no-gutters' justify='center'>
+	<v-container v-if='dataReady' class='' fluid>
+		<v-row class='justify-center' density='compact'>
 			<v-col cols='12' lg='8' sm='10'>
-				<v-row class='ma-0 pa-0' :justify='lgAndUp ? "space-between" : "center"'>
+				<v-row class='ma-0 pa-0' :class='justify'>
 
 					<!-- Date -->
 					<v-col class='ma-0 pa-0' cols='12' md='5'>
-						<v-row class='ma-0 pa-0' justify='space-between'>
+						<v-row class='ma-0 pa-0 justify-space-between' density='compact'>
 							<v-col class='ma-0 pa-0' cols='8'>
 								<v-text-field
 									v-model='meal.date'
@@ -27,8 +27,8 @@
 									</v-menu>
 								</v-text-field>
 							</v-col>
-							<v-col class='ma-0 pa-0 mt-2' cols='3'>
-								<v-row class='ma-0 pa-0' justify='space-around'>
+							<v-col class='ma-0 pa-0' cols='3'>
+								<v-row class='ma-0 pa-0 justify-space-around' density='compact'>
 									<v-col class='ma-0 pa-0' cols='auto'>
 										<v-icon class='' :icon='mdiRestore' @click='previous' />
 									</v-col>
@@ -41,8 +41,8 @@
 					</v-col>
 
 					<!-- Person -->
-					<v-col class='ma-0 pa-0 mr-md-3 mt-2' cols='12' md='6'>
-						<v-row class='ma-0 pa-0' justify='space-between'>
+					<v-col class='ma-0 pa-0 mr-md-3' cols='12' md='6'>
+						<v-row class='ma-0 pa-0 justify-space-between' density='compact'>
 							<v-col v-for='(item, index) in [TPerson.DAVE, TPerson.JACK]' :key='index' class='ma-0 pa-0' cols='auto'>
 								<v-radio-group v-model='meal.person' row>
 									<v-radio color='primary' density='compact' :label='item' :value='item' />
@@ -51,15 +51,12 @@
 						</v-row>
 					</v-col>
 
-					<v-row class='ma-0 pa-0' justify='space-between'>
+					<v-row class='ma-0 pa-0 justify-space-between' density='compact'>
 
-						<!-- Category -->
 						<v-col
-							class='ma-0 pa-0'
+							class='ma-0 pa-0 order-2 order-md-1'
 							cols='12'
 							md='5'
-							order='2'
-							order-md='1'
 						>
 							<v-textarea
 								v-model='meal.category'
@@ -80,13 +77,11 @@
 
 						<!-- variant -->
 						<v-col
-							class='ma-0 pa-0'
+							class='ma-0 pa-0 order-1 order-md-2'
 							cols='12'
 							md='6'
-							order='1'
-							order-md='2'
 						>
-							<v-row class='ma-0 pa-0' justify='space-between'>
+							<v-row class='ma-0 pa-0 justify-space-between'>
 								<v-col
 									v-for='(item, index) in mealVariants'
 									:key='index'
@@ -109,9 +104,9 @@
 					</v-row>
 
 					<!-- Category suggestions -->
-					<v-col align-self='center' class='ma-0 pa-0 mt-md-n5 mb-n3 cat_height' cols='12'>
+					<v-col class='align-center ma-0 pa-0 mb-md-n4 mt-md-n5 cat_height' cols='12'>
 						<v-expand-transition>
-							<v-row v-if='categorySuggestions.length > 0' class='ma-0 pa-0' justify='start'>
+							<v-row v-if='categorySuggestions.length > 0' class='ma-0 pa-0 justify-start' density='compact'>
 								<v-col
 									v-for='(item, index) in categorySuggestions'
 									:key='index'
@@ -133,7 +128,7 @@
 					</v-col>
 
 					<!-- Description -->
-					<v-col class='ma-0 pa-0 pt-4' cols='12'>
+					<v-col class='ma-0 pa-0 pt-2' cols='12'>
 						<v-textarea
 							v-model='meal.description'
 							:auto-grow='true'
@@ -149,12 +144,12 @@
 					</v-col>
 
 					<!-- Photo section -->
-					<v-col class='ma-0 pa-0' cols='12'>
-						<v-row align='center' class='ma-0 pa-0' justify='space-between'>
+					<v-col class='ma-0 pa-0 mt-n4' cols='12'>
+						<v-row class='ma-0 pa-0 justify-space-between' density='compact'>
 
 							<!-- Photo -->
-							<v-col v-if='imageUrl' class='ma-0 pa-0 text-center mb-2' cols='12' md='12'>
-								<v-row class='ma-0 pa-0' justify='center'>
+							<v-col v-if='imageUrl' class='ma-0 pa-0 text-center' cols='12' md='12'>
+								<v-row class='ma-0 pa-0 justify-center' density='compact'>
 									<v-col class='ma-0 pa-0' cols='6'>
 										<v-img alt='A photograph of a meal' contain max-height='40vh' :src='imageUrl' />
 									</v-col>
@@ -188,7 +183,7 @@
 									v-else
 									v-model='meal.photo_original'
 									:append-inner-icon='meal.photo_original ? mdiClose : ""'
-									class='ma-0 pa-0 text-caption'
+									class='ma-0 pa-0 text-body-small'
 									density='compact'
 									:prepend-icon='``'
 									:prepend-inner-icon='mdiAttachment'
@@ -201,14 +196,13 @@
 					</v-col>
 
 					<!-- Buttons -->
-					<v-col class='ma-0 pa-0 mt-4' cols='12'>
-						<v-row align='center' class='no-gutters' justify='space-between'>
+					<v-col class='ma-0 pa-0 ' cols='12'>
+						<v-row class='justify-space-between' density='compact'>
 							<v-col
 								v-if='editMeal'
+								class='order-3 order-md-1'
 								cols='12'
 								md='auto'
-								order='3'
-								order-md='1'
 							>
 								<v-btn
 									:block='smAndDown'
@@ -223,7 +217,11 @@
 									delete
 								</v-btn>
 							</v-col>
-							<v-col cols='12' md='auto' :order-md='editMeal ? "3" : "2"'>
+							<v-col
+								:class='editMeal? "order-md-3":"order-md-2"'
+								cols='12'
+								md='auto'
+							>
 								<v-btn
 									:block='smAndDown'
 									class='elevation-0'
@@ -238,7 +236,12 @@
 									cancel
 								</v-btn>
 							</v-col>
-							<v-col cols='12' md='auto' order='1' :order-md='editMeal ? "2" : "3"'>
+							<v-col
+								class='order-1'
+								:class='editMeal? "order-md-2":"order-md-3"'
+								cols='12'
+								md='auto'
+							>
 								<v-btn
 									:block='smAndDown'
 									class='elevation-0'
@@ -288,7 +291,11 @@ onBeforeUnmount(async () => {
 	if (!completed.value && meal.value.photo_converted && meal.value.photo_original) await clear()
 })
 
-const submitText = computed(() => editMeal.value ? 'UPDATE' : 'ADD')
+const justify = computed(() => {
+	return lgAndUp.value ? 'justify-space-between' : 'justify-center'
+})
+
+const submitText = computed(() => editMeal.value ? 'update' : 'add')
 const submitIcon = computed(() => editMeal.value ? mdiDatabaseEdit : mdiCloudUpload)
 
 // Set the pages meal value from a given TMealDatePerson
@@ -376,7 +383,7 @@ const computedDateLabel = computed((): string => {
 	const today_long = new Date(Date.now() - new Date().getTimezoneOffset() * 60_000)
 	const today = today_long.toISOString().slice(0, 10)
 	const yesterday = new Date(today_long.setDate(today_long.getDate() - 1)).toISOString().slice(0, 10)
-	const text = 'Choose date'
+	const text = 'choose date'
 	return meal.value.date === today ? `${text} - today` : (meal.value.date === yesterday ? `${text} - yesterday` : text)
 })
 
@@ -639,10 +646,10 @@ const v$ = useVuelidate(rules, meal)
 
 <style>
 .cat_height {
-	min-height: 1.5rem;
+	min-height: 1rem;
 }
 
-@media (max-width: 960px) {
+@media (max-width: 840px) {
 	.v-input--switch .v-label {
 		font-size: 12px;
 	}

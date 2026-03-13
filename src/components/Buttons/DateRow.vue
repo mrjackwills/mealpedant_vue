@@ -1,5 +1,5 @@
 <template>
-	<v-row class='ma-0 pa-0' justify='space-around'>
+	<v-row class='ma-0 pa-0 justify-space-around'>
 		<v-col class='ma-0 pa-0 mt-md-8' cols='5' md='3'>
 			<v-text-field
 				v-model='startDate'
@@ -56,17 +56,12 @@ import { mdiCalendarEnd, mdiCalendarStart } from '@mdi/js'
 import { snackError } from '@/services/snack'
 import { convert_date, genesisDateString, todayDateString } from '@/vanillaTS/helpers'
 
-const startModel = ref(undefined as u<Date>)
+const mealStore = mealModule()
+const startModel = ref(new Date(mealStore.search_by.start_date))
 const showStartDate = ref(false)
 
-const endModel = ref(undefined as u<Date>)
+const endModel = ref(new Date(mealStore.search_by.end_date))
 const showEndDate = ref(false)
-const mealStore = mealModule()
-
-onMounted(() => {
-	if (mealStore.search_by.start_date) startModel.value = new Date(mealStore.search_by.start_date)
-	if (mealStore.search_by.end_date) endModel.value = new Date(mealStore.search_by.end_date)
-})
 
 watch(startModel, (i: u<Date>) => {
 	if (i) {

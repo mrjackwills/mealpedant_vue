@@ -4,22 +4,20 @@
 		v-model='drawer'
 		app
 		color='navmenu'
-		height=''
 		:location='mobile ? "right" : "left"'
-		:mobile-breakpoint='960'
+		:mobile-breakpoint='840'
 		:rail='mini'
-		touchless
 		width='150'
 	>
-		<v-list v-if='init'>
+		<v-list v-if='init' nav>
 			<section v-if='mobile'>
 
-				<v-list-item class='cl' density='compact' @click='(drawer = !drawer)'>
+				<v-list-item class='cl' density='compact' :prepend-gap='prependGap' @click='(drawer = !drawer)'>
 					<template #prepend>
-						<v-icon class='flipx' :icon='mdiClose' size='small' />
+						<v-icon class='flipx ma-0 pa-0' :icon='mdiClose' size='small' />
 					</template>
 					<template #title>
-						<span class='ml-2 text-body-2'>close</span>
+						<span class='text-body-medium'>close</span>
 					</template>
 				</v-list-item>
 				<v-divider class='' />
@@ -29,6 +27,7 @@
 					v-for='(item, index) in registerLinks'
 					:key='`drt${index}`'
 					density='compact'
+					:prepend-gap='prependGap'
 					router
 					:to='item.route'
 				>
@@ -36,7 +35,7 @@
 						<v-icon class='ma-0 pa-0' :icon='item.icon' size='small' />
 					</template>
 					<template #title>
-						<span class='text-body-2'>{{ item.text }}</span>
+						<span class='text-body-medium'>{{ item.text }}</span>
 					</template>
 				</v-list-item>
 			</section>
@@ -46,6 +45,7 @@
 					v-for='(item, index) in drawerLinks'
 					:key='`dr${index}`'
 					density='compact'
+					:prepend-gap='prependGap'
 					router
 					:to='item.route'
 				>
@@ -59,7 +59,7 @@
 						/>
 					</template>
 					<template #title>
-						<span class='text-body-2'>{{ item.text }}</span>
+						<span class='text-body-medium'>{{ item.text }}</span>
 					</template>
 				</v-list-item>
 
@@ -69,6 +69,7 @@
 						v-for='(item, index) in adminLinks'
 						:key='`al${index}`'
 						density='compact'
+						:prepend-gap='prependGap'
 						router
 						:to='item.route'
 					>
@@ -82,11 +83,11 @@
 							/>
 						</template>
 						<template #title>
-							<span class='text-body-2'>{{ item.text }}</span>
+							<span class='text-body-medium'>{{ item.text }}</span>
 						</template>
 					</v-list-item>
 
-					<v-list-item class='cl' density='compact' @click='flushCache'>
+					<v-list-item class='cl' density='compact' :prepend-gap='prependGap' @click='flushCache'>
 						<template #prepend>
 							<v-icon class='ma-0 pa-0' :icon='mdiDeleteSweep' size='small' />
 							<v-tooltip
@@ -97,12 +98,18 @@
 							/>
 						</template>
 						<template #title>
-							<span class='text-body-2'>flush cache</span>
+							<span class='text-body-medium'>flush cache</span>
 						</template>
 					</v-list-item>
 				</section>
 
-				<v-list-item v-if='!mobile' class='cl ' density='compact' @click='mini = !mini'>
+				<v-list-item
+					v-if='!mobile'
+					class='cl'
+					density='compact'
+					:prepend-gap='prependGap'
+					@click='mini = !mini'
+				>
 					<template #prepend>
 						<v-icon class='ma-0 pa-0' :icon='minivariantIcon' size='small' />
 						<v-tooltip
@@ -113,13 +120,18 @@
 						/>
 					</template>
 					<template #title>
-						<span class='text-body-2'>minimize</span>
+						<span class='text-body-medium'>minimize</span>
 					</template>
 				</v-list-item>
 
 				<v-divider class='my-2' />
 
-				<v-list-item class='cl' density='compact' @click='signout'>
+				<v-list-item
+					class='cl'
+					density='compact'
+					:prepend-gap='prependGap'
+					@click='signout'
+				>
 					<template #prepend>
 						<v-icon class='ma-0 pa-0' :icon='mdiPower' size='small' />
 						<v-tooltip
@@ -130,7 +142,7 @@
 						/>
 					</template>
 					<template #title>
-						<span class='text-body-2'>sign out</span>
+						<span class='text-body-medium'>sign out</span>
 					</template>
 				</v-list-item>
 
@@ -186,14 +198,19 @@ const mini = computed({
 	},
 })
 
+const prependGap = '10px'
+
 async function flushCache (): PV {
 	await axios_admin.cache_delete()
 	if (mobile.value && drawer.value) drawer.value = false
 }
+
 onBeforeMount(() => {
-	if (!mobile.value && authed.value) {
-		drawer.value = true
-		mini.value = false
+	drawer.value = true
+	mini.value = false
+
+	if (mobile.value) {
+		drawer.value = false
 	}
 	init.value = true
 })
@@ -247,17 +264,3 @@ function signout (): void {
 }
 
 </script>
-
-<style>
-.minivariantmargintop {
-	margin-top: 5rem;
-}
-
-.v-list-item__spacer {
-	width: 8px !important;
-}
-
-#nav_menu {
-	min-height: 100vh;
-}
-</style>

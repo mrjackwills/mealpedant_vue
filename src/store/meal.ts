@@ -13,10 +13,26 @@ type BothTPersonFood = {
 }
 
 // Convert a yymmdd to yyyy-mm-dd
-const uncompress_date = (input: string): string => `20${input.at(0)}${input.at(1)}-${input.at(2)}${input.at(3)}-${input.at(4)}${input.at(5)}`
+// const uncompress_date = (input: string): string => `20${input.at(0)}${input.at(1)}-${input.at(2)}${input.at(3)}-${input.at(4)}${input.at(5)}`
+const uncompress_date = (input: string): string => `20${input.slice(0, 2)}-${input.slice(2, 4)}-${input.slice(4, 6)}`
 
 // Convert a yyyy-mm-dd to yymmdd
 const compress_date = (input: string): string => input.slice(2).replaceAll('-', '')
+
+function default_search_by (authed: boolean): search_by {
+	return {
+		category_id: 0,
+		end_date: todayDateString(),
+		include_dave: authed,
+		include_jack: true,
+		include_restaurant: true,
+		include_takeaway: true,
+		include_vegetarian: true,
+		only_photos: false,
+		start_date: genesisDateString(),
+		term: '',
+	}
+}
 
 // Convert the compressed response to one with more meaningful names, and create maps for the categories and descriptions
 function uncompress_meals (input: c_MealInfo): MealInfo | undefined {
@@ -82,79 +98,8 @@ function uncompress_meals (input: c_MealInfo): MealInfo | undefined {
 	}
 }
 
-function default_search_by (): search_by {
-	return {
-		category_id: 0,
-		end_date: todayDateString(),
-		include_dave: userModule().authenticated,
-		include_jack: true,
-		include_restaurant: true,
-		include_takeaway: true,
-		include_vegetarian: true,
-		only_photos: false,
-		start_date: genesisDateString(),
-		term: '',
-	}
-}
-
 const num_to_bool = (x: number): boolean => x === 1
 const bool_to_num = (x: boolean): number => x ? 1 : 0
-
-// convert a search_by to a compress_search_by
-function compress_search_by (x: search_by): c_search_by {
-	const dsb = default_search_by()
-	return {
-		c: x.category_id === dsb.category_id ? undefined : x.category_id,
-		d: x.include_dave === dsb.include_dave ? undefined : bool_to_num(x.include_dave),
-		e: x.end_date === dsb.end_date ? undefined : compress_date(x.end_date),
-		j: x.include_jack === dsb.include_jack ? undefined : bool_to_num(x.include_jack),
-		m: x.term === dsb.term ? undefined : x.term,
-		p: x.only_photos === dsb.only_photos ? undefined : bool_to_num(x.only_photos),
-		r: x.include_restaurant === dsb.include_restaurant ? undefined : bool_to_num(!x.include_restaurant),
-		s: x.start_date === dsb.start_date ? undefined : compress_date(x.start_date),
-		t: x.include_takeaway === dsb.include_takeaway ? undefined : bool_to_num(!x.include_takeaway),
-		v: x.include_vegetarian === dsb.include_vegetarian ? undefined : bool_to_num(!x.include_vegetarian),
-	}
-}
-
-// convert a compressed_search_by to a search_by
-function uncompress_search_by (x: c_search_by): search_by {
-	const dsb = default_search_by()
-	if (x.c && x.c !== dsb.category_id) {
-		dsb.category_id = x.c
-	}
-	if (x.d && num_to_bool(x.d) !== dsb.include_dave) {
-		dsb.include_dave = num_to_bool(x.d)
-	}
-	if (x.e && x.e !== dsb.end_date) {
-		dsb.end_date = uncompress_date(x.e)
-	}
-	if (x.j && num_to_bool(x.j) !== dsb.include_jack) {
-		dsb.include_jack = num_to_bool(x.j)
-	}
-	if (x.m && x.m !== dsb.term) {
-		dsb.term = x.m
-	}
-	if (x.p && num_to_bool(x.p) !== dsb.only_photos) {
-		dsb.only_photos = num_to_bool(x.p)
-	}
-	if (x.r) {
-		dsb.include_restaurant = false
-	}
-	if (x.s && x.s !== dsb.start_date) {
-		dsb.start_date = uncompress_date(x.s)
-	}
-	if (x.t) {
-		dsb.include_takeaway = false
-	}
-	if (x.v) {
-		dsb.include_vegetarian = false
-	}
-	if (!userModule().authenticated) {
-		dsb.include_dave = false
-	}
-	return dsb
-}
 
 type SearchHistory = Map<string, MealHistoryValue>
 
@@ -163,10 +108,14 @@ export const mealModule = defineStore(ModuleName.Meal, {
 		hash: '',
 		date_meals: [] as Array<DateMeal>,
 		meal_descriptions: new Map() as MealDescriptionMap,
+		meal_description_normalized: new Map() as MealDescriptionMap,
 		meal_categories: new Map() as MealCategoryMap,
 		meal_types: ['restaurant', 'takeaway', 'vegetarian'] as Array<TMealVariant>,
 
-		search_by: default_search_by(),
+		// default_search_by: default_search_by(userModule().authenticated),
+		default_search_by_stringified: JSON.stringify(default_search_by(userModule().authenticated)),
+
+		search_by: default_search_by(userModule().authenticated),
 		search_history: new Map() as SearchHistory,
 
 		is_filtered: false,
@@ -180,6 +129,7 @@ export const mealModule = defineStore(ModuleName.Meal, {
 	}),
 
 	getters: {
+
 		show_jack (): boolean {
 			return this.search_by.include_jack
 		},
@@ -193,8 +143,9 @@ export const mealModule = defineStore(ModuleName.Meal, {
 			return (id: number): string => state.meal_categories.get(id) ?? ''
 		},
 		// return the filtered categories by alphabetical order
-		get_all_filtered_categories_sorted_alpha (): Array<[number, string]> {
-			return Array.from(this.is_filtered ? this.filtered_meal_categories : this.meal_categories).toSorted((a, b) => a[1].localeCompare(b[1]))
+		get_all_filtered_categories_sorted_alpha (state): Array<[number, string]> {
+			const source = state.is_filtered ? state.filtered_meal_categories : state.meal_categories
+			return Array.from(source).toSorted((a, b) => a[1].localeCompare(b[1]))
 		},
 		// return the categories by alphabetical order
 		get_all_categories_sorted_alpha (): Array<[number, string]> {
@@ -225,12 +176,75 @@ export const mealModule = defineStore(ModuleName.Meal, {
 	},
 
 	actions: {
+
+		// convert a compressed_search_by to a search_by
+		uncompress_search_by (x: c_search_by): search_by {
+			const dsb = default_search_by(userModule().authenticated)
+			if (x.c && x.c !== dsb.category_id) {
+				dsb.category_id = x.c
+			}
+			if (x.d && num_to_bool(x.d) !== dsb.include_dave) {
+				dsb.include_dave = num_to_bool(x.d)
+			}
+			if (x.e && x.e !== dsb.end_date) {
+				dsb.end_date = uncompress_date(x.e)
+			}
+			if (x.j && num_to_bool(x.j) !== dsb.include_jack) {
+				dsb.include_jack = num_to_bool(x.j)
+			}
+			if (x.m && x.m !== dsb.term) {
+				dsb.term = x.m
+			}
+			if (x.p && num_to_bool(x.p) !== dsb.only_photos) {
+				dsb.only_photos = num_to_bool(x.p)
+			}
+			if (x.r) {
+				dsb.include_restaurant = false
+			}
+			if (x.s && x.s !== dsb.start_date) {
+				dsb.start_date = uncompress_date(x.s)
+			}
+			if (x.t) {
+				dsb.include_takeaway = false
+			}
+			if (x.v) {
+				dsb.include_vegetarian = false
+			}
+			if (!userModule().authenticated) {
+				dsb.include_dave = false
+			}
+			return dsb
+		},
+
+		// convert a search_by to a compress_search_by
+		compress_search_by (x: search_by): c_search_by {
+			const dsb = default_search_by(userModule().authenticated)
+			return {
+				c: x.category_id === dsb.category_id ? undefined : x.category_id,
+				d: x.include_dave === dsb.include_dave ? undefined : bool_to_num(x.include_dave),
+				e: x.end_date === dsb.end_date ? undefined : compress_date(x.end_date),
+				j: x.include_jack === dsb.include_jack ? undefined : bool_to_num(x.include_jack),
+				m: x.term === dsb.term ? undefined : x.term,
+				p: x.only_photos === dsb.only_photos ? undefined : bool_to_num(x.only_photos),
+				r: x.include_restaurant === dsb.include_restaurant ? undefined : bool_to_num(!x.include_restaurant),
+				s: x.start_date === dsb.start_date ? undefined : compress_date(x.start_date),
+				t: x.include_takeaway === dsb.include_takeaway ? undefined : bool_to_num(!x.include_takeaway),
+				v: x.include_vegetarian === dsb.include_vegetarian ? undefined : bool_to_num(!x.include_vegetarian),
+			}
+		},
+
 		set (x: c_MealInfo) {
 			const meals = uncompress_meals(x)
 			if (meals) {
 				this.date_meals = meals.date_meals
 				this.meal_descriptions = meals.meal_descriptions
 				this.meal_categories = meals.meal_categories
+				this.meal_description_normalized = new Map<number, string>(
+					[...meals.meal_descriptions.entries()].map(([key, value]) => [
+						key,
+						this.normalise_string(value),
+					]),
+				)
 			}
 		},
 
@@ -250,7 +264,7 @@ export const mealModule = defineStore(ModuleName.Meal, {
 			this.filtered_search_term_date = 0
 			this.is_filtered = false
 			this.filtered_date_meals = []
-			this.search_by = default_search_by()
+			this.search_by = default_search_by(userModule().authenticated)
 			this.filter_b64 = ''
 			router.replace({ query: {} })
 		},
@@ -319,7 +333,7 @@ export const mealModule = defineStore(ModuleName.Meal, {
 		// Attempt to convert a base64 param to a search_by, and then run the search
 		param_to_search (x: string) {
 			try {
-				this.search_by = uncompress_search_by(JSON.parse(atob(x)))
+				this.search_by = this.uncompress_search_by(JSON.parse(atob(x)))
 				this.filter_by_search_by()
 			} catch {
 				snackError({ message: 'Invalid URL search params' })
@@ -336,14 +350,17 @@ export const mealModule = defineStore(ModuleName.Meal, {
 		},
 
 		// Filter the meals by the current search_by settings
+		/// Could pre
+		/// Or set a loading value in here, and use that in the chip switch
+		// Or, pre-calc it all
 		// eslint-disable-next-line complexity
 		filter_by_search_by () {
 			const search_by = this.search_by
-			this.filter_b64 = btoa(JSON.stringify(compress_search_by(search_by)))
+			this.filter_b64 = btoa(JSON.stringify(this.compress_search_by(search_by)))
 			router.replace({ query: { filter: this.filter_b64 } })
 
 			const search_by_stringified = JSON.stringify(search_by)
-			if (search_by_stringified === JSON.stringify(default_search_by())) {
+			if (search_by_stringified === this.default_search_by_stringified) {
 				this.clear_all_filters()
 				return
 			}
@@ -369,26 +386,28 @@ export const mealModule = defineStore(ModuleName.Meal, {
 
 			const search_term = this.normalise_string(search_by.term)
 			const cat_id = new Set([...this.meal_categories.entries()].filter(([, i]) => i.includes(search_term)).map(([id]) => id))
-			const desc_id = new Set([...this.meal_descriptions.entries()].filter(([, i]) => this.normalise_string(i).includes(search_term)).map(([id]) => id))
+			const desc_id = new Set([...this.meal_description_normalized.entries()].filter(([, i]) => i.includes(search_term)).map(([id]) => id))
 
+			const people_arr = [TPerson.DAVE, TPerson.JACK]
 			for (const meal of this.date_meals) {
-				for (const person of [TPerson.DAVE, TPerson.JACK]) {
+				for (const person of people_arr) {
 					if ((!search_by.include_dave && person === TPerson.DAVE) || (!search_by.include_jack && person === TPerson.JACK)) {
 						continue
 					}
-					if (meal[person]) {
+					const meal_person = meal[person]
+					if (meal_person) {
 						if (
 							(meal.date > search_by.end_date)
 							|| (meal.date < search_by.start_date)
-							|| (search_by.only_photos && !meal[person]?.photo)
-							|| (!search_by.include_takeaway && !meal[person]?.takeaway)
-							|| (!search_by.include_vegetarian && !meal[person]?.vegetarian)
-							|| (!search_by.include_restaurant && !meal[person]?.restaurant)) {
+							|| (search_by.only_photos && !meal_person.photo)
+							|| (!search_by.include_takeaway && !meal_person.takeaway)
+							|| (!search_by.include_vegetarian && !meal_person.vegetarian)
+							|| (!search_by.include_restaurant && !meal_person.restaurant)) {
 							continue
 						}
 
-						const known_category = meal[person].meal_category_id === search_by.category_id
-						const has_category_description = cat_id.has(meal[person].meal_category_id) || desc_id.has(meal[person].meal_description_id)
+						const known_category = meal_person.meal_category_id === search_by.category_id
+						const has_category_description = cat_id.has(meal_person.meal_category_id) || desc_id.has(meal_person.meal_description_id)
 
 						if (
 							(search_by.category_id && !search_by.term && known_category)
@@ -486,10 +505,10 @@ export const mealModule = defineStore(ModuleName.Meal, {
 			if (meal[person]?.restaurant) {
 				filtered_meal_variants.add('restaurant')
 			}
-			if (meal[person]?.restaurant) {
+			if (meal[person]?.takeaway) {
 				filtered_meal_variants.add('takeaway')
 			}
-			if (meal[person]?.restaurant) {
+			if (meal[person]?.vegetarian) {
 				filtered_meal_variants.add('vegetarian')
 			}
 		},

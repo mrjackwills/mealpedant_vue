@@ -1,5 +1,5 @@
 <template>
-	<v-row class='no-gutters ma-0 pa-0' justify='center'>
+	<v-row class='ma-0 pa-0 justify-center' density='compact'>
 		<v-col class='ma-0 pa-0' cols='12' sm='8'>
 			<v-data-table-virtual
 				class='elevation-1 mt-4'
@@ -14,10 +14,10 @@
 					<tr>
 						<td class='text-left cl' @click='downloadFile(item.file_name)'>
 							<ButtonIcon :icon='mdiDownload' margin='mr-1' :size='mdAndDown?"x-small":""' />
-							<span :class='smAndDown?"smalltext":"text-caption"'>{{ item.file_name }}</span>
+							<span :class='smAndDown?"smalltext":"text-body-small"'>{{ item.file_name }}</span>
 						</td>
 						<td class='text-right'>
-							<div :class='smAndDown?"smalltext":"text-caption"'>{{ bytes_to_mb(Number(item.file_size)) }} mb</div>
+							<div :class='smAndDown?"smalltext":"text-body-small"'>{{ bytes_to_mb(Number(item.file_size)) }} mb</div>
 						</td>
 						<td class='text-right cl' @click='deleteFile(item.file_name)'>
 							<ButtonIcon color='red' :icon='mdiCloseCircleOutline' />
@@ -27,19 +27,17 @@
 			</v-data-table-virtual>
 		</v-col>
 		<v-col class='ma-0 pa-0' cols='12'>
-			<v-row align='center' class='no-gutters ma-0 pa-0 mt-n4' justify='space-around'>
-				<v-col class='ma-0 pa-0 mt-5' cols='auto'>
-					<div class='text-center'>
-						<v-checkbox
-							v-model='withPhotos'
-							class=''
-							color='primary'
-							:disabled='localLoading'
-							label='include photos'
-						/>
-					</div>
+			<v-row class='ma-0 pa-0 justify-space-around' density='compact'>
+				<v-col class='ma-0 pa-0 text-center ' cols='auto'>
+					<v-checkbox
+						v-model='withPhotos'
+						class=''
+						color='primary'
+						:disabled='localLoading'
+						label='include photos'
+					/>
 				</v-col>
-				<v-col class='' cols='auto'>
+				<v-col class='ma-0 pa-0 mt-3' cols='auto'>
 					<v-btn
 						:block='smAndDown'
 						:color='localLoading?"":"secondary"'

@@ -5,6 +5,7 @@ export type su = u<string>
 export type P<T> = Promise<T>
 export type PV = P<void>
 export type PB = P<boolean>
+export type PUB = P<undefined | boolean>
 
 export type ConstT<T> = T[keyof T]
 

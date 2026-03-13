@@ -1,3 +1,10 @@
+# <a href='https://github.com/mrjackwills/mealpedant_vue/releases/tag/v2.1.2'>v2.1.2</a>
+### 2026-03-13
+
+### Chores
++ dependencies updated, [488372e5](https://github.com/mrjackwills/mealpedant_vue/commit/488372e594316c5287aac8691e0256e5601a5288)
++ GitHub workflow updated, [5ca901e7](https://github.com/mrjackwills/mealpedant_vue/commit/5ca901e77e9f002372e8c5df740fd657264aed10)
+
 # <a href='https://github.com/mrjackwills/mealpedant_vue/releases/tag/v2.1.1'>v2.1.1</a>
 ### 2026-01-22
 

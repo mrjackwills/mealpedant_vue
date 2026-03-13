@@ -1,6 +1,6 @@
 <template>
 	<section>
-		<v-row v-if='!backup' align='center' class='ma-0 pa-0' justify='center'>
+		<v-row v-if='!backup' class='ma-0 pa-0 justify-center'>
 			<v-col class='pa-0 mb-4' cols='12' md='8'>
 				Backups enable a user to login to their account in situations where their two factor authentication app
 				is unavailable.
@@ -12,9 +12,9 @@
 			</v-col>
 		</v-row>
 		<v-expand-transition>
-			<v-row v-if='backupArray.length === 0' align='center' class='ma-0 pa-0' justify='center'>
+			<v-row v-if='backupArray.length === 0' class='ma-0 pa-0 justify-center'>
 				<v-col class='ma-0 pa-0' cols='12' lg='4'>
-					<v-row justify='center'>
+					<v-row class='justify-center'>
 						<v-col cols='auto'>
 							<v-btn
 								color='secondary'
@@ -34,7 +34,7 @@
 		<v-expand-transition>
 			<section v-if='backupArray.length > 0'>
 				<section>
-					<v-row align='center' class='ma-0 pa-0' justify='center'>
+					<v-row class='ma-0 pa-0 justify-center'>
 
 						<v-col class='ma-0 pa-0' cols='auto'>
 							These backup tokens need to be stored securely, each token can only be used once
@@ -42,14 +42,11 @@
 
 					</v-row>
 					<v-row
-						align='center'
-						class='mt-4'
-						dense
-						justify='center'
-						no-gutters
+						class='mt-4 justify-center'
+						density='compact'
 					>
 						<v-col class='ma-0 pa-0' cols='12' md='auto'>
-							<v-row class='ma-0 pa-0' justify='space-between'>
+							<v-row class='ma-0 pa-0 justify-space-between'>
 								<v-col cols='5'>
 									<div v-for='(item, index) in backupArray.slice(0, 5)' :key='index'>
 										{{ item }}
@@ -65,11 +62,8 @@
 						</v-col>
 					</v-row>
 					<v-row
-						align='center'
-						class='mt-4'
-						dense
-						justify='space-around'
-						no-gutters
+						class='mt-4 justify-space-around'
+						density='compact'
 					>
 
 						<v-col cols='auto'>

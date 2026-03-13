@@ -58,7 +58,9 @@ class MealStorage {
 		const hash = this.hash_get()
 		try {
 			const latest_hash = authenticated ? await axios_authenticatedFood.mealhash_get() : await axios_incognito.mealhash_get()
-			this.hash_set(latest_hash)
+			if (latest_hash) {
+				this.hash_set(latest_hash)
+			}
 			if (hash && hash === latest_hash) {
 				const meals_in_storage = this.meals_get()
 				await (meals_in_storage ? this.#get_set_meals_to_pinia(authenticated, meals_in_storage) : this.#get_set_meals_to_pinia(authenticated))
@@ -81,8 +83,10 @@ class MealStorage {
 			mealModule().set(current_meals)
 		} else {
 			const current_meals = authenticated ? await axios_authenticatedFood.all_get() : await axios_incognito.meals_get()
-			this.meals_set(current_meals)
-			mealModule().set(current_meals)
+			if (current_meals) {
+				this.meals_set(current_meals)
+				mealModule().set(current_meals)
+			}
 		}
 	}
 }

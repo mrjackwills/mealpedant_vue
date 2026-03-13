@@ -1,7 +1,7 @@
 <template>
-	<v-row class='no-gutters' justify='center'>
+	<v-row class='justify-center' density='compact'>
 		<v-col class='' cols='12' md='10'>
-			<v-row class='no-gutters' justify='center'>
+			<v-row class='justify-center' density='compact'>
 				<v-col cols='12'>
 					<v-data-table-virtual
 						id='datatable'

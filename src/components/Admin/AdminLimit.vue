@@ -1,5 +1,5 @@
 <template>
-	<v-row justify='center' wrap>
+	<v-row class='justify-center' wrap>
 		<v-col cols='12' md='6' sm='8'>
 			<v-data-table-virtual
 				class='elevation-1 mt-2'

@@ -1,6 +1,6 @@
 <template>
-	<v-container class='fill-height' fluid>
-		<v-row align='center' justify='center' wrap>
+	<v-container class='' fluid>
+		<v-row class='justify-center' wrap>
 			<v-col cols='12' md='4' sm='8'>
 				<v-form method='post' @submit.prevent>
 					<div v-for='(item, index) in textFields' :key='index'>

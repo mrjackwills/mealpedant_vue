@@ -1,5 +1,5 @@
 <template>
-	<v-row align='center' class='ma-0 pa-0 mt-1 mt-md-4' justify='center'>
+	<v-row class='ma-0 pa-0 mt-1 mt-md-4 justify-center'>
 		<v-col class='cl ma-0 pa-0' cols='auto'>
 			<v-btn
 				color='infobar'

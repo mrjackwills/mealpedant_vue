@@ -1,11 +1,11 @@
 <template>
-	<v-container v-if='pageInit' class='fill-height' fluid>
-		<v-row align='center' class='ma-0 pa-0' justify='center'>
+	<v-container v-if='pageInit' class='' fluid>
+		<v-row class='ma-0 pa-0 justify-center'>
 			<v-col class='ma-0 pa-0' cols='11'>
 				<TwoFactor />
 			</v-col>
 			<v-col v-if='!setupProcessStarted && !backupProcess' class='pa-0' cols='11'>
-				<v-row class='no-gutters my-3' justify='center'>
+				<v-row class='my-3 justify-center' density='compact'>
 					<v-col cols='12' md='6' sm='8'>
 						<v-divider />
 					</v-col>

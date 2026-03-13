@@ -2,6 +2,7 @@
 	<v-data-table-virtual
 		:density
 		:headers
+		height='100%'
 		hide-default-footer
 		hover
 		item-key='name'
@@ -10,7 +11,7 @@
 	>
 
 		<template #[`item.v`]='{ item }'>
-			<v-row align='center' class='ma-0 pa-0 text-red-lighten-4 fill-height' :class='{ "smalltext": smAndDown }' justify='start'>
+			<v-row class='ma-0 pa-0 text-red-lighten-4 fill-height justify-start' :class='{ "smalltext": smAndDown }' style='min-height: 3rem;'>
 				<v-col class='ma-0 pa-0' cols='auto'>
 					{{ formatCategoryName(item.variant) }}
 				</v-col>
@@ -19,10 +20,10 @@
 
 		<template #[`item.q`]='{ item }'>
 
-			<v-row align='center' class='ma-0 pa-0 fill-height' :class='{ "smalltext": smAndDown }' :justify='authenticated?show_jack && show_dave?"start":"end":"end"'>
+			<v-row class='ma-0 pa-0 fill-height' :class='[{ "smalltext": smAndDown }, justify]'>
 
 				<v-col v-if='authenticated' class='ma-0 pa-0' :class='show_jack && show_dave? "text-mealtype" : show_jack &&!show_dave?"text-secondary":"text-primary"' cols='6'>
-					<v-row align='center' class='ma-0 pa-0' justify='space-around'>
+					<v-row class='ma-0 pa-0 justify-space-around'>
 						<v-col class='ma-0 pa-0 font-weight-bold mono-num' cols='6'>
 							{{ item.q.Dave + item.q.Jack }}
 						</v-col>
@@ -35,9 +36,9 @@
 				</v-col>
 
 				<v-col v-if='authenticated? show_dave&&show_jack : true' class='ma-0 pa-0' :cols='authenticated? "6":"8"'>
-					<v-row align='center' class='ma-0 pa-0' justify='center'>
+					<v-row class='ma-0 pa-0 justify-center'>
 						<v-col v-if='authenticated' class='ma-0 pa-0 text-primary' cols='12'>
-							<v-row align='center' class='ma-0 pa-0' justify='space-around'>
+							<v-row class='ma-0 pa-0 justify-space-around'>
 								<v-col class='ma-0 pa-0 font-weight-bold text-right mono-num'>
 									{{ item.q.Dave }}
 								</v-col>
@@ -51,7 +52,7 @@
 						</v-col>
 
 						<v-col class='ma-0 pa-0 text-secondary' cols='12'>
-							<v-row align='center' class='ma-0 pa-0' justify='space-around'>
+							<v-row class='ma-0 pa-0 justify-space-around'>
 								<v-col class='ma-0 pa-0 font-weight-bold text-right mono-num'>
 									{{ item.q.Jack }}
 								</v-col>
@@ -91,6 +92,11 @@ const total_meals_visible = computed(() => mealStore.get_total_meals_visible())
 const density = computed(() => platform.value.firefox ? 'comfortable' : 'compact')
 
 const has_filter = computed(() => mealStore.is_filtered)
+
+const justify = computed(() => {
+	const suffix = authenticated.value ? (show_jack.value && show_dave.value ? 'start' : 'end') : 'end'
+	return `justify-${suffix}`
+})
 
 const headers = [
 	{

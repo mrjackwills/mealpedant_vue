@@ -1,6 +1,6 @@
 <template>
 	<div v-if='passwordResetDate'>
-		<v-row align='center' class='ma-0 pa-0' dense justify='start'>
+		<v-row class='ma-0 pa-0 justify-start' density='compact'>
 			<v-col class='ma-0 pa-0' cols='12'>
 				<span class='smalltext'>{{ passwordCreationIp }}</span>
 			</v-col>
@@ -8,7 +8,7 @@
 				<span class='smalltext'>{{ passwordResetDate }}</span>
 			</v-col>
 		</v-row>
-		<v-row align='center' class='ma-0 pa-0' justify='start'>
+		<v-row class='ma-0 pa-0 justify-start'>
 			<v-col class='pa-0 ma-0' cols='auto'>
 				<v-btn
 					class='ma-0 pa-0 fab-fix mr-6 text-black'
@@ -18,7 +18,7 @@
 					@click='copyString'
 				>
 					<v-icon color='primary' :icon='mdiContentCopy' size='x-small' />
-					<span class='text-overline ml-1 text-primary'>copy</span>
+					<span class='text-label-small ml-1 text-primary'>copy</span>
 				</v-btn>
 			</v-col>
 			<v-col class='pa-0 ma-0' cols='auto'>
@@ -30,13 +30,13 @@
 					@click='revoke'
 				>
 					<v-icon :icon='mdiClose' size='small' />
-					<span class='text-overline ml-1 text-secondary'>revoke</span>
+					<span class='text-label-small ml-1 text-secondary'>revoke</span>
 				</v-btn>
 			</v-col>
 		</v-row>
 	</div>
 	<div v-else>
-		<v-row align='center' class='ma-0 pa-0' justify='start'>
+		<v-row class='ma-0 pa-0 justify-start'>
 			<v-col class='pa-0 ma-0 mr-6' cols='auto'>
 				<v-btn class='ma-0 pa-0 fab-fix' color='mealtype' variant='text' @click='force'>
 					<v-icon :icon='mdiLockReset' size='small' />
@@ -44,11 +44,11 @@
 				</v-btn>
 			</v-col>
 		</v-row>
-		<v-row align='center' class='ma-0 pa-0 mt-n4' justify='start'>
+		<v-row class='ma-0 pa-0 mt-n4 justify-start'>
 			<v-col class='pa-0 ma-0' cols='auto'>
 				<v-switch v-model='withEmail' :color='withEmail ? "mealtype" : ""'>
 					<template #label>
-						<span class='text-overline'>send email</span>
+						<span class='text-label-small'>send email</span>
 					</template>
 				</v-switch>
 			</v-col>

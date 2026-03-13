@@ -1,10 +1,10 @@
 <template>
-	<v-container class='fill-height' fluid>
-		<v-row align='center' justify='center' wrap>
+	<v-container class='' fluid>
+		<v-row class='justify-center' wrap>
 			<v-col cols='12' md='9'>
 				<p class='text-center mb-2' :class='fontSize'>Enter your email address to receive instructions on how to
 					reset your password</p>
-				<v-row align='center' justify='center' wrap>
+				<v-row class='justify-center' wrap>
 					<v-col cols='12' md='4' sm='8'>
 						<v-form ref='form' @submit.prevent>
 							<v-text-field
@@ -86,7 +86,7 @@ const emailErrors = computed((): Array<string> => {
 	return errors
 })
 
-const fontSize = computed(() => mdAndDown ? 'text-subtitle-1' : 'text-h5')
+const fontSize = computed(() => mdAndDown ? 'text-body-large' : 'text-headline-medium')
 
 const completed = ref(false)
 const user = ref({ email: '' })

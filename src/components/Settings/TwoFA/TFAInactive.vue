@@ -1,7 +1,7 @@
 <template>
 	<section>
-		<v-row align='center' class='ma-0 pa-0' justify='center'>
-			<v-col class='pl-0 ml-0 text-body-1' cols='12' lg='8'>
+		<v-row class='ma-0 pa-0 justify-center'>
+			<v-col class='pl-0 ml-0 text-body-large' cols='12' lg='8'>
 				Two-Factor Authentication (2FA) is an additional layer of security to protect your Meal Pedant account.
 				When activated,
 				you will be required to enter a time sensitive code during login.
@@ -13,7 +13,7 @@
 			</v-col>
 		</v-row>
 		<v-expand-transition>
-			<v-row v-if='!setupProcessStarted' align='center' class='ma-0 pa-0' justify='center'>
+			<v-row v-if='!setupProcessStarted' class='ma-0 pa-0 justify-center'>
 				<v-col class='ml-0 pl-0' cols='auto'>
 					<v-btn color='secondary' rounded variant='flat' @click='start2FASetup'>
 						<v-icon :icon='mdiShieldPlus' />

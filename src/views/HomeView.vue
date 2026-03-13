@@ -1,15 +1,15 @@
 <template>
 	<v-container class='' fluid>
-		<v-row align='center' justify='center'>
-			<v-col align='center' cols='11'>
-				<p class='text-white text-h5'>
-					Since May 9th 2015, two friends have fastidiously exchanged information on every evening meal that they have consumed.
-				</p>
-				<p class='text-center text-white text-h5 my-4'>
-					This is a comprehensive chronicling of that pedantry.
-				</p>
+		<v-row class='justify-center'>
+			<v-col class='align-center text-center text-white text-headline-small' cols='12' md='8'>
+				Since May 9th 2015, two friends have fastidiously exchanged information on every evening meal that they have consumed.
+				<br>
+				<br>
+				This is a comprehensive chronicling of that pedantry.
+				<br>
+				<br>
 			</v-col>
-			<v-col align='center' cols='11' justify='center'>
+			<v-col class='align-center justify-center text-center' cols='12'>
 				<v-btn
 					class='cl'
 					color='secondary'
@@ -18,11 +18,11 @@
 					:to='FrontEndRoutes.MEALS'
 					variant='flat'
 				>
-					<v-row align='center' justify='center'>
-						<v-col class='pa-1' cols='auto'>
+					<v-row class='justify-center align-center' density='compact'>
+						<v-col cols='auto'>
 							<ButtonIcon color='white' :icon='mdiFood' size='large' />
 						</v-col>
-						<v-col class='pa-1' cols='auto'>
+						<v-col cols='auto'>
 							see the meals
 						</v-col>
 					</v-row>

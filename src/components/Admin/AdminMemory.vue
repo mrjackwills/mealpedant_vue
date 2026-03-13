@@ -1,5 +1,5 @@
 <template>
-	<v-row class='my-0' justify='center'>
+	<v-row class='my-0 justify-center'>
 		<v-col
 			v-if='memory'
 			class='mt-8'
@@ -10,32 +10,29 @@
 			<v-row
 				v-for='(value, name) in memory'
 				:key='name'
-				align='center'
-				class='my-0'
-				justify='space-around'
+				class='my-0 justify-space-around'
 			>
-				<v-col class='pa-0 text-right' cols='4'>
+				<v-col class='pa-0 text-right' cols='5' lg='3'>
 					{{ name }}:
 				</v-col>
-				<v-col v-if='!name.includes("uptime")' class='pa-0 text-left' cols='4'>
+				<v-col v-if='!name.includes("uptime")' class='pa-0 text-left' cols='5' lg='3'>
 					{{ bytes_to_mb(Number(value)) }} mb
 				</v-col>
-				<v-col v-else class='pa-0 text-left' cols='4'>
+				<v-col v-else class='pa-0 text-left' cols='5' lg='3'>
 					{{ secondsToText(Number(value)) }}
 				</v-col>
-				<v-col class='ma-0 pa-0' cols='12' sm='6'>
+				<v-col class='ma-0 pa-0' cols='8'>
 					<v-divider />
 				</v-col>
 			</v-row>
-			<v-row class='mt-2' justify='center'>
+			<v-row class='mt-2 justify-center'>
 				<v-col cols='auto'>
 					<v-row
 						v-for='(item, index) in buttonArray'
 						:key='index'
-						align='center'
-						class='no-gutters'
+						class='justify-center'
 						:class='{ "mt-4": index === 1 }'
-						justify='center'
+						density='compact'
 					>
 						<v-col class='pa-0' cols='12' md='auto'>
 							<v-btn
