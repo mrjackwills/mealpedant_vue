@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import router from '@/router'
-import { axios_authenticatedUser } from '@/services/axios'
+import { fetch_authenticatedUser } from '@/services/fetch'
 import { ModuleName } from '@/types/const_module'
 import { FrontEndRoutes } from '@/types/const_routes'
 
@@ -35,7 +35,7 @@ export const userModule = defineStore(ModuleName.User, {
 
 		clientSideSignout (): void {
 			loadingModule().set_loading(true)
-			axios_authenticatedUser.signout_post()
+			fetch_authenticatedUser.signout_post()
 			this.authenticated = false
 			adminModule().$reset()
 			snackbarModule().$reset()

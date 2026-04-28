@@ -11,6 +11,7 @@
 			<v-col class='ma-0 pa-0' cols='auto'>
 				<ButtonIcon color='white' :icon='mdiClose' margin='mr-1' :size='chip_size' />
 			</v-col>
+
 			<v-col class='ma-0 pa-0' cols='auto'>
 				clear filters
 			</v-col>

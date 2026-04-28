@@ -3,6 +3,7 @@
 		<v-row class='justify-center' wrap>
 			<v-col cols='12' md='9'>
 				<p class='text-center mb-2' :class='fontSize'>Please enter a new password</p>
+
 				<v-row class='justify-center' wrap>
 					<v-col cols='12' md='5' sm='8'>
 						<v-form method='post' @submit.prevent>
@@ -24,10 +25,12 @@
 								@input='touch(item.model)'
 								@keyup.enter='reset'
 							/>
+
 							<v-expand-transition>
 								<PasswordContainsEmail v-if='errors.new_password && !passNum' />
 								<HibpMessage v-if='passNum' :pass-num />
 							</v-expand-transition>
+
 							<section v-if='twoFA_active'>
 								<v-text-field
 									v-for='item in tokenFields'
@@ -46,6 +49,7 @@
 								/>
 							</section>
 						</v-form>
+
 						<div class='text-center mt-1'>
 							<v-btn
 								:color='loading || v$.$invalid || completed || errors.new_password || disabled ? "" : "secondary"'
@@ -73,7 +77,7 @@ import useVuelidate from '@vuelidate/core'
 import { minLength, required } from '@vuelidate/validators'
 import { useRouter } from 'vue-router'
 import { useDisplay } from 'vuetify'
-import { axios_incognito } from '@/services/axios'
+import { fetch_incognito } from '@/services/fetch'
 import { snackSuccess } from '@/services/snack'
 import { FrontEndRoutes } from '@/types/const_routes'
 import { passwordCheck } from '@/vanillaTS/hibp'
@@ -161,7 +165,7 @@ async function reset (): Promise<void> {
 		token: false,
 		new_password: false,
 	}
-	const success = await axios_incognito.reset_patch({
+	const success = await fetch_incognito.reset_patch({
 		resetId: resetId.value,
 		password: user.value.new_password,
 		token: user.value.token,

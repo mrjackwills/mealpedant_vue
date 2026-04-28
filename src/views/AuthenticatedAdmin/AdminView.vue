@@ -20,10 +20,12 @@
 							</v-col>
 						</v-row>
 					</router-link>
+
 					<v-divider />
 				</v-col>
 			</v-row>
 		</v-col>
+
 		<v-col v-for='(item, index) in adminRows' :key='index' cols='12'>
 			<v-row class=' justify-center pa-0 ma-0' density='compact' wrap>
 				<v-col cols='12' sm='8'>
@@ -34,12 +36,14 @@
 								class='align-center'
 								density='compact'
 								wrap
-								@click='clicker(item.axios, item.show)'
+								@click='clicker(item.fetch, item.show)'
 							>
 								<v-col class='mr-2' cols='auto'>
 									<span class='cl text-headline-medium unselectable'>{{ item.title }}</span>
 								</v-col>
+
 								<v-spacer />
+
 								<v-col :class='{ "ml-md-12": returnThis(item.show) }' cols='auto'>
 									<v-icon>{{ returnThis(item.icon) }}</v-icon>
 								</v-col>
@@ -48,6 +52,7 @@
 					</v-row>
 				</v-col>
 			</v-row>
+
 			<v-col class='pa-1' cols='12'>
 				<v-expand-transition>
 					<div v-if='returnThis(item.show)'>
@@ -57,7 +62,7 @@
 									v-if='returnThis(item.show)'
 									class='mx-md-12 pa-0'
 									cols='auto'
-									@click='refresh(item.axios)'
+									@click='refresh(item.fetch)'
 								>
 									<v-btn
 										class='ma-0 mt-4'
@@ -72,12 +77,14 @@
 								</v-col>
 							</v-row>
 						</v-col>
+
 						<v-col class='pa-0' cols='12'>
 							<component :is='item.component' />
 						</v-col>
 					</div>
 				</v-expand-transition>
 			</v-col>
+
 			<v-row v-if='index !== adminRows.length - 1' class=' justify-center' density='compact'>
 				<v-col cols='12' sm='8'>
 					<v-divider />
@@ -88,7 +95,7 @@
 </template>
 
 <script setup lang='ts'>
-import type { PV, TAdminAxiosNames, TAdminShow } from '@/types'
+import type { PV, TAdminFetchNames, TAdminShow } from '@/types'
 import { mdiChevronDown, mdiChevronUp, mdiRefresh } from '@mdi/js'
 import AdminBackup from '@/components/Admin/AdminBackup.vue'
 import AdminEmail from '@/components/Admin/AdminEmail.vue'
@@ -96,7 +103,7 @@ import AdminError from '@/components/Admin/AdminError.vue'
 import AdminLimit from '@/components/Admin/AdminLimit.vue'
 import AdminMemory from '@/components/Admin/AdminMemory.vue'
 import AdminRegisteredUsers from '@/components/Admin/AdminRegisteredUsers.vue'
-import { axios_admin } from '@/services/axios'
+import { fetch_admin } from '@/services/fetch'
 import { FrontEndRoutes } from '@/types/const_routes'
 
 const loading = computed({
@@ -187,96 +194,96 @@ function getParam (x: TAdminShow): Ref<boolean> {
 	}
 }
 
-// Dispatch axios request to update filelist, show filelist component
-async function clicker (axios: TAdminAxiosNames, show: TAdminShow): PV {
+// Dispatch fetch request to update filelist, show filelist component
+async function clicker (fetch: TAdminFetchNames, show: TAdminShow): PV {
 	loading.value = true
-	if (!getParam(show).value) await dispatch(axios)
+	if (!getParam(show).value) await dispatch(fetch)
 	getParam(show).value = !getParam(show).value
 	loading.value = false
 }
 
 /*
- * Dispatch vuex axios command
- * @param {string} choice A valid suffix to `axios` in vuex admin dispatch section
+ * Dispatch vuex fetch command
+ * @param {string} choice A valid suffix to `fetch` in vuex admin dispatch section
  */
-async function dispatch (axios: TAdminAxiosNames): PV {
-	switch (axios) {
+async function dispatch (fetch: TAdminFetchNames): PV {
+	switch (fetch) {
 		case 'backup': {
-			await axios_admin.backup_get()
+			await fetch_admin.backup_get()
 			break
 		}
 		case 'error': {
-			await axios_admin.logs_get()
+			await fetch_admin.logs_get()
 			break
 		}
 		case 'limit': {
-			await axios_admin.limit_get()
+			await fetch_admin.limit_get()
 			break
 		}
 		case 'email': {
-			await axios_admin.email_get()
+			await fetch_admin.email_get()
 			break
 		}
 		case 'user': {
-			await axios_admin.user_get()
+			await fetch_admin.user_get()
 			break
 		}
 		case 'memory': {
-			await axios_admin.memory_get()
+			await fetch_admin.memory_get()
 			break
 		}
 	}
 }
 
 /*
- * Dispatch vuex axios command to refresh chosen section
- * @param {string} choice A valid suffix to `axios` in vuex admin dispatch section
+ * Dispatch vuex fetch command to refresh chosen section
+ * @param {string} choice A valid suffix to `fetch` in admin dispatch section
  */
-async function refresh (axios: TAdminAxiosNames): PV {
+async function refresh (fetch: TAdminFetchNames): PV {
 	loading.value = true
-	dispatch(axios)
+	dispatch(fetch)
 	loading.value = false
 }
 
 const adminRows = [
 	{
-		axios: 'backup' as const,
 		component: AdminBackup,
+		fetch: 'backup' as const,
 		icon: 'backupIcon' as const,
 		show: 'showBackup' as const,
 		title: 'Database Backups',
 	},
 	{
-		axios: 'email' as const,
 		component: AdminEmail,
+		fetch: 'email' as const,
 		icon: 'emailIcon' as const,
 		show: 'showEmail' as const,
 		title: 'Email',
 	},
 	{
-		axios: 'error' as const,
 		component: AdminError,
+		fetch: 'error' as const,
 		icon: 'errorIcon' as const,
 		show: 'showError' as const,
 		title: 'Error Logs',
 	},
 	{
-		axios: 'user' as const,
 		component: AdminRegisteredUsers,
+		fetch: 'user' as const,
 		icon: 'registeredUsersIcon' as const,
 		show: 'showRegisterUsers' as const,
 		title: 'Registered Users',
 	},
 	{
-		axios: 'limit' as const,
 		component: AdminLimit,
+		fetch: 'limit' as const,
 		icon: 'limitIcon' as const,
 		show: 'showLimit' as const,
 		title: 'Rate Limited Users',
 	},
 	{
-		axios: 'memory' as const,
 		component: AdminMemory,
+		fetch: 'memory' as const,
 		icon: 'memoryIcon' as const,
 		show: 'showMemory' as const,
 		title: 'Server Details',

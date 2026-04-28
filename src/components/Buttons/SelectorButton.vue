@@ -4,9 +4,11 @@
 			<v-col class='pa-0 mb-n2' cols='11' md='3' sm='7'>
 				<CustomSearchSelector />
 			</v-col>
+
 			<v-col class='pa-0 mb-n2' cols='11' md='3' sm='7'>
 				<VariantSelector />
 			</v-col>
+
 			<v-col class='pa-0 mb-n2' cols='11' md='3' sm='7'>
 				<CategorySelector />
 			</v-col>

@@ -21,11 +21,14 @@
 					:size='18'
 					:width='3'
 				/>
+
 				<v-icon v-if='icon && !loading' class='' :icon medium />
 			</v-col>
+
 			<v-col class='pa-0 ma-0 text-center' :class='messageSize' cols='10'>
 				{{ message }}
 			</v-col>
+
 			<v-col class='pa-0 ma-0' cols='1'>
 				<v-icon
 					v-if='closable'

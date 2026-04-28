@@ -175,12 +175,12 @@ export type TCategoryTotals = Array<{
 export type TFilterClick = 'removePhotos' | 'removeDisabled' | 'removeJack' | 'removeDave' | 'reset'
 export type TFilterDisabled = 'photoDisabled' | 'personDisabled' | 'original'
 
-type TAxiosStatus = { status: (typeof HttpCode)[keyof typeof HttpCode] }
+type TFetchStatus = { status: (typeof HttpCode)[keyof typeof HttpCode] }
 
 export type TSigninBody = { response: { twoFABackup: boolean } }
-export type TSigninResponse = TSigninBody & TAxiosStatus
+export type TSigninResponse = TSigninBody & TFetchStatus
 
-export type TAdminAxiosNames = 'backup' | 'limit' | 'email' | 'user' | 'memory' | 'error'
+export type TAdminFetchNames = 'backup' | 'limit' | 'email' | 'user' | 'memory' | 'error'
 export type TAdminShow = 'showBackup' | 'showLimit' | 'showError' | 'showEmail' | 'showRegisterUsers' | 'showMemory'
 
 export type TDialogData = {

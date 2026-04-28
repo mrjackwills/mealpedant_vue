@@ -58,6 +58,7 @@
 							<ButtonIcon :icon='mdiClose' />
 							cancel
 						</v-btn>
+
 						<v-checkbox
 							v-else
 							v-model='user.remember'
@@ -106,7 +107,7 @@ import useVuelidate from '@vuelidate/core'
 import { email, minLength, required } from '@vuelidate/validators'
 import { useRouter } from 'vue-router'
 import { useDisplay } from 'vuetify'
-import { axios_authenticatedUser, axios_incognito } from '@/services/axios'
+import { fetch_authenticatedUser, fetch_incognito } from '@/services/fetch'
 import { HttpCode } from '@/types/const_http'
 import { FrontEndRoutes } from '@/types/const_routes'
 const { mdAndUp } = useDisplay()
@@ -192,7 +193,7 @@ function cancel (): void {
 }
 const localLoading = ref(false)
 
-// / axios method to sign in user, works with both 2fa and non 2fa users
+// fetch method to sign in user, works with both 2fa and non 2fa users
 async function signin (): PV {
 	if (v$.value.$invalid || !user.value.email || !user.value.password || (twoFARequired.value && !user.value.token)) return
 	if (pwa.value) user.value.remember = true
@@ -205,14 +206,14 @@ async function signin (): PV {
 		remember: user.value.remember,
 	}
 	passwordVisible.value = false
-	const loginRequest = await axios_incognito.signin_post(authObject)
+	const loginRequest = await fetch_incognito.signin_post(authObject)
 	if (loginRequest?.status === HttpCode.OK) {
 		userModule().set_authenticated(true)
 		snackbarModule().$reset()
 		infobarModule().$reset()
 		mealModule().$reset()
 		mealStorage.delete()
-		await axios_authenticatedUser.authenticated_get()
+		await fetch_authenticatedUser.authenticated_get()
 		await mealStorage.seed_meal_pinia()
 		user.value = {
 			email: '',

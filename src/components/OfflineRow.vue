@@ -17,6 +17,7 @@
 			<v-col class='' cols='auto'>
 				<v-icon :icon='mdiWifiStrengthAlertOutline' />
 			</v-col>
+
 			<v-col class='' cols='auto'>
 				offline
 			</v-col>
@@ -26,7 +27,7 @@
 
 <script setup lang='ts'>
 import { mdiWifiStrengthAlertOutline } from '@mdi/js'
-import { axios_adminMeal, axios_incognito } from '@/services/axios'
+import { fetch_adminMeal, fetch_incognito } from '@/services/fetch'
 import { snackError } from '@/services/snack'
 
 onBeforeUnmount(() => {
@@ -48,13 +49,13 @@ const goOnlineInterval = ref(0)
 async function goOnline (): Promise<void> {
 	try {
 		loading.value = true
-		await axios_incognito.online_get()
+		await fetch_incognito.online_get()
 		if (authenticated.value) {
 			mealStorage.delete()
 			infobarModule().$reset()
 			mealModule().clear_all_filters()
 			await mealStorage.seed_meal_pinia()
-			if (userModule().admin) await axios_adminMeal.missing_get()
+			if (userModule().admin) await fetch_adminMeal.missing_get()
 		}
 	} catch (error) {
 		const message = error instanceof Error ? error.message : 'ERROR'

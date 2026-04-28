@@ -41,6 +41,7 @@
 						<v-col class='ma-0 pa-0 font-weight-bol mono-num' cols='6'>
 							{{ item.t }}
 						</v-col>
+
 						<v-col
 							v-tooltip:top='has_filter ? "% filtered meals" : "% all meals"'
 							class='ma-0 pa-0 font-italic mono-num'
@@ -71,6 +72,7 @@
 								</v-col>
 							</v-row>
 						</v-col>
+
 						<v-col class='ma-0 pa-0 text-secondary' cols='12'>
 							<v-row class='ma-0 pa-0 justify-space-around'>
 								<v-col class='ma-0 pa-0 font-weight-bold text-right mono-num'>
@@ -84,6 +86,7 @@
 									<span v-if='authenticated'>
 										{{ (100 / (item.t) *
 											item.j).toFixed(2) }}% </span>
+
 									<span v-else>
 										{{ (100 / (originalLength) * item.j).toFixed(2) }}%
 									</span>
@@ -94,6 +97,7 @@
 				</v-col>
 			</v-row>
 		</template>
+
 		<template v-if='tableData.length > 0' #bottom='{ }'>
 			<v-row
 				class='ma-0 pa-0 py-1 px-4 justify-space-around'
@@ -140,6 +144,7 @@
 					<section v-if='has_filter'>
 						filtered:
 						<span class='font-weight-bold text-mealtype mono-num'>{{ tableData.length }}</span>
+
 						<span v-tooltip:top='"% all categories"' class='font-italic text-mealtype mono-num'>
 							({{ (100 / (total_categories) * tableData.length).toFixed(2) }}%)
 						</span>

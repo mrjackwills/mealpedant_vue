@@ -4,6 +4,7 @@
 			<v-col cols='12' md='9'>
 				<p class='text-center mb-2' :class='fontSize'>Enter your email address to receive instructions on how to
 					reset your password</p>
+
 				<v-row class='justify-center' wrap>
 					<v-col cols='12' md='4' sm='8'>
 						<v-form ref='form' @submit.prevent>
@@ -21,6 +22,7 @@
 								@keyup.enter='forgot'
 							/>
 						</v-form>
+
 						<div class='text-center mt-1'>
 							<v-btn
 								class='elevation-0 mr-4'
@@ -35,6 +37,7 @@
 								<ButtonIcon :icon='mdiClose' />
 								cancel
 							</v-btn>
+
 							<v-btn
 								class='elevation-0'
 								:color='send_disabled?"":"secondary"'
@@ -62,7 +65,7 @@ import useVuelidate from '@vuelidate/core'
 import { email, required } from '@vuelidate/validators'
 import { useRouter } from 'vue-router'
 import { useDisplay } from 'vuetify'
-import { axios_incognito } from '@/services/axios'
+import { fetch_incognito } from '@/services/fetch'
 import { snackSuccess } from '@/services/snack'
 
 const { mdAndDown } = useDisplay()
@@ -100,11 +103,11 @@ function goback (): void {
 	router.back()
 }
 
-// ALWAYS sends a forgotten password axios request, and snack success
+// ALWAYS sends a forgotten password fetch request, and snack success
 async function forgot (): Promise<void> {
 	if (v$.value.$invalid) return
 	loading.value = true
-	const resetRequest = await axios_incognito.resetPassword_post(user.value.email)
+	const resetRequest = await fetch_incognito.resetPassword_post(user.value.email)
 	if (resetRequest) snackSuccess({
 		message: resetRequest,
 		icon: mdiEmail,

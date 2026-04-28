@@ -4,6 +4,7 @@
 			<v-col class='ma-0 pa-0' cols='11'>
 				<TwoFactor />
 			</v-col>
+
 			<v-col v-if='!setupProcessStarted && !backupProcess' class='pa-0' cols='11'>
 				<v-row class='my-3 justify-center' density='compact'>
 					<v-col cols='12' md='6' sm='8'>
@@ -11,6 +12,7 @@
 					</v-col>
 				</v-row>
 			</v-col>
+
 			<v-col v-if='!setupProcessStarted && !backupProcess' class='ma-0 pa-0 mb-8' cols='11'>
 				<ChangePassword />
 			</v-col>
@@ -19,7 +21,7 @@
 </template>
 
 <script setup lang='ts'>
-import { axios_authenticatedUser } from '@/services/axios'
+import { fetch_authenticatedUser } from '@/services/fetch'
 
 const backupProcess = computed(() => twoFAModule().backupProcess)
 const loading = computed({
@@ -35,7 +37,7 @@ const pageInit = ref(false)
 
 onBeforeMount(async () => {
 	loading.value = true
-	await axios_authenticatedUser.authenticated_get()
+	await fetch_authenticatedUser.authenticated_get()
 	pageInit.value = true
 	loading.value = false
 })

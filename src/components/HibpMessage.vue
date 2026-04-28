@@ -4,6 +4,7 @@
 		<br>It appears in a database of leaked passwords. Try using a password which is a complex combination of
 		letters, numbers, and symbols, and ideally utilise password manager.
 		<br>
+
 		<a
 			class='text-body-small text-white'
 			href='https://haveibeenpwned.com/Passwords'

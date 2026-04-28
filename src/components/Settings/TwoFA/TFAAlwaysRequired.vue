@@ -18,6 +18,7 @@
 						</v-switch>
 					</v-col>
 				</v-row>
+
 				<v-row class='ma-0 pa-0 mt-n4 justify-center'>
 					<v-col class='ma-0 pa-0' cols='12'>
 						When enabled, a Two Factor Authentication token will be required at all password prompts.
@@ -33,8 +34,8 @@
 <script setup lang='ts'>
 import type { PV, TAuthObject } from '@/types'
 import { mdiDeleteCircle } from '@mdi/js'
-import { axios_authenticatedUser } from '@/services/axios'
 import { dialoger } from '@/services/dialog'
+import { fetch_authenticatedUser } from '@/services/fetch'
 import { snackSuccess } from '@/services/snack'
 
 const arVal = ref(false)
@@ -72,7 +73,7 @@ const loading = computed({
 
 async function confirm_function (authObject: TAuthObject): PV {
 	loading.value = true
-	const success = await axios_authenticatedUser.setupTwoFA_patch({
+	const success = await fetch_authenticatedUser.setupTwoFA_patch({
 		...authObject,
 		always_required: false,
 	})
@@ -98,7 +99,7 @@ async function toggle (): PV {
 		show_dialog()
 	} else {
 		loading.value = true
-		const success = await axios_authenticatedUser.setupTwoFA_patch({ always_required: true })
+		const success = await fetch_authenticatedUser.setupTwoFA_patch({ always_required: true })
 		if (success) snackSuccess({ message: 'extra two-factor authentication prompts enabled' })
 		loading.value = false
 	}

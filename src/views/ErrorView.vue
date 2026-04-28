@@ -4,6 +4,7 @@
 			<v-col class='cl text-display-small text-center text-white' cols='10'>
 				Error - page not found
 			</v-col>
+
 			<v-col class='align-center justify-center text-center mt-4' cols='auto'>
 				<v-btn
 					class='cl'
@@ -17,6 +18,7 @@
 						<v-col class='pa-1' cols='auto'>
 							<ButtonIcon color='white' :icon='mdiHome' size='large' />
 						</v-col>
+
 						<v-col class='pa-1' cols='auto'>
 							<div>Return to home page</div>
 						</v-col>

@@ -4,8 +4,10 @@
 			Two Factor Authentication
 		</v-col>
 	</v-row>
+
 	<TFAStatusRow v-if='active && !backupProcess' :active text='Two-Factor enabled' @click='removeTwoFA' />
 	<TFAInactive v-if='!active' />
+
 	<section v-else>
 		<TFAStatusRow v-if='!backupProcess' :active='backup_count > 0' :text='backupText' @click='removeBackups' />
 		<TFABackup />
@@ -17,8 +19,8 @@
 <script setup lang='ts'>
 import type { PV, TAuthObject } from '@/types'
 import { useDisplay } from 'vuetify'
-import { axios_authenticatedUser } from '@/services/axios'
 import { dialoger } from '@/services/dialog'
+import { fetch_authenticatedUser } from '@/services/fetch'
 import { snackSuccess } from '@/services/snack'
 const { mdAndDown, mdAndUp } = useDisplay()
 
@@ -31,7 +33,7 @@ onBeforeMount(async () => {
 		twoFAStore.set_backupProcess(false),
 	]
 	await Promise.all(promiseList)
-	if (setupProcessStarted.value) await axios_authenticatedUser.setupTwoFA_delete()
+	if (setupProcessStarted.value) await fetch_authenticatedUser.setupTwoFA_delete()
 })
 
 const active = computed(() => twoFAStore.active)
@@ -52,7 +54,7 @@ const setupProcessStarted = computed(() => twoFAStore.setupProcessStarted)
 // @param {Object} AuthObject - {password: string, token?:string, twoFABackup?:boolean}
 async function removeTwoFAFunction (authObject: TAuthObject): PV {
 	loading.value = true
-	const confirm = await axios_authenticatedUser.twoFA_delete(authObject)
+	const confirm = await fetch_authenticatedUser.twoFA_delete(authObject)
 	if (confirm) {
 		twoFAStore.set_backupProcess(false)
 		snackSuccess({ message: 'two-factor authentication removed' })
@@ -61,7 +63,7 @@ async function removeTwoFAFunction (authObject: TAuthObject): PV {
 }
 async function removeTwoFABackupFunction (authObject: TAuthObject): PV {
 	loading.value = true
-	const success = await axios_authenticatedUser.twoFA_put(authObject)
+	const success = await fetch_authenticatedUser.twoFA_put(authObject)
 	if (success) twoFAStore.set_backupProcess(false)
 	snackSuccess({ message: 'two-factor authentication backups removed' })
 	loading.value = false

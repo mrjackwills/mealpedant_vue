@@ -11,21 +11,25 @@
 				<v-img id='topOfPage' :eager='true' src='@/assets/tile_svg.svg' />
 			</v-avatar>
 		</router-link>
+
 		<v-toolbar-title>
 			<router-link class='text-white' :to='FrontEndRoutes.MEALS'>
 				<span class='font-weight-bold' :class='navTitleFontSize' FrontendRoutes.BASE>Meal Pedant</span>
+
 				<section v-if='!mobile' class='mx-1'>
 					<span class='font-weight-light font-italic tag-line text-body-large'>"A meticulous daily log of
 						ingestion"</span>
 				</section>
 			</router-link>
 		</v-toolbar-title>
+
 		<v-toolbar-items v-if='!authed && !mobile' class=''>
 			<v-btn v-for='(item, index) in registerLinks' :key='`${index}`' class='cl' :to='item.route'>
 				<v-icon class='mr-1' dark :icon='item.icon' small />
 				{{ item.text }}
 			</v-btn>
 		</v-toolbar-items>
+
 		<v-toolbar-items v-if='authed && !mobile' class=''>
 			<v-row class='align-center'>
 				<v-col class='cl' cols='auto mr-6'>
@@ -37,6 +41,7 @@
 				</v-col>
 			</v-row>
 		</v-toolbar-items>
+
 		<v-toolbar-items v-if='mobile' class='mr-xs-4'>
 			<v-row class='justify-center align-center' density='compact'>
 				<v-col class='mr-2' cols='auto'>

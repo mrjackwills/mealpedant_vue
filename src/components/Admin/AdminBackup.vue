@@ -16,9 +16,11 @@
 							<ButtonIcon :icon='mdiDownload' margin='mr-1' :size='mdAndDown?"x-small":""' />
 							<span :class='smAndDown?"smalltext":"text-body-small"'>{{ item.file_name }}</span>
 						</td>
+
 						<td class='text-right'>
 							<div :class='smAndDown?"smalltext":"text-body-small"'>{{ bytes_to_mb(Number(item.file_size)) }} mb</div>
 						</td>
+
 						<td class='text-right cl' @click='deleteFile(item.file_name)'>
 							<ButtonIcon color='red' :icon='mdiCloseCircleOutline' />
 						</td>
@@ -26,6 +28,7 @@
 				</template>
 			</v-data-table-virtual>
 		</v-col>
+
 		<v-col class='ma-0 pa-0' cols='12'>
 			<v-row class='ma-0 pa-0 justify-space-around' density='compact'>
 				<v-col class='ma-0 pa-0 text-center ' cols='auto'>
@@ -37,6 +40,7 @@
 						label='include photos'
 					/>
 				</v-col>
+
 				<v-col class='ma-0 pa-0 mt-3' cols='auto'>
 					<v-btn
 						:block='smAndDown'
@@ -66,7 +70,7 @@ import {
 	mdiFileStar,
 } from '@mdi/js'
 import { useDisplay } from 'vuetify'
-import { axios_admin } from '@/services/axios'
+import { fetch_admin } from '@/services/fetch'
 import { snackSuccess } from '@/services/snack'
 import { env } from '@/vanillaTS/env'
 import { bytes_to_mb } from '@/vanillaTS/helpers'
@@ -112,9 +116,9 @@ const withPhotos = ref(true)
 async function createBackup (): PV {
 	loading.value = true
 	localLoading.value = true
-	const response = await axios_admin.backup_post(withPhotos.value)
+	const response = await fetch_admin.backup_post(withPhotos.value)
 	if (response) {
-		await axios_admin.backup_get()
+		await fetch_admin.backup_get()
 		snackSuccess({
 			message: 'new backup created',
 			icon: mdiCloudCheck,
@@ -131,9 +135,9 @@ async function createBackup (): PV {
 async function deleteFile (fileName: string): PV {
 	if (loading.value) return
 	loading.value = true
-	const response = await axios_admin.backup_delete(fileName)
+	const response = await fetch_admin.backup_delete(fileName)
 	if (response) {
-		await axios_admin.backup_get()
+		await fetch_admin.backup_get()
 		snackSuccess({
 			message: `deleted: ${fileName}`,
 			icon: mdiDeleteCircleOutline,

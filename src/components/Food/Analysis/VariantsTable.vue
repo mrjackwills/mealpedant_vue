@@ -27,6 +27,7 @@
 						<v-col class='ma-0 pa-0 font-weight-bold mono-num' cols='6'>
 							{{ item.q.Dave + item.q.Jack }}
 						</v-col>
+
 						<v-col class='ma-0 pa-0 font-italic mono-num' cols='6'>
 							<span v-tooltip:top='has_filter ? "% filtered meals" : "% all meals"'>
 								{{ (100 / (total_meals_visible) * (item.q.Dave + item.q.Jack)).toFixed(2) }}%
@@ -42,6 +43,7 @@
 								<v-col class='ma-0 pa-0 font-weight-bold text-right mono-num'>
 									{{ item.q.Dave }}
 								</v-col>
+
 								<v-col
 									v-tooltip:top='"% split"'
 									class='ma-0 pa-0 font-italic mono-num'
@@ -56,6 +58,7 @@
 								<v-col class='ma-0 pa-0 font-weight-bold text-right mono-num'>
 									{{ item.q.Jack }}
 								</v-col>
+
 								<v-col
 									v-tooltip:top='authenticated ? "% split" : "% all meals"'
 									class='ma-0 pa-0 font-italic mono-num'
@@ -63,6 +66,7 @@
 									<span v-if='authenticated'>
 										{{ (item.q.Jack !== 0) ? ((100 / (item.q.Dave + item.q.Jack) * item.q.Jack).toFixed(2)) : '0.00' }}%
 									</span>
+
 									<span v-else>
 										{{ (100 / (total_meals) * item.q.Jack).toFixed(2) }}%
 									</span>

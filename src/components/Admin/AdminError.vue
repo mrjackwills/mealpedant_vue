@@ -19,6 +19,7 @@
 						<template #[`item.level`]='{ item }'>
 							<div :class='item.level === "ERROR" ? "text-mealtype" : ""'>{{ item.level }}</div>
 						</template>
+
 						<template #[`item.fields`]='{ item }'>
 							<div v-for='(i, ii) in item.fields' :key='ii' class=''>
 								{{ i }}

@@ -12,6 +12,7 @@
 				highly encouraged.
 			</v-col>
 		</v-row>
+
 		<v-expand-transition>
 			<v-row v-if='!setupProcessStarted' class='ma-0 pa-0 justify-center'>
 				<v-col class='ml-0 pl-0' cols='auto'>
@@ -22,6 +23,7 @@
 				</v-col>
 			</v-row>
 		</v-expand-transition>
+
 		<v-expand-transition>
 			<TFAInstructions v-if='setupProcessStarted' key='a' />
 		</v-expand-transition>
@@ -30,12 +32,12 @@
 
 <script setup lang='ts'>
 import { mdiShieldPlus } from '@mdi/js'
-import { axios_authenticatedUser } from '@/services/axios'
+import { fetch_authenticatedUser } from '@/services/fetch'
 
 const setupProcessStarted = computed(() => twoFAModule().setupProcessStarted)
 
 async function start2FASetup (): Promise<void> {
-	const secret = await axios_authenticatedUser.setupTwoFA_get()
+	const secret = await fetch_authenticatedUser.setupTwoFA_get()
 	if (secret) {
 		twoFAModule().set_secret(secret)
 		twoFAModule().set_setupProcessStarted(true)

@@ -20,7 +20,6 @@
     "@vueuse/components": "^14.2.1",
     "@vueuse/core": "^14.2.1",
     "@vueuse/head": "^2.0.0",
-    "axios": "^1.15.2",
     "hibp": "^15.2.1",
     "pinia": "^3.0.4",
     "pinia-plugin-persistedstate": "^4.7.1",

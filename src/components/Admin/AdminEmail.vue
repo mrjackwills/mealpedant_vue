@@ -20,6 +20,7 @@
 							@input='touch(`emails`)'
 						/>
 					</v-col>
+
 					<v-col class='ma-0 pa-0 mt-4 justify-end' cols='auto'>
 						<v-switch
 							v-model='all'
@@ -30,6 +31,7 @@
 							@change='allToggle()'
 						/>
 					</v-col>
+
 					<v-col v-for='(item, index) in lineRows' :key='index' class='ma-0 pa-0' cols='12'>
 						<v-textarea
 							v-model='email[item.model]'
@@ -71,6 +73,7 @@
 						</v-btn>
 					</div>
 				</v-col>
+
 				<v-col v-if='confirm' class='mt-3' cols='auto'>
 					<div class='text-center'>
 						<v-btn
@@ -97,7 +100,7 @@ import type { PV, su } from '@/types'
 import { mdiClose, mdiCommentTextMultipleOutline, mdiCommentTextOutline, mdiEmail, mdiFormatTitle, mdiLink, mdiTagTextOutline } from '@mdi/js'
 import useVuelidate from '@vuelidate/core'
 import { minLength, required } from '@vuelidate/validators'
-import { axios_admin } from '@/services/axios'
+import { fetch_admin } from '@/services/fetch'
 import { snackSuccess } from '@/services/snack'
 
 onBeforeUnmount(() => {
@@ -211,7 +214,7 @@ async function confirmButton (): PV {
 	loading.value = true
 	localLoading.value = true
 	for (const i of email.value.emails) if (!emailRegex.test(i)) throw new Error(`Email address invalid - ${i}`)
-	const response = await axios_admin.email_post(email.value)
+	const response = await fetch_admin.email_post(email.value)
 	if (response) {
 		const emailPlural = email.value.emails.length > 1 ? 's have' : ' has'
 		snackSuccess({

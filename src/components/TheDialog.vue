@@ -14,6 +14,7 @@
 				:indeterminate='loading'
 				width='100%'
 			/>
+
 			<v-card-title class='text-mealtype text-uppercase text-headline-small'>{{ title }}</v-card-title>
 			<v-card-text class=''>{{ message }}</v-card-text>
 
@@ -41,6 +42,7 @@
 									@focus='focusMethod(item.model)'
 									@keydown.enter='click'
 								/>
+
 								<template v-if='twoFA_always_required'>
 									<v-text-field
 										v-for='item in tokenFields'
@@ -77,6 +79,7 @@
 									cancel
 								</v-btn>
 							</v-col>
+
 							<v-col class='ma-0 pa-0 text-center' cols='6'>
 								<v-btn
 									color='secondary'
@@ -89,6 +92,7 @@
 									<span class='text-white'>
 										{{ timeout_text }}
 									</span>
+
 									<ButtonIcon
 										v-if='!monospace'
 										v-model:disabled='disabled'

@@ -13,11 +13,13 @@
 					<v-col class='text-left ma-0 pa-0' cols='5' md='auto'>
 						<v-icon class='mr-1' :icon='buttonIcon' size='medium' />
 					</v-col>
+
 					<v-col class='text-left ma-0 pa-0' cols='4' md='auto'>
 						<span v-if='buttonSection && lgAndUp'>hide</span>
 						<span v-if='!buttonSection && lgAndUp'>show</span>
 						{{ buttonName }}
 					</v-col>
+
 					<v-col class='ma-0 pa-0 text-right' cols='3' md='auto'>
 						<v-icon class='mr-1' size='medium'>{{ showHideIcon }}</v-icon>
 					</v-col>

@@ -10,6 +10,7 @@
 			/>
 		</v-col>
 	</v-row>
+
 	<v-expand-x-transition>
 		<v-row class='ma-0 pa-0 justify-start'>
 			<v-col v-if='showSave' class='ma-0 pa-0 heartbeat' cols='auto'>
@@ -30,7 +31,7 @@
 <script setup lang='ts'>
 import type { PV } from '@/types'
 import { mdiContentSave } from '@mdi/js'
-import { axios_admin } from '@/services/axios'
+import { fetch_admin } from '@/services/fetch'
 
 const disabled = computed((): boolean => props.removeOnly && !props.active ? true : false)
 const showSave = computed((): boolean => props.removeOnly ? !newActive.value && newActive.value !== props.active : newActive.value !== props.active)
@@ -40,7 +41,7 @@ async function save (): PV {
 	if (props.patchName) {
 		switch (props.patchName) {
 			case 'active': {
-				await axios_admin.user_patch({
+				await fetch_admin.user_patch({
 					patch: { active: newActive.value },
 					email: props.email,
 				})
@@ -48,14 +49,14 @@ async function save (): PV {
 			}
 
 			case 'two_fa_secret': {
-				await axios_admin.user_patch({
+				await fetch_admin.user_patch({
 					patch: { two_fa_secret: newActive.value },
 					email: props.email,
 				})
 				break
 			}
 		}
-		await axios_admin.user_get()
+		await fetch_admin.user_get()
 	}
 }
 

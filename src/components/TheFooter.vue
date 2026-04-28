@@ -30,6 +30,7 @@
 						<a class='text-body-small text-black' href='https://www.github.com/mrjackwills' rel='noopener noreferrer' target='_blank'>
 							<v-icon class='mr-2' color='black' href='' :icon='mdiGithub' />
 						</a>
+
 						<span class='' @click='buildInfo'>
 							mrjackwills 2015 -
 						</span>

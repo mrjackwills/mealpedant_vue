@@ -6,9 +6,11 @@
 					<v-col class='pa-0 ma-0' cols='1' lg='auto'>
 						<v-icon color='white' :icon='mdiInformation' small />
 					</v-col>
+
 					<v-col class='text-white pa-0 ma-0 text-center text-label-medium' cols='10' lg='auto'>
 						{{ message }}
 					</v-col>
+
 					<v-col class='pa-0 ma-0' cols='1' lg='auto'>
 						<v-icon color='white' :icon='mdiClose' small @click='infoClose' />
 					</v-col>

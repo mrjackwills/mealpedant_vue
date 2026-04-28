@@ -17,6 +17,7 @@
 									<v-col :class='`ma-0 pa-0 text-left text-${item.class}`' cols='5'>
 										original:
 									</v-col>
+
 									<v-col class='ma-0 pa-0 text-right' cols='5'>
 										{{ item.original }}mb
 									</v-col>
@@ -28,6 +29,7 @@
 									<v-col :class='`ma-0 pa-0 text-left text-${item.class}`' cols='5'>
 										converted:
 									</v-col>
+
 									<v-col class='ma-0 pa-0 text-right' cols='5'>
 										{{ item.converted }}mb
 									</v-col>
@@ -39,6 +41,7 @@
 									<v-col :class='`ma-0 pa-0 text-left text-${item.class}`' cols='5'>
 										#
 									</v-col>
+
 									<v-col class='ma-0 pa-0 text-right' cols='5'>
 										{{ item.total }}
 									</v-col>
@@ -50,6 +53,7 @@
 				</v-row>
 			</v-col>
 		</v-row>
+
 		<v-row class='ma-0 pa-0 justify-space-around mt-2'>
 			<v-col
 				v-for='(item, index) in photo_data'
@@ -97,6 +101,7 @@
 											{{ bytes_to_mb(item.size_in_bytes_converted ?? 0) }}mb
 										</a>
 									</v-col>
+
 									<v-col class='ma-0 pa-0 cl' cols='auto'>
 										<a
 											v-if='item.file_name_original'
@@ -112,6 +117,7 @@
 						</v-col>
 					</v-row>
 				</template>
+
 				<template v-else-if='(item.file_name_converted)'>
 
 					<v-row class='justify-center bg-black ma-0 pa-0'>
@@ -149,6 +155,7 @@
 											{{ bytes_to_mb(item.size_in_bytes_converted ?? 0) }}mb
 										</a>
 									</v-col>
+
 									<v-col
 										class='cl ma-0 pa-0'
 										cols='auto'
@@ -201,6 +208,7 @@
 											{{ bytes_to_mb(item.size_in_bytes_original ?? 0) }}mb
 										</a>
 									</v-col>
+
 									<v-col
 										class='cl ma-0 pa-0'
 										cols='auto'
@@ -229,7 +237,7 @@
 
 import { mdiImageSizeSelectActual, mdiImageSizeSelectLarge } from '@mdi/js'
 import { useDisplay } from 'vuetify'
-import { axios_admin } from '@/services/axios'
+import { fetch_admin } from '@/services/fetch'
 import { type PV, type TAdminPhoto, TPerson } from '@/types'
 import { FrontEndRoutes } from '@/types/const_routes'
 import { env } from '@/vanillaTS/env'
@@ -275,7 +283,7 @@ onBeforeMount(async () => {
 
 // Delete an unused photo
 async function deletePhoto (name: string): PV {
-	await axios_admin.photo_delete(name)
+	await fetch_admin.photo_delete(name)
 	await get_data()
 }
 
@@ -322,7 +330,7 @@ const init = ref(false)
 // / Download all photo data
 async function get_data (): PV {
 	loading.value = true
-	await axios_admin.photo_get()
+	await fetch_admin.photo_get()
 	loading.value = false
 	init.value = true
 }

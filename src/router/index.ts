@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory, type NavigationGuardNext, type RouteLocationNormalized, type RouteRecordRaw } from 'vue-router'
 import EmptyComponent from '@/components/EmptyComponent.vue'
-import { axios_admin, axios_authenticatedUser, axios_incognito } from '@/services/axios'
+import { fetch_admin, fetch_authenticatedUser, fetch_incognito } from '@/services/fetch'
 import { snackError, snackSuccess } from '@/services/snack'
 import { type PV, TPerson } from '@/types'
 import { FrontEndNames, FrontEndRoutes } from '@/types/const_routes'
@@ -14,10 +14,10 @@ async function init_check (): PV {
 		loadingModule().set_loading(true)
 		try {
 			if (userModule().authenticated) {
-				await axios_authenticatedUser.authenticated_get()
+				await fetch_authenticatedUser.authenticated_get()
 			}
 			if (userModule().admin) {
-				await axios_admin.admin_get()
+				await fetch_admin.admin_get()
 			}
 		} catch (error) {
 			// eslint-disable-next-line no-console
@@ -138,7 +138,7 @@ async function hexPasswordReset (to: RouteLocationNormalized, _from: RouteLocati
 	} else {
 		const LoadingStore = loadingModule()
 		LoadingStore.set_loading(true)
-		const success = await axios_incognito.reset_get(secret)
+		const success = await fetch_incognito.reset_get(secret)
 		LoadingStore.set_loading(false)
 		if (success) {
 			next(FrontEndRoutes.USER_RESET)
@@ -161,7 +161,7 @@ async function hexRegister (to: RouteLocationNormalized, _from: RouteLocationNor
 	if (to.params.id?.length !== 128) {
 		snackError({ message: 'Invalid verification data' })
 	}
-	const success = await axios_incognito.verify_get(String(to.params.id))
+	const success = await fetch_incognito.verify_get(String(to.params.id))
 	if (success) {
 		snackSuccess({ message: 'verified, please sign in to continue' })
 		next(FrontEndRoutes.SIGNIN)

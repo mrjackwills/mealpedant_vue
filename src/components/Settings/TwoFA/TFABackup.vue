@@ -11,6 +11,7 @@
 				backup tokens cannot be retrieved by Meal Pedant.
 			</v-col>
 		</v-row>
+
 		<v-expand-transition>
 			<v-row v-if='backupArray.length === 0' class='ma-0 pa-0 justify-center'>
 				<v-col class='ma-0 pa-0' cols='12' lg='4'>
@@ -31,6 +32,7 @@
 				</v-col>
 			</v-row>
 		</v-expand-transition>
+
 		<v-expand-transition>
 			<section v-if='backupArray.length > 0'>
 				<section>
@@ -41,6 +43,7 @@
 						</v-col>
 
 					</v-row>
+
 					<v-row
 						class='mt-4 justify-center'
 						density='compact'
@@ -52,6 +55,7 @@
 										{{ item }}
 									</div>
 								</v-col>
+
 								<v-col cols='5'>
 									<div v-for='(item, index) in backupArray.slice(5, 10)' :key='index'>
 										{{ item }}
@@ -61,6 +65,7 @@
 							</v-row>
 						</v-col>
 					</v-row>
+
 					<v-row
 						class='mt-4 justify-space-around'
 						density='compact'
@@ -72,6 +77,7 @@
 								close
 							</v-btn>
 						</v-col>
+
 						<v-col class='mx-2' :class='{ "my-2": smAndDown }' cols='auto'>
 							<v-btn
 								class='text-black'
@@ -86,11 +92,13 @@
 							</v-btn>
 
 						</v-col>
+
 						<v-col id='tooltip' cols='auto'>
 							<v-btn color='secondary' rounded variant='flat' @click='copyCodes'>
 								<v-icon :icon='mdiContentCopy' />
 								copy all
 							</v-btn>
+
 							<v-tooltip
 								v-if='showTooltip'
 								activator='parent'
@@ -115,8 +123,8 @@ import type { PV, TAuthObject } from '@/types'
 import { mdiClose, mdiContentCopy, mdiDownload, mdiShieldKey, mdiShieldRefresh } from '@mdi/js'
 import { useClipboard } from '@vueuse/core'
 import { useDisplay } from 'vuetify'
-import { axios_authenticatedUser } from '@/services/axios'
 import { dialoger } from '@/services/dialog'
+import { fetch_authenticatedUser } from '@/services/fetch'
 const { smAndDown } = useDisplay()
 
 onBeforeUnmount(() => {
@@ -194,14 +202,14 @@ async function generateBackups (authObject?: TAuthObject): PV {
 	localLoading.value = true
 	twoFAModule().set_backupProcess(true)
 	if (backup.value && authObject) {
-		const response = await axios_authenticatedUser.twoFA_patch(authObject)
+		const response = await fetch_authenticatedUser.twoFA_patch(authObject)
 		if (response) backupArray.value = response
 	} else if (!backup.value) {
-		const backups = await axios_authenticatedUser.twoFA_post()
+		const backups = await fetch_authenticatedUser.twoFA_post()
 		if (backups) backupArray.value = backups
 	}
 	loading.value = false
 	localLoading.value = false
-	await axios_authenticatedUser.authenticated_get()
+	await fetch_authenticatedUser.authenticated_get()
 }
 </script>

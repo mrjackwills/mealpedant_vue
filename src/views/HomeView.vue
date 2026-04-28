@@ -9,6 +9,7 @@
 				<br>
 				<br>
 			</v-col>
+
 			<v-col class='align-center justify-center text-center' cols='12'>
 				<v-btn
 					class='cl'
@@ -22,6 +23,7 @@
 						<v-col cols='auto'>
 							<ButtonIcon color='white' :icon='mdiFood' size='large' />
 						</v-col>
+
 						<v-col cols='auto'>
 							see the meals
 						</v-col>
