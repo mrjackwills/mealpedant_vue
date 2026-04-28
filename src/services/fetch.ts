@@ -16,12 +16,6 @@ class HttpError extends Error {
 	}
 }
 
-const BASE_HEADERS: Record<string, string> = {
-	Accept: 'application/json',
-	'Content-Type': 'application/json; charset=utf-8',
-	'Cache-control': 'no-cache',
-}
-
 const REQUEST_TIMEOUT = 60_000
 
 async function fetchRequest (
@@ -36,9 +30,14 @@ async function fetchRequest (
 
 	try {
 		const isFormData = body instanceof FormData
-		const headers: Record<string, string> = isFormData
-			? { 'Cache-control': 'no-cache' }
-			: { ...BASE_HEADERS }
+
+		const headers: Record<string, string> = {
+			'Cache-Control': 'no-cache',
+			...(isFormData && {
+				'Content-Type': 'application/json; charset=utf-8',
+				Accept: 'application/json',
+			}),
+		}
 
 		const init: RequestInit = {
 			method,
@@ -48,7 +47,7 @@ async function fetchRequest (
 			...(body !== undefined && { body: isFormData ? body : JSON.stringify(body) }),
 		}
 
-		const url = new URL(path, baseURL.endsWith('/') ? baseURL : `${baseURL}/`).href
+		const url = new URL(path.startsWith('/') ? path.slice(1) : path, baseURL.endsWith('/') ? baseURL : `${baseURL}/`).href
 		const response = await fetch(url, init)
 
 		if (!response.ok) {
