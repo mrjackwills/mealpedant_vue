@@ -1,3 +1,10 @@
+### Chores
++ linting, [416d2a3fa2c8b5eb1ec7d433a97ebde646a8356a]
++ dependencies updated, [225e2e21a61f5fddfafd809dbb4b3e300916fa4a]
+
+### Features
++ replace axios with native fetch, [56bf22c531ec231dfa8bbad3bc5ddb6c7aeb4de3]
+
 # <a href='https://github.com/mrjackwills/mealpedant_vue/releases/tag/v2.1.2'>v2.1.2</a>
 ### 2026-03-13
 
