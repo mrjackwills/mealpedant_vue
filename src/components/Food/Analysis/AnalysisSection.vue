@@ -3,6 +3,7 @@
 		<v-col class='ma-0 pa-0 pb-3 pb-md-0 pr-md-3' cols='12' :md='totals_cols'>
 			<VariantsTable />
 		</v-col>
+
 		<v-col class='ma-0 pa-0 align-start' cols='12' :md='categories_cols'>
 			<CategoriesTable />
 		</v-col>

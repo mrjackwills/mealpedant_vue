@@ -1,5 +1,5 @@
 import type { c_MealInfo, PV } from '@/types'
-import { axios_authenticatedFood, axios_incognito } from '@/services/axios'
+import { fetch_authenticatedFood, fetch_incognito } from '@/services/fetch'
 
 class MealStorage {
 	readonly #hash_name = 'hash'
@@ -57,7 +57,7 @@ class MealStorage {
 		const authenticated = userModule().authenticated
 		const hash = this.hash_get()
 		try {
-			const latest_hash = authenticated ? await axios_authenticatedFood.mealhash_get() : await axios_incognito.mealhash_get()
+			const latest_hash = authenticated ? await fetch_authenticatedFood.mealhash_get() : await fetch_incognito.mealhash_get()
 			if (latest_hash) {
 				this.hash_set(latest_hash)
 			}
@@ -82,7 +82,7 @@ class MealStorage {
 			this.meals_set(current_meals)
 			mealModule().set(current_meals)
 		} else {
-			const current_meals = authenticated ? await axios_authenticatedFood.all_get() : await axios_incognito.meals_get()
+			const current_meals = authenticated ? await fetch_authenticatedFood.all_get() : await fetch_incognito.meals_get()
 			if (current_meals) {
 				this.meals_set(current_meals)
 				mealModule().set(current_meals)

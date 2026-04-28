@@ -4,10 +4,12 @@
 			<v-col class='ma-0 pa-0' cols='12'>
 				<span class='smalltext'>{{ passwordCreationIp }}</span>
 			</v-col>
+
 			<v-col class='ma-0 pa-0' cols='12'>
 				<span class='smalltext'>{{ passwordResetDate }}</span>
 			</v-col>
 		</v-row>
+
 		<v-row class='ma-0 pa-0 justify-start'>
 			<v-col class='pa-0 ma-0' cols='auto'>
 				<v-btn
@@ -21,6 +23,7 @@
 					<span class='text-label-small ml-1 text-primary'>copy</span>
 				</v-btn>
 			</v-col>
+
 			<v-col class='pa-0 ma-0' cols='auto'>
 				<v-btn
 					class='ma-0 pa-0 fab-fix'
@@ -35,6 +38,7 @@
 			</v-col>
 		</v-row>
 	</div>
+
 	<div v-else>
 		<v-row class='ma-0 pa-0 justify-start'>
 			<v-col class='pa-0 ma-0 mr-6' cols='auto'>
@@ -44,6 +48,7 @@
 				</v-btn>
 			</v-col>
 		</v-row>
+
 		<v-row class='ma-0 pa-0 mt-n4 justify-start'>
 			<v-col class='pa-0 ma-0' cols='auto'>
 				<v-switch v-model='withEmail' :color='withEmail ? "mealtype" : ""'>
@@ -64,7 +69,7 @@ import {
 	mdiLockReset,
 } from '@mdi/js'
 import { useClipboard } from '@vueuse/core'
-import { axios_admin } from '@/services/axios'
+import { fetch_admin } from '@/services/fetch'
 import { env } from '@/vanillaTS/env'
 
 const withEmail = ref(false)
@@ -75,20 +80,20 @@ function copyString (): void {
 
 async function force (): PV {
 	if (!props.passwordResetId) {
-		await axios_admin.user_patch({
+		await fetch_admin.user_patch({
 			patch: { reset: true },
 			email: props.email,
 		})
-		await axios_admin.user_get()
+		await fetch_admin.user_get()
 	}
 }
 async function revoke (): PV {
 	if (props.passwordResetId) {
-		await axios_admin.user_patch({
+		await fetch_admin.user_patch({
 			patch: { password_reset_id: props.passwordResetId },
 			email: props.email,
 		})
-		await axios_admin.user_get()
+		await fetch_admin.user_get()
 	}
 }
 

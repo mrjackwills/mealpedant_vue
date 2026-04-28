@@ -3,6 +3,7 @@
 		<NavMenu v-if='smAndDown' />
 		<AppBar />
 		<NavMenu v-if='!smAndDown && authenticated' />
+
 		<v-main class='d-flex align-center justify-center'>
 			<router-view :key='route_name' />
 			<TheFooter />
@@ -20,7 +21,7 @@ import { registerSW } from 'virtual:pwa-register'
 import { useRegisterSW } from 'virtual:pwa-register/vue'
 import { useRoute } from 'vue-router'
 import { useDisplay } from 'vuetify'
-import { axios_incognito } from '@/services/axios'
+import { fetch_incognito } from '@/services/fetch'
 import { snackSuccess } from '@/services/snack'
 
 const { smAndDown } = useDisplay()
@@ -51,7 +52,7 @@ const service_interval = ref(0)
 
 onBeforeMount(async () => {
 	check_pwa()
-	await axios_incognito.online_get()
+	await fetch_incognito.online_get()
 	init.value = true
 	service_interval.value = setInterval(check_pwa, 1000 * 60 * 20)
 })

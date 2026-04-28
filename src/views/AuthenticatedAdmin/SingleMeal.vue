@@ -27,11 +27,13 @@
 									</v-menu>
 								</v-text-field>
 							</v-col>
+
 							<v-col class='ma-0 pa-0' cols='3'>
 								<v-row class='ma-0 pa-0 justify-space-around' density='compact'>
 									<v-col class='ma-0 pa-0' cols='auto'>
 										<v-icon class='' :icon='mdiRestore' @click='previous' />
 									</v-col>
+
 									<v-col class='ma-0 pa-0' cols='auto'>
 										<v-icon class='' :icon='mdiClose' @click='resetDate' />
 									</v-col>
@@ -153,6 +155,7 @@
 									<v-col class='ma-0 pa-0' cols='6'>
 										<v-img alt='A photograph of a meal' contain max-height='40vh' :src='imageUrl' />
 									</v-col>
+
 									<v-col v-if='imageUrl' class='ma-0 pa-0 text-center mt-2' cols='12'>
 										<v-chip class=''>
 											<a :href='env.gen_photo_url(meal.photo_original)' target='_blank'>
@@ -217,6 +220,7 @@
 									delete
 								</v-btn>
 							</v-col>
+
 							<v-col
 								:class='editMeal? "order-md-3":"order-md-2"'
 								cols='12'
@@ -236,6 +240,7 @@
 									cancel
 								</v-btn>
 							</v-col>
+
 							<v-col
 								class='order-1'
 								:class='editMeal? "order-md-2":"order-md-3"'
@@ -273,8 +278,8 @@ import useVuelidate from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
 import { useDisplay } from 'vuetify'
 import { VBtn } from 'vuetify/components'
-import { axios_adminMeal, axios_adminPhoto } from '@/services/axios'
 import { dialoger } from '@/services/dialog'
+import { fetch_adminMeal, fetch_adminPhoto } from '@/services/fetch'
 import { snackError, snackSuccess } from '@/services/snack'
 import { TPerson } from '@/types'
 import { FrontEndRoutes } from '@/types/const_routes'
@@ -342,7 +347,7 @@ onBeforeMount(async () => {
 
 	if (person && date) {
 		editMeal.value = true
-		const validated = await axios_adminMeal.singleMeal_get({
+		const validated = await fetch_adminMeal.singleMeal_get({
 			date,
 			person,
 		})
@@ -466,7 +471,7 @@ async function clear (): PV {
 	loading.value = true
 	if (!meal.value.photo_original || !meal.value.photo_converted) return
 	if (!editMealHasPhoto.value) {
-		axios_adminPhoto.photo_delete({
+		fetch_adminPhoto.photo_delete({
 			original: meal.value.photo_original,
 			converted: meal.value.photo_converted,
 		})
@@ -495,7 +500,7 @@ function deleteMeal (): void {
 async function deleteMeal_confirm (authObject: TAuthObject): PV {
 	loading.value = true
 	if (!meal.value || !meal.value.person) return
-	const success = await axios_adminMeal.meal_delete({
+	const success = await fetch_adminMeal.meal_delete({
 		person: meal.value.person,
 		date: original_date.value,
 		auth: authObject,
@@ -538,7 +543,7 @@ async function fileInserted (): PV {
 	const newName = `${meal.value.person.slice(0, 1)}.${fileType}`
 	data.append('image', imageToUpload.value, newName)
 
-	const response = await axios_adminPhoto.photo_post(data)
+	const response = await fetch_adminPhoto.photo_post(data)
 	if (response) {
 		[meal.value.photo_original, meal.value.photo_converted] = [response.original, response.converted]
 		imageUrl.value = env.gen_photo_url(meal.value.photo_converted)
@@ -557,7 +562,7 @@ function trimCategory (): void {
 async function addMeal (): PV {
 	if (v$.value.$invalid) return
 	loading.value = true
-	const response = await axios_adminMeal.meal_post(meal.value)
+	const response = await fetch_adminMeal.meal_post(meal.value)
 	if (response) {
 		snackSuccess({
 			message: 'new meal added',
@@ -576,7 +581,7 @@ async function complete_clear (): PV {
 	infobarModule().$reset()
 	mealModule().clear_search_history()
 	await mealStorage.seed_meal_pinia()
-	await axios_adminMeal.missing_get()
+	await fetch_adminMeal.missing_get()
 	if (mealModule().is_filtered) mealModule().filter_by_search_by()
 }
 
@@ -607,7 +612,7 @@ async function updateMeal_confirm (): PV {
 
 	if (!meal.value.photo_original) meal.value.photo_original = ''
 	if (!meal.value.photo_converted) meal.value.photo_converted = ''
-	const success = await axios_adminMeal.meal_patch(gen_update_meal())
+	const success = await fetch_adminMeal.meal_patch(gen_update_meal())
 	if (success) {
 		snackSuccess({
 			message: 'meal edited',

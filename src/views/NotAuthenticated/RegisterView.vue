@@ -8,6 +8,7 @@
 							<PasswordContainsEmail v-if='item.label === "invite" && errors.password && !passNum' />
 							<HibpMessage v-if='item.label === "invite" && passNum' :pass-num />
 						</v-expand-transition>
+
 						<v-text-field
 							v-model='user[item.model]'
 							:append-inner-icon='item.appendIcon'
@@ -27,6 +28,7 @@
 						/>
 					</div>
 				</v-form>
+
 				<div class='text-center mt-1'>
 					<v-btn
 						class='elevation-0 mr-4'
@@ -41,6 +43,7 @@
 						<ButtonIcon :icon='mdiClose' />
 						cancel
 					</v-btn>
+
 					<v-btn
 						class='elevation-0'
 						:color='loading || v$.$invalid || errors.password || completed ? "" : "secondary"'
@@ -75,7 +78,7 @@ import {
 } from '@mdi/js'
 import useVuelidate from '@vuelidate/core'
 import { email, minLength, required } from '@vuelidate/validators'
-import { axios_incognito } from '@/services/axios'
+import { fetch_incognito } from '@/services/fetch'
 import { snackSuccess } from '@/services/snack'
 import { FrontEndRoutes } from '@/types/const_routes'
 import { passwordCheck } from '@/vanillaTS/hibp'
@@ -183,7 +186,7 @@ async function register (): PV {
 		return
 	}
 	password_visible.value = false
-	const registerRequest = await axios_incognito.register_post(user.value)
+	const registerRequest = await fetch_incognito.register_post(user.value)
 	if (registerRequest) {
 		completed.value = true
 		snackSuccess({

@@ -26,6 +26,7 @@
 					:src='`${item}`'
 				/>
 			</template>
+
 			<v-card-actions>
 
 				<v-container class='ma-0 pa-0' fluid>
@@ -74,7 +75,7 @@
 <script setup lang='ts'>
 import { mdiClose, mdiPublish } from '@mdi/js'
 import { useDisplay } from 'vuetify'
-import { axios_downloadPhoto } from '@/services/axios'
+import { fetch_downloadPhoto } from '@/services/fetch'
 import { env } from '@/vanillaTS/env'
 const { mdAndUp } = useDisplay()
 
@@ -109,7 +110,7 @@ function closeDialog (): void {
 // Download the original photo, by adding it to the page as a link and clicking said link
 async function downloadOriginalFromStatic (): Promise<void> {
 	if (!photoUrlOriginal.value || !authenticated) return
-	const image = await axios_downloadPhoto.photo_get(`photo/${photoUrlOriginal.value}`)
+	const image = await fetch_downloadPhoto.photo_get(`photo/${photoUrlOriginal.value}`)
 	if (image) {
 		const url = window.URL.createObjectURL(new Blob([image]))
 		const link = document.createElement('a')

@@ -72,6 +72,7 @@
 							<GenericButton button-name='analysis' />
 						</v-col>
 					</v-row>
+
 					<v-expand-transition>
 						<v-row v-show='show_analysis' class='ma-0 pa-0 justify-center'>
 							<v-col class='ma-0 pa-0' cols='12' md='11'>
@@ -91,6 +92,7 @@
 				</v-row>
 
 			</v-col>
+
 			<PhotoDialog />
 		</v-row>
 	</v-expand-transition>
@@ -100,7 +102,7 @@
 <script setup lang='ts'>
 import { useElementSize } from '@vueuse/core'
 import { useDisplay } from 'vuetify'
-import { axios_adminMeal } from '@/services/axios'
+import { fetch_adminMeal } from '@/services/fetch'
 
 const { lgAndUp } = useDisplay()
 
@@ -128,7 +130,7 @@ const init = ref(false)
 onBeforeMount(async () => {
 	loadingModule().set_loading(true)
 	await mealStorage.seed_meal_pinia()
-	if (is_admin.value) await axios_adminMeal.missing_get()
+	if (is_admin.value) await fetch_adminMeal.missing_get()
 	if (lgAndUp.value) [show_search.value, show_filters.value] = [true, true]
 	const browserStore = browserModule()
 	browserStore.set_pageTitle('Meals')

@@ -1,5 +1,4 @@
 import { createHead } from '@vueuse/head'
-
 import { createPinia } from 'pinia'
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 import App from './App.vue'

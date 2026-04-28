@@ -23,7 +23,6 @@ export default createVuetify({
 	defaults: {
 		VRow: {
 			density: 'compact',
-			// class: 'align-center',
 		},
 	},
 	icons: {

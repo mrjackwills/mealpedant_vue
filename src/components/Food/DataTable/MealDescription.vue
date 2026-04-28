@@ -7,25 +7,30 @@
 	>
 		<router-link v-if='admin' :class='[categoryColor, { "cl": admin }]' :to='editHref'> {{ formatCategoryName(category) }}</router-link>
 		<span v-else :class='categoryColor'>{{ formatCategoryName(category) }}</span>
+
 		<span
 			v-if='restaurant'
 			v-tooltip:top='"Restaurant"'
 			class='font-weight-bold text-uppercase ml-1 text-mealtype'
 		>r</span>
+
 		<span
 			v-if='takeaway'
 			v-tooltip:top='"Takeaway"'
 			class='font-weight-bold text-uppercase ml-1 text-mealtype'
 		>t</span>
+
 		<span
 			v-if='vegetarian'
 			v-tooltip:top='"Vegetarian"'
 			class='font-weight-bold text-uppercase ml-1 text-mealtype'
 		>v</span>
 	</v-col>
+
 	<v-col class='ma-0 pa-0' :class='computedFont' cols='12'>
 		{{ formatDescription(description) }}
 	</v-col>
+
 	<v-col v-if='photo?.converted' class='align-self-end ma-0 pa-0' cols='12'>
 		<v-chip
 			v-intersect='onIntersect'
@@ -44,6 +49,7 @@
 						:size='smAndDown?"x-small":"small"'
 					/>
 				</v-col>
+
 				<v-col class='ma-0 pa-0 text-black text-body-small' :class='computedFont' cols='auto'>
 					view
 				</v-col>

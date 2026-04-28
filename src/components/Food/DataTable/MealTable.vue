@@ -16,6 +16,7 @@
 				<v-col class='ma-0 pa-0 text-center' cols='1' md='auto'>
 					<v-icon :icon='mdiInformation' :size='smAndDown?"x-small":"small"' />
 				</v-col>
+
 				<v-col class='ma-0 pa-0 px-2 text-center mt-md-1' :class='{ "smalltext": smAndDown }' cols='10' md='auto'>
 					Access to both datasets requires registration
 				</v-col>
@@ -31,12 +32,14 @@
 						@click='() => toggleSort(column)'
 					>
 						<span class='pl-4' :class='headerClass(column.title)'>{{ column.title }}</span>
+
 						<v-icon
 							v-if='column.sortable'
 							color='offwhite'
 							:icon='isSorted(column) ? getSortIcon(column) : mdiSwapVertical'
 							size='x-small'
 						/>
+
 						<v-divider />
 					</td>
 				</template>
@@ -52,12 +55,15 @@
 				<v-col class='pa-0 ma-0 ml-1' :class='computedDateFont' cols='12' density='compact'>
 					{{ filteredDay(item.date) }}
 				</v-col>
+
 				<v-col class='pa-0 ma-0 ml-1 mt-n2' :class='computedDateFont' cols='12' density='compact'>
 					{{ filteredDate(item.date) }}
 				</v-col>
+
 				<v-col class='pa-0 ma-0 ml-1 mt-n2' :class='computedDateFont' cols='12' density='compact'>
 					{{ filteredYear(item.date) }}
 				</v-col>
+
 				<v-col class='pa-0 ma-0 ml-1 mt-n2 mb-2' :class='computedDateFont' cols='12' density='compact'>
 					day: {{ filteredDayNumber(item.date) }}
 				</v-col>
@@ -79,6 +85,7 @@
 				:vegetarian='item.Dave.vegetarian == 1'
 			/>
 		</template>
+
 		<template v-if='show_jack' #[`item.Jack`]='{ item }'>
 			<MealDescription
 				v-if='item.Jack'
@@ -151,6 +158,7 @@
 					<section v-if='has_filter'>
 						filtered:
 						<span class='font-weight-bold text-mealtype'>{{ filteredDays }}</span>
+
 						<span v-tooltip:top='"% all days"' class='font-italic text-mealtype'>
 							({{ (100 / (totalMeals) * filteredDays).toFixed(2) }}%)
 						</span>

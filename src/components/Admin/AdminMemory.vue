@@ -15,16 +15,20 @@
 				<v-col class='pa-0 text-right' cols='5' lg='3'>
 					{{ name }}:
 				</v-col>
+
 				<v-col v-if='!name.includes("uptime")' class='pa-0 text-left' cols='5' lg='3'>
 					{{ bytes_to_mb(Number(value)) }} mb
 				</v-col>
+
 				<v-col v-else class='pa-0 text-left' cols='5' lg='3'>
 					{{ secondsToText(Number(value)) }}
 				</v-col>
+
 				<v-col class='ma-0 pa-0' cols='8'>
 					<v-divider />
 				</v-col>
 			</v-row>
+
 			<v-row class='mt-2 justify-center'>
 				<v-col cols='auto'>
 					<v-row
@@ -58,8 +62,8 @@
 import type { PV, TAuthObject, TServerStats, u } from '@/types'
 import { mdiRestartAlert } from '@mdi/js'
 import { useDisplay } from 'vuetify'
-import { axios_admin } from '@/services/axios'
 import { dialoger } from '@/services/dialog'
+import { fetch_admin } from '@/services/fetch'
 import { snackSuccess } from '@/services/snack'
 import { bytes_to_mb, secondsToText } from '@/vanillaTS/helpers'
 const { smAndDown } = useDisplay()
@@ -109,7 +113,7 @@ async function restartDialog (): PV {
 }
 
 /*
- * Send axios request to restart app, if no error, refresh memory stats with snack
+ * Send fetch request to restart app, if no error, refresh memory stats with snack
  * @param {Object} AuthObject - {password: string, token?:string, twoFABackup?:boolean}
  */
 async function restartServer (authObject: TAuthObject): PV {
@@ -120,8 +124,8 @@ async function restartServer (authObject: TAuthObject): PV {
 		type: 'info',
 		timeout: 4000,
 	})
-	pageTimeout.value = window.setTimeout(() => axios_admin.memory_get(), 5000)
-	await axios_admin.restart_put(authObject)
+	pageTimeout.value = window.setTimeout(() => fetch_admin.memory_get(), 5000)
+	await fetch_admin.restart_put(authObject)
 	loading.value = false
 }
 </script>

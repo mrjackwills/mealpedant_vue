@@ -24,6 +24,7 @@
 					</v-switch>
 				</v-chip>
 			</v-col>
+
 			<template v-if='authenticated'>
 
 				<v-col class='ma-0 pa-0' cols='auto'>

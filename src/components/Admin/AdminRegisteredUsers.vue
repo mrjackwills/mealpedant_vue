@@ -51,6 +51,7 @@
 								<v-icon color='mealtype' :icon='mdiClose' size='small' />
 							</v-btn>
 						</v-col>
+
 						<v-col
 							v-if='item_log.login_attempt_number && item_log.login_attempt_number >= 1'
 							class='ma-0 pa-0'
@@ -130,22 +131,26 @@
 																{{ session.login_date }}
 															</span>
 														</v-col>
+
 														<v-col class='ma-0 pa-0' cols='auto'>
 															<span class='text-secondary'> {{ session.end_date }}
 															</span>
 														</v-col>
 													</v-row>
 												</v-col>
+
 												<v-col class='ma-0 pa-0' cols='12'>
 													<span class='smalltext text-center'>
 														{{ session.ip }}
 													</span>
 												</v-col>
+
 												<v-col class='ma-0 pa-0' cols='12'>
 													<span class='smalltext text-center'>
 														{{ session.user_agent }}
 													</span>
 												</v-col>
+
 												<v-col class='ma-0 pa-0' cols='12'>
 													<span class='smalltext text-center'>
 														{{ session.ulid }}
@@ -156,6 +161,7 @@
 													<span class='smalltext text-center text-mealtype'>CURRENT</span>
 												</v-col>
 											</v-row>
+
 											<v-divider v-if='index !== sessionData.length - 1' class='my-3' />
 										</v-row>
 									</section>
@@ -177,11 +183,11 @@
 </template>
 
 <script setup lang='ts'>
-import type { VDataTableRow } from 'vuetify/components/VDataTable'
 import type { PV, TAdminSession, TAllUserInfo } from '@/types'
+import type { VDataTableRow } from 'vuetify/components/VDataTable'
 import { mdiChevronDown, mdiChevronUp, mdiClose } from '@mdi/js'
 import { useDisplay } from 'vuetify'
-import { axios_admin } from '@/services/axios'
+import { fetch_admin } from '@/services/fetch'
 import { snackError } from '@/services/snack'
 
 const { smAndDown } = useDisplay()
@@ -193,7 +199,7 @@ const sessionData = ref([] as Array<TAdminSession>)
 async function getSessions (email: string): PV {
 	try {
 		loading.value = true
-		const session = await axios_admin.session_get(email)
+		const session = await fetch_admin.session_get(email)
 		if (session) {
 			sessionData.value = session
 		}
@@ -301,16 +307,16 @@ function activeSessionsIcon (email: string): string {
 	return expandedEmail.value === email && expandedRow.value ? mdiChevronUp : mdiChevronDown
 }
 async function resetAttempt (email: string): PV {
-	await axios_admin.user_patch({
+	await fetch_admin.user_patch({
 		patch: { attempt: true },
 		email,
 	})
-	await axios_admin.user_get()
+	await fetch_admin.user_get()
 }
 
 async function removeSession (ulid: string, email: string): PV {
-	await axios_admin.session_delete(ulid)
-	const session = await axios_admin.session_get(email)
+	await fetch_admin.session_delete(ulid)
+	const session = await fetch_admin.session_get(email)
 	if (session) {
 		sessionData.value = session
 		if (sessionData.value.length === 0) expanded.value = []

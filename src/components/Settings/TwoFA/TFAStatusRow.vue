@@ -5,10 +5,13 @@
 				<v-col class='ma-0 pa-0' :class='{ "mr-2": mdAndUp }' cols='1' sm='auto'>
 					<v-icon :color='iconColor' :icon :size='smAndDown ? "small" : ""' />
 				</v-col>
+
 				<v-col class='ma-0 pa-0' cols='10' sm='auto'>
 					<span class='text-headline-small' :class='textColor'>{{ text }}</span>
 				</v-col>
+
 				<v-spacer />
+
 				<v-col v-if='active' class='ma-0 pa-0 ' cols='1' sm='auto'>
 					<v-row class='pa-0 ma-0 justify-end'>
 						<v-col class='pa-0 ma-0' cols='auto'>

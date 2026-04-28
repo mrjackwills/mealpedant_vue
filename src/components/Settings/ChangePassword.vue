@@ -5,10 +5,12 @@
 				Change Password
 			</v-col>
 		</v-row>
+
 		<v-row class='my-0 justify-center'>
 			<v-col cols='12' md='6' sm='8'>
 				<v-form method='post' @submit.prevent>
 					<v-text-field v-show='false' autocomplete='email' label='email' type='email' />
+
 					<v-row class='justify-center' wrap>
 						<v-col v-for='(item, index) in textFields' :key='index' class='pa-1' cols='12'>
 							<v-text-field
@@ -31,12 +33,14 @@
 								@update:model-value='valueTouch(item.model, $event)'
 							/>
 						</v-col>
+
 						<v-col class='pa-0 mt-n2' cols='12'>
 							<v-expand-transition>
 								<PasswordContainsEmail v-if='errors.new_password && !passwordCompromised' />
 								<HibpMessage v-if='passwordCompromised' v-model='passwordCompromised' />
 							</v-expand-transition>
 						</v-col>
+
 						<v-col v-if='twoFA_always_required' class='pa-1' cols='12' md='7'>
 							<v-text-field
 								v-for='item in tokenFields'
@@ -54,6 +58,7 @@
 					</v-row>
 				</v-form>
 			</v-col>
+
 			<v-col class='ma-0 pa-0 mt-2' cols='12'>
 				<v-row class='ma-a pa- 0 justify-center'>
 
@@ -95,6 +100,7 @@
 					</v-col>
 
 				</v-row>
+
 				<v-row class='ma-0 pa-0 mt-4 justify-center'>
 					<v-col class='ma-0 pa-0' cols='auto'>
 						<v-checkbox v-model='user.remove_sessions' color='' density='compact' hide-details>
@@ -115,7 +121,7 @@ import { mdiCached, mdiCellphoneInformation, mdiClose, mdiEye, mdiEyeOff, mdiLoc
 import useVuelidate from '@vuelidate/core'
 import { minLength, required } from '@vuelidate/validators'
 import { useDisplay } from 'vuetify'
-import { axios_authenticatedUser } from '@/services/axios'
+import { fetch_authenticatedUser } from '@/services/fetch'
 import { snackSuccess } from '@/services/snack'
 import { passwordCheck } from '@/vanillaTS/hibp'
 const { lgAndUp, mdAndUp, mdAndDown, smAndDown } = useDisplay()
@@ -249,7 +255,7 @@ function valueTouch (model: 'current_password' | 'new_password' | 'token', value
 	}
 }
 
-// store axios request to patch password
+// store fetch request to patch password
 async function submit (): PV {
 	if (v$.value?.$invalid || passwordCompromised.value || errorMessages.value.new_password || errorMessages.value.current_password || loading.value || disabled.value || !user.value.new_password || !user.value.current_password) return
 	loading.value = true;
@@ -261,7 +267,7 @@ async function submit (): PV {
 		loading.value = false
 		return
 	}
-	const changed = await axios_authenticatedUser.password_patch({
+	const changed = await fetch_authenticatedUser.password_patch({
 		current_password: user.value.current_password,
 		new_password: user.value.new_password,
 		token: user.value.token,

@@ -16,12 +16,15 @@
 					<template #prepend>
 						<v-icon class='flipx ma-0 pa-0' :icon='mdiClose' size='small' />
 					</template>
+
 					<template #title>
 						<span class='text-body-medium'>close</span>
 					</template>
 				</v-list-item>
+
 				<v-divider class='' />
 			</section>
+
 			<section v-if='!authed && mobile'>
 				<v-list-item
 					v-for='(item, index) in registerLinks'
@@ -34,11 +37,13 @@
 					<template #prepend>
 						<v-icon class='ma-0 pa-0' :icon='item.icon' size='small' />
 					</template>
+
 					<template #title>
 						<span class='text-body-medium'>{{ item.text }}</span>
 					</template>
 				</v-list-item>
 			</section>
+
 			<section v-if='authed'>
 
 				<v-list-item
@@ -51,6 +56,7 @@
 				>
 					<template #prepend>
 						<v-icon class='ma-0 pa-0' :icon='item.icon' size='small' />
+
 						<v-tooltip
 							v-if='mini &&!mobile'
 							activator='parent'
@@ -58,6 +64,7 @@
 							:text='item.text'
 						/>
 					</template>
+
 					<template #title>
 						<span class='text-body-medium'>{{ item.text }}</span>
 					</template>
@@ -75,6 +82,7 @@
 					>
 						<template #prepend>
 							<v-icon class='ma-0 pa-0' :icon='item.icon' size='small' />
+
 							<v-tooltip
 								v-if='mini &&!mobile'
 								activator='parent'
@@ -82,6 +90,7 @@
 								:text='item.text'
 							/>
 						</template>
+
 						<template #title>
 							<span class='text-body-medium'>{{ item.text }}</span>
 						</template>
@@ -90,6 +99,7 @@
 					<v-list-item class='cl' density='compact' :prepend-gap='prependGap' @click='flushCache'>
 						<template #prepend>
 							<v-icon class='ma-0 pa-0' :icon='mdiDeleteSweep' size='small' />
+
 							<v-tooltip
 								v-if='mini &&!mobile'
 								activator='parent'
@@ -97,6 +107,7 @@
 								text='flush cache'
 							/>
 						</template>
+
 						<template #title>
 							<span class='text-body-medium'>flush cache</span>
 						</template>
@@ -112,6 +123,7 @@
 				>
 					<template #prepend>
 						<v-icon class='ma-0 pa-0' :icon='minivariantIcon' size='small' />
+
 						<v-tooltip
 							v-if='mini &&!mobile'
 							activator='parent'
@@ -119,6 +131,7 @@
 							text='maxmize'
 						/>
 					</template>
+
 					<template #title>
 						<span class='text-body-medium'>minimize</span>
 					</template>
@@ -134,6 +147,7 @@
 				>
 					<template #prepend>
 						<v-icon class='ma-0 pa-0' :icon='mdiPower' size='small' />
+
 						<v-tooltip
 							v-if='mini &&!mobile'
 							activator='parent'
@@ -141,6 +155,7 @@
 							text='sign out'
 						/>
 					</template>
+
 					<template #title>
 						<span class='text-body-medium'>sign out</span>
 					</template>
@@ -167,7 +182,7 @@ import {
 	mdiPower,
 } from '@mdi/js'
 import { useDisplay } from 'vuetify'
-import { axios_admin } from '@/services/axios'
+import { fetch_admin } from '@/services/fetch'
 import { FrontEndRoutes } from '@/types/const_routes'
 const { smAndDown } = useDisplay()
 
@@ -201,7 +216,7 @@ const mini = computed({
 const prependGap = '10px'
 
 async function flushCache (): PV {
-	await axios_admin.cache_delete()
+	await fetch_admin.cache_delete()
 	if (mobile.value && drawer.value) drawer.value = false
 }
 

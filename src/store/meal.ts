@@ -2,7 +2,6 @@ import type { c_MealInfo, c_search_by, DateMeal, MealCategoryMap, MealDescriptio
 import { defineStore } from 'pinia'
 import router from '@/router'
 import { snackError } from '@/services/snack'
-
 import { TPerson } from '@/types'
 import { ModuleName } from '@/types/const_module'
 import { genesisDateString, todayDateString } from '@/vanillaTS/helpers'

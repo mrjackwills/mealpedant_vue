@@ -12,9 +12,11 @@
 				<template #item='{ item }'>
 					<tr>
 						<td class='text-left'>{{ item.key }}</td>
+
 						<td class='text-center'>
 							{{ item.points }}
 						</td>
+
 						<td class='text-right cl' @click='clearLimit(item.key)'>
 							<ButtonIcon color='red' :icon='mdiCloseCircleOutline' />
 						</td>
@@ -28,7 +30,7 @@
 <script setup lang='ts'>
 import type { PV, TLimit } from '@/types'
 import { mdiCloseCircleOutline } from '@mdi/js'
-import { axios_admin } from '@/services/axios'
+import { fetch_admin } from '@/services/fetch'
 
 const userLimits = computed((): TLimit => adminModule().limit)
 
@@ -53,7 +55,7 @@ const headers = [
 ] as const
 
 async function clearLimit (key: string): PV {
-	await axios_admin.limit_delete({ key })
+	await fetch_admin.limit_delete({ key })
 }
 
 </script>

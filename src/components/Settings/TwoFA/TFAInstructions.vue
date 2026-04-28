@@ -4,6 +4,7 @@
 			<v-icon class='mr-1' :icon='mdiCircle' size='x-small' /> Ensure you have an authenticator app installed on your cell
 			phone (other authenticator apps are available)
 		</v-col>
+
 		<v-col class='ma-0 pa-0' cols='12' lg='8'>
 			<v-row class=' justify-center'>
 				<v-col v-for='(item, index) of appLinks' :key='index' class='' cols='auto'>
@@ -17,15 +18,18 @@
 			</v-row>
 		</v-col>
 	</v-row>
+
 	<v-row class='ma-0 pa-0 justify-center'>
 		<v-col class='ma-0 pa-0' cols='12' lg='8'>
 			<v-icon class='mr-1' :icon='mdiCircle' size='x-small' />Use the authenticator app to scan the following qr code (or
 			manually enter the secret)
 		</v-col>
 	</v-row>
+
 	<v-row class='ma-0 pa-0 my-2 justify-center'>
 		<v-col class='text-center ma-0 pa-0' cols='auto'>
 			<QrCode level='H' render-as='svg' :size :value='qrCode' />
+
 			<v-row class=' justify-center'>
 				<v-col class='pa-0 text-body-small mt-3' cols='auto'>
 					secret: {{ secret }}
@@ -33,6 +37,7 @@
 			</v-row>
 		</v-col>
 	</v-row>
+
 	<v-row class='ma-0 pa-0 justify-center'>
 		<v-col class='ma-0 pa-0' cols='12' lg='8'>
 			<v-icon class='mr-1' :icon='mdiCircle' size='x-small' />
@@ -40,6 +45,7 @@
 			is correct
 		</v-col>
 	</v-row>
+
 	<v-row class='ma-0 pa-0 my-2 justify-center'>
 		<v-col class='ma-0 pa-0' cols='12' lg='2'>
 			<v-text-field
@@ -56,6 +62,7 @@
 			/>
 		</v-col>
 	</v-row>
+
 	<v-row class='ma-0 pa-0 justify-center'>
 		<v-col cols='auto'>
 			<v-btn color='error' rounded variant='flat' @click='cancel'>
@@ -64,6 +71,7 @@
 			</v-btn>
 
 		</v-col>
+
 		<v-col cols='auto'>
 			<v-btn
 				:color='!userToken ? "black" : "secondary"'
@@ -84,7 +92,7 @@ import type { PV, su } from '@/types'
 import { mdiApple, mdiCellphoneInformation, mdiCheck, mdiCircle, mdiClose, mdiGooglePlay } from '@mdi/js'
 import QrCode from 'qrcode.vue'
 import { useDisplay } from 'vuetify'
-import { axios_authenticatedUser } from '@/services/axios'
+import { fetch_authenticatedUser } from '@/services/fetch'
 import { snackSuccess } from '@/services/snack'
 const { smAndDown, mdAndUp } = useDisplay()
 
@@ -115,7 +123,7 @@ const appLinks = [
 async function cancel (): PV {
 	twoFAModule().set_secret(undefined)
 	twoFAModule().set_setupProcessStarted(false)
-	await axios_authenticatedUser.setupTwoFA_delete()
+	await fetch_authenticatedUser.setupTwoFA_delete()
 }
 
 async function verify (): PV {
@@ -126,10 +134,10 @@ async function verify (): PV {
 		errorMessage.value = 'code invalid'
 		return
 	}
-	const response = await axios_authenticatedUser.setupTwoFA_post({ token: userToken.value })
+	const response = await fetch_authenticatedUser.setupTwoFA_post({ token: userToken.value })
 	if (response) {
 		Promise.all([
-			axios_authenticatedUser.setupTwoFA_delete(),
+			fetch_authenticatedUser.setupTwoFA_delete(),
 			twoFAModule().set_active(true),
 			twoFAModule().set_secret(undefined),
 			twoFAModule().set_setupProcessStarted(false),

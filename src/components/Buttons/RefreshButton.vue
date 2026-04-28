@@ -18,7 +18,7 @@
 
 <script setup lang='ts'>
 import { mdiDatabaseRefresh } from '@mdi/js'
-import { axios_adminMeal } from '@/services/axios'
+import { fetch_adminMeal } from '@/services/fetch'
 
 // Refresh the meal data, clear filters, and if admin, check for missing meals
 async function refresh (): Promise<void> {
@@ -26,7 +26,7 @@ async function refresh (): Promise<void> {
 	infobarModule().$reset()
 	mealModule().clear_all_filters()
 	await mealStorage.seed_meal_pinia()
-	if (userModule().admin) await axios_adminMeal.missing_get()
+	if (userModule().admin) await fetch_adminMeal.missing_get()
 	window.scrollTo({
 		top: 0,
 		behavior: 'smooth',
