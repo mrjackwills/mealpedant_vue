@@ -1,7 +1,10 @@
-### 2026-03-13
+### 2026-04-28
 
 ### Chores
-+ dependencies updated, [488372e594316c5287aac8691e0256e5601a5288]
-+ GitHub workflow updated, [5ca901e77e9f002372e8c5df740fd657264aed10]
++ linting, [416d2a3fa2c8b5eb1ec7d433a97ebde646a8356a]
++ dependencies updated, [225e2e21a61f5fddfafd809dbb4b3e300916fa4a], [6c9e7f5bf7090fefe9381319cca2aa0f3ea92810]
+
+### Features
++ replace axios with native fetch, [56bf22c531ec231dfa8bbad3bc5ddb6c7aeb4de3], [cbc38b6028c01caa79bfcb4cbb9fe0744f8ace13]
 
 see <a href='https://github.com/mrjackwills/mealpedant_vue/blob/main/CHANGELOG.md'>CHANGELOG.md</a> for more details

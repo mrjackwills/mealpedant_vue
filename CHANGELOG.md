@@ -1,9 +1,12 @@
+# <a href='https://github.com/mrjackwills/mealpedant_vue/releases/tag/v2.1.3'>v2.1.3</a>
+### 2026-04-28
+
 ### Chores
-+ linting, [416d2a3fa2c8b5eb1ec7d433a97ebde646a8356a]
-+ dependencies updated, [225e2e21a61f5fddfafd809dbb4b3e300916fa4a], [6c9e7f5bf7090fefe9381319cca2aa0f3ea92810]
++ linting, [416d2a3f](https://github.com/mrjackwills/mealpedant_vue/commit/416d2a3fa2c8b5eb1ec7d433a97ebde646a8356a)
++ dependencies updated, [225e2e21](https://github.com/mrjackwills/mealpedant_vue/commit/225e2e21a61f5fddfafd809dbb4b3e300916fa4a), [6c9e7f5b](https://github.com/mrjackwills/mealpedant_vue/commit/6c9e7f5bf7090fefe9381319cca2aa0f3ea92810)
 
 ### Features
-+ replace axios with native fetch, [56bf22c531ec231dfa8bbad3bc5ddb6c7aeb4de3], [cbc38b6028c01caa79bfcb4cbb9fe0744f8ace13]
++ replace axios with native fetch, [56bf22c5](https://github.com/mrjackwills/mealpedant_vue/commit/56bf22c531ec231dfa8bbad3bc5ddb6c7aeb4de3), [cbc38b60](https://github.com/mrjackwills/mealpedant_vue/commit/cbc38b6028c01caa79bfcb4cbb9fe0744f8ace13)
 
 # <a href='https://github.com/mrjackwills/mealpedant_vue/releases/tag/v2.1.2'>v2.1.2</a>
 ### 2026-03-13
