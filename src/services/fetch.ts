@@ -33,7 +33,7 @@ async function fetchRequest (
 
 		const headers: Record<string, string> = {
 			'Cache-Control': 'no-cache',
-			...(isFormData && {
+			...(!isFormData && {
 				'Content-Type': 'application/json; charset=utf-8',
 				Accept: 'application/json',
 			}),
