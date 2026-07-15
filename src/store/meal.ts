@@ -1,3 +1,4 @@
+/* eslint-disable unicorn/no-this-outside-of-class */
 import type { c_MealInfo, c_search_by, DateMeal, MealCategoryMap, MealDescriptionMap, MealHistoryValue, MealInfo, search_by, TMealVariant, TPersonFood, TPersonVal } from '@/types'
 import { defineStore } from 'pinia'
 import router from '@/router'

@@ -1,3 +1,4 @@
+/* eslint-disable unicorn/no-this-outside-of-class */
 import type { su, TPersonVal, u } from '@/types'
 import { defineStore } from 'pinia'
 import { ModuleName } from '@/types/const_module'

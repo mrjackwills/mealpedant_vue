@@ -40,7 +40,11 @@ async function adminBefore (_to: RouteLocationNormalized, _from: RouteLocationNo
 
 async function adminEditMeal (to: RouteLocationNormalized, _from: RouteLocationNormalized, next: NavigationGuardNext): PV {
 	try {
-		const dateRegex = /([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))/
+		// TODO fix me
+		// const dateRegex = /([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))/
+		// const dateRegex = /([12]\d{3}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12]\d|3[01]))/
+		const dateRegex = /[12]\d{3}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12]\d|3[01])/
+		// const dateRegex = /^[12]\d{3}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12]\d|3[01])$/
 
 		if (to.query.date && to.query.person) {
 			const person = to.query.person.toString()

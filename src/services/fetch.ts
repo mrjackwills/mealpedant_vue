@@ -1,3 +1,4 @@
+/* eslint-disable unicorn/no-this-outside-of-class */
 import type * as types from '@/types'
 import { HttpCode } from '@/types/const_http'
 import { isHttpCode } from '@/types/typeGuards'

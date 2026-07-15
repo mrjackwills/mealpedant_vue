@@ -1,3 +1,4 @@
+/* eslint-disable unicorn/no-this-outside-of-class */
 import type { nu, su, TSnackPosition } from '@/types'
 import { defineStore } from 'pinia'
 import { ModuleName } from '@/types/const_module'

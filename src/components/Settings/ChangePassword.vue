@@ -36,6 +36,7 @@
 
 						<v-col class='pa-0 mt-n2' cols='12'>
 							<v-expand-transition>
+								<!-- todo remove this -->
 								<PasswordContainsEmail v-if='errors.new_password && !passwordCompromised' />
 								<HibpMessage v-if='passwordCompromised' v-model='passwordCompromised' />
 							</v-expand-transition>

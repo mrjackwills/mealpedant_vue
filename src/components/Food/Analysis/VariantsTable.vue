@@ -97,8 +97,9 @@ const density = computed(() => platform.value.firefox ? 'comfortable' : 'compact
 
 const has_filter = computed(() => mealStore.is_filtered)
 
+// TODO test me
 const justify = computed(() => {
-	const suffix = authenticated.value ? (show_jack.value && show_dave.value ? 'start' : 'end') : 'end'
+	const suffix = authenticated.value && show_jack.value && show_dave.value ? 'start' : 'end'
 	return `justify-${suffix}`
 })
 

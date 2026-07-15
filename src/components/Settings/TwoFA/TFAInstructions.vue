@@ -130,7 +130,8 @@ async function verify (): PV {
 	if (!userToken.value) {
 		errorMessage.value = 'code required'
 		return
-	} else if (!(/^[0-9]{6}$/).test(userToken.value.replace(/\s/g, ''))) {
+		// TODO fix me
+	} else if (!(/^\d{6}$/).test(userToken.value.replace(/\s/g, ''))) {
 		errorMessage.value = 'code invalid'
 		return
 	}
