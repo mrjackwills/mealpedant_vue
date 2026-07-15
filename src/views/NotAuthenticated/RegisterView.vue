@@ -5,7 +5,7 @@
 				<v-form method='post' @submit.prevent>
 					<div v-for='(item, index) in textFields' :key='index'>
 						<v-expand-transition>
-							<HibpMessage v-if='item.label === "invite" && passNum' :pass-num />
+							<HibpMessage v-if='item.label === "invite" && passwordCompromised' :password-compromised />
 						</v-expand-transition>
 
 						<v-text-field
@@ -13,13 +13,13 @@
 							:append-inner-icon='item.appendIcon'
 							:autocomplete='item.autocomplete'
 							:disabled='loading || completed'
-							:error='errors[item.model]'
-							:error-messages='errorMessages[item.model]'
+							:error='errorMessages[item.model].length > 0'
+							:error-messages='errorMessages[item.model]||externalErrors[item.model]'
 							:label='item.label'
 							:prepend-inner-icon='item.icon'
 							:type='item.type'
 							variant='underlined'
-							@blur='touch(item.model)'
+							@blur='cleanTouch(item.model)'
 							@click:append-inner='appendClick(item.model)'
 							@input='touch(item.model)'
 							@keyup.enter='register'
@@ -44,12 +44,12 @@
 
 					<v-btn
 						class='elevation-0'
-						:color='loading || v$.$invalid || errors.password || completed ? "" : "secondary"'
+						:color='loading || v$.$invalid || completed ? "" : "secondary"'
 						dark
-						:disabled='loading || v$.$invalid || errors.password || completed'
+						:disabled='loading || v$.$invalid || completed'
 						large
 						rounded
-						:variant='loading || v$.$invalid || errors.password || completed ? "outlined" : "flat"'
+						:variant='loading || v$.$invalid || completed ? "outlined" : "flat"'
 						@click='register'
 					>
 						<ButtonIcon :icon='mdiAccountPlus' />
@@ -90,11 +90,6 @@ const loading = computed({
 	},
 })
 
-const watcher_email = computed(() => user.value.email)
-const watcher_full_name = computed(() => user.value.full_name)
-const watcher_invite = computed(() => user.value.invite)
-const watcher_password = computed(() => user.value.password)
-
 const password_visible = ref(false)
 
 // Set the password field visible
@@ -103,20 +98,8 @@ function appendClick (model: string): void {
 }
 
 const completed = ref(false)
-const errorMessages = ref({
-	email: '',
-	full_name: '',
-	password: '',
-	invite: '',
-})
 
-const errors = ref({
-	email: false,
-	full_name: false,
-	password: false,
-	invite: false,
-})
-const passNum = ref(false)
+const passwordCompromised = ref(false)
 const textFields = computed(() => [
 	{
 		autocomplete: 'full_name',
@@ -168,19 +151,13 @@ async function cancel (): PV {
 	await (mealModule().meals_length > 0 ? router.push(FrontEndRoutes.MEALS) : router.push(FrontEndRoutes.BASE))
 }
 
-function touch (name: string): void {
-	v$.value[name]?.$touch()
-}
 async function register (): PV {
 	if (v$.value.$invalid) return
-	if (user.value.password.toLowerCase().includes(user.value.email.toLowerCase().trim())) {
-		errors.value.password = true
-		return
-	}
+	if (user.value.password.toLowerCase().includes(user.value.email.toLowerCase().trim())) return
 	loading.value = true
-	passNum.value = await passwordCheck(user.value.password)
-	if (passNum.value) {
-		errors.value.password = true
+	passwordCompromised.value = await passwordCheck(user.value.password)
+	if (passwordCompromised.value) {
+		externalErrors.value.password = 'invalid password'
 		loading.value = false
 		return
 	}
@@ -198,6 +175,28 @@ async function register (): PV {
 	loading.value = false
 }
 
+function cleanTouch (name: string): void {
+	if (name === 'email' || name === 'invite') {
+		user.value[name] = user.value[name].toLowerCase().trim()
+	}
+	touch(name)
+}
+
+function touch (name: string): void {
+	if (name === 'password') {
+		externalErrors.value.password = ''
+		passwordCompromised.value = false
+	}
+	v$.value[name]?.$touch()
+}
+
+const externalErrors = ref({
+	password: '',
+	email: '',
+	full_name: '',
+	invite: '',
+})
+
 const rules = {
 	email: {
 		email,
@@ -210,33 +209,52 @@ const rules = {
 		minLen: minLength(12),
 	},
 }
-const v$ = useVuelidate(rules, user)
+const v$ = useVuelidate(rules, user, { $externalResults: externalErrors })
 
-watch(watcher_email, () => {
-	user.value.email = user.value.email.toLowerCase().trim()
-	if (v$.value.email?.$dirty && user.value.email.length === 0) errorMessages.value.email = 'email required'
-	else errorMessages.value.email = v$.value.email?.email.$invalid ? 'email invalid' : ''
-})
+const errorMessages = computed(() => {
+	const ev = v$.value.email
+	const fv = v$.value.full_name
+	const iv = v$.value.invite
+	const pv = v$.value.password
 
-watch(watcher_full_name, () => {
-	errorMessages.value.full_name = v$.value.full_name?.$dirty && user.value.full_name.length === 0 ? 'full name required' : ''
-})
+	let emailErr = ''
+	if (ev?.$dirty) {
+		if (user.value.email.length === 0) {
+			emailErr = 'email required'
+		} else if (ev.email.$invalid) {
+			emailErr = 'email invalid'
+		}
+	}
 
-watch(watcher_invite, () => {
-	user.value.invite = user.value.invite.toLowerCase().trim()
-	errorMessages.value.invite = v$.value.invite?.$dirty && user.value.invite.length === 0 ? 'invite required' : ''
-})
+	let fullNameErr = ''
+	if (fv?.$dirty && user.value.full_name.length === 0) {
+		fullNameErr = 'full name required'
+	}
 
-watch(watcher_password, () => {
-	passNum.value = false
-	errors.value.password = false
-	if (user.value.email && user.value.password.toLowerCase().includes(user.value.email.toLowerCase().trim())) errorMessages.value.password = 'Your password cannot containt your email'
-	if (v$.value.password?.minLen.$invalid) {
-		errorMessages.value.password = '12 characters minimum'
-	} else if (v$.value.password?.$dirty && user.value.password.length === 0) {
-		errorMessages.value.password = 'password required'
-	} else {
-		errorMessages.value.password = ''
+	let inviteErr = ''
+	if (iv?.$dirty && user.value.invite.length === 0) {
+		inviteErr = 'invite required'
+	}
+
+	let passwordErr = ''
+	if (pv?.$dirty) {
+		const emailVal = user.value.email.toLowerCase().trim()
+		const passVal = user.value.password.toLowerCase()
+
+		if (emailVal && passVal.includes(emailVal)) {
+			passwordErr = 'Your password cannot contain your email'
+		} else if (pv.minLen.$invalid) {
+			passwordErr = '12 characters minimum'
+		} else if (user.value.password.length === 0) {
+			passwordErr = 'password required'
+		}
+	}
+
+	return {
+		email: emailErr,
+		full_name: fullNameErr,
+		invite: inviteErr,
+		password: passwordErr,
 	}
 })
 
