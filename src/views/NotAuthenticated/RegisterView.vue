@@ -5,7 +5,6 @@
 				<v-form method='post' @submit.prevent>
 					<div v-for='(item, index) in textFields' :key='index'>
 						<v-expand-transition>
-							<PasswordContainsEmail v-if='item.label === "invite" && errors.password && !passNum' />
 							<HibpMessage v-if='item.label === "invite" && passNum' :pass-num />
 						</v-expand-transition>
 
@@ -18,7 +17,6 @@
 							:error-messages='errorMessages[item.model]'
 							:label='item.label'
 							:prepend-inner-icon='item.icon'
-
 							:type='item.type'
 							variant='underlined'
 							@blur='touch(item.model)'
@@ -111,6 +109,7 @@ const errorMessages = ref({
 	password: '',
 	invite: '',
 })
+
 const errors = ref({
 	email: false,
 	full_name: false,
@@ -215,36 +214,30 @@ const v$ = useVuelidate(rules, user)
 
 watch(watcher_email, () => {
 	user.value.email = user.value.email.toLowerCase().trim()
-	if (!v$.value.user?.email?.$invalid) errorMessages.value.email = ''
-	else if (!v$.value.user?.email?.$dirty) return
-	else if (!v$.value.user?.email?.required) errorMessages.value.email = 'email required'
-	else if (!v$.value.user?.email?.email) errorMessages.value.email = 'email invalid'
+	if (v$.value.email?.$dirty && user.value.email.length === 0) errorMessages.value.email = 'email required'
+	else errorMessages.value.email = v$.value.email?.email.$invalid ? 'email invalid' : ''
 })
 
 watch(watcher_full_name, () => {
-	if (!v$.value.user?.firstName?.$invalid) errorMessages.value.full_name = ''
-	else if (!v$.value.user?.firstName?.$dirty) return
-	else if (!v$.value.user?.firstName?.required) errorMessages.value.full_name = 'full name required'
+	errorMessages.value.full_name = v$.value.full_name?.$dirty && user.value.full_name.length === 0 ? 'full name required' : ''
 })
 
 watch(watcher_invite, () => {
 	user.value.invite = user.value.invite.toLowerCase().trim()
-	if (!v$.value.user?.invite?.$invalid) errorMessages.value.invite = ''
-	else if (!v$.value.user?.invite?.$dirty) return
-	else if (!v$.value.user?.invite?.required) errorMessages.value.invite = 'invite required'
+	errorMessages.value.invite = v$.value.invite?.$dirty && user.value.invite.length === 0 ? 'invite required' : ''
 })
 
 watch(watcher_password, () => {
 	passNum.value = false
 	errors.value.password = false
-	if (user.value.email && user.value.password.toLowerCase().includes(user.value.email.toLowerCase().trim())) errors.value.password = true
-	else if (user.value.email && user.value.password) {
-		const a = user.value.email.toLowerCase().trim().split('@')[0]
-		if (a && user.value.password.toLowerCase().includes(a)) errors.value.password = true
-	} else if (!v$.value.user?.password?.$invalid && !passNum.value) errorMessages.value.password = ''
-	else if (!v$.value.user?.password?.$dirty) return
-	else if (!v$.value.user?.password?.required) errorMessages.value.password = 'password required'
-	else if (!v$.value.user?.password?.minLength) errorMessages.value.password = '12 characters minimum'
+	if (user.value.email && user.value.password.toLowerCase().includes(user.value.email.toLowerCase().trim())) errorMessages.value.password = 'Your password cannot containt your email'
+	if (v$.value.password?.minLen.$invalid) {
+		errorMessages.value.password = '12 characters minimum'
+	} else if (v$.value.password?.$dirty && user.value.password.length === 0) {
+		errorMessages.value.password = 'password required'
+	} else {
+		errorMessages.value.password = ''
+	}
 })
 
 </script>
