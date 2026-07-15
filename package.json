@@ -12,7 +12,9 @@
     "build": "eslint ./src && vue-tsc --build --force && vite build",
     "preview": "vite preview",
     "check": "vue-tsc --build --force",
-    "lint": "eslint ./src"
+    "lint": "eslint ./src",
+	"ps":"NODE_ENV=production npm run serve",
+	"_ps": "npm run build && npx serve -p 4173 dist"
   },
   "dependencies": {
     "@vuelidate/core": "^2.0.3",

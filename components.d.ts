@@ -35,7 +35,6 @@ declare module 'vue' {
     MealTable: typeof import('./src/components/Food/DataTable/MealTable.vue')['default']
     NavMenu: typeof import('./src/components/Nav/NavMenu.vue')['default']
     OfflineRow: typeof import('./src/components/OfflineRow.vue')['default']
-    PasswordContainsEmail: typeof import('./src/components/PasswordContainsEmail.vue')['default']
     PhotoDialog: typeof import('./src/components/Food/PhotoDialog.vue')['default']
     RefreshButton: typeof import('./src/components/Buttons/RefreshButton.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']

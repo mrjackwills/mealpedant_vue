@@ -350,86 +350,111 @@ export const mealModule = defineStore(ModuleName.Meal, {
 		},
 
 		// Filter the meals by the current search_by settings
-		/// Could pre
-		/// Or set a loading value in here, and use that in the chip switch
+		// Could pre
+		// Or set a loading value in here, and use that in the chip switch
 		// Or, pre-calc it all
-		// eslint-disable-next-line complexity
-		filter_by_search_by () {
-			const search_by = this.search_by
-			this.filter_b64 = btoa(JSON.stringify(this.compress_search_by(search_by)))
-			router.replace({ query: { filter: this.filter_b64 } })
+		filter_by_search_by (): void {
+			const { search_by } = this
+			const searchKey = JSON.stringify(search_by)
 
-			const search_by_stringified = JSON.stringify(search_by)
-			if (search_by_stringified === this.default_search_by_stringified) {
+			if (searchKey === this.default_search_by_stringified) {
 				this.clear_all_filters()
 				return
 			}
 
-			const known = this.search_history.get(search_by_stringified)
-			if (known) {
-				this.filtered_meal_descriptions = known.filtered_meal_descriptions
-				this.filtered_meal_categories = known.filtered_meal_categories
-				this.filtered_date_meals = known.filtered_date_meals
-				this.filtered_meal_variants = known.filtered_meal_variants
+			this.filter_b64 = btoa(JSON.stringify(this.compress_search_by(search_by)))
+			router.replace({ query: { filter: this.filter_b64 } })
+
+			const cachedResult = this.search_history.get(searchKey)
+			if (cachedResult) {
+				this.filtered_meal_descriptions = cachedResult.filtered_meal_descriptions
+				this.filtered_meal_categories = cachedResult.filtered_meal_categories
+				this.filtered_date_meals = cachedResult.filtered_date_meals
+				this.filtered_meal_variants = cachedResult.filtered_meal_variants
 				this.is_filtered = true
 				return
 			}
 
-			const tmp_cat_id = new Set<number>()
-			const tmp_desc_id = new Set<number>()
+			const searchTerm = this.normalise_string(search_by.term || '')
+			const matchedCategoryIds = new Set<number>()
+			const matchedDescriptionIds = new Set<number>()
 
-			const filtered_date_meals = new Map<string, {
-				Dave?: TPersonFood
-				Jack?: TPersonFood
-			}>()
-			const filtered_meal_variants = new Set<TMealVariant>()
-
-			const search_term = this.normalise_string(search_by.term)
-			const cat_id = new Set([...this.meal_categories.entries()].filter(([, i]) => i.includes(search_term)).map(([id]) => id))
-			const desc_id = new Set([...this.meal_description_normalized.entries()].filter(([, i]) => i.includes(search_term)).map(([id]) => id))
-
-			const people_arr = [TPerson.DAVE, TPerson.JACK]
-			for (const meal of this.date_meals) {
-				for (const person of people_arr) {
-					if ((!search_by.include_dave && person === TPerson.DAVE) || (!search_by.include_jack && person === TPerson.JACK)) {
-						continue
+			if (searchTerm) {
+				for (const [id, name] of this.meal_categories) {
+					if (name.includes(searchTerm)) {
+						matchedCategoryIds.add(id)
 					}
-					const meal_person = meal[person]
-					if (meal_person) {
-						if (
-							(meal.date > search_by.end_date)
-							|| (meal.date < search_by.start_date)
-							|| (search_by.only_photos && !meal_person.photo)
-							|| (!search_by.include_takeaway && !meal_person.takeaway)
-							|| (!search_by.include_vegetarian && !meal_person.vegetarian)
-							|| (!search_by.include_restaurant && !meal_person.restaurant)) {
-							continue
-						}
-
-						const known_category = meal_person.meal_category_id === search_by.category_id
-						const has_category_description = cat_id.has(meal_person.meal_category_id) || desc_id.has(meal_person.meal_description_id)
-
-						if (
-							(search_by.category_id && !search_by.term && known_category)
-							|| (!search_by.category_id && !search_by.term)
-							|| (!search_by.category_id && search_by.term && has_category_description)
-							|| (search_by.category_id && search_by.term && known_category && has_category_description)
-						) {
-							this.add_entry(filtered_date_meals, filtered_meal_variants, meal, person, tmp_cat_id, tmp_desc_id)
-						}
+				}
+				for (const [id, name] of this.meal_description_normalized) {
+					if (name.includes(searchTerm)) {
+						matchedDescriptionIds.add(id)
 					}
 				}
 			}
 
-			this.filtered_meal_descriptions = this.get_filtered_map(tmp_desc_id, this.meal_descriptions)
-			this.filtered_meal_categories = this.get_filtered_map(tmp_cat_id, this.meal_categories)
-			this.filtered_date_meals = this.converted_map_to_array(filtered_date_meals)
-			this.filtered_meal_variants = filtered_meal_variants
+			const targetPeople = [] as Array<typeof TPerson.DAVE | typeof TPerson.JACK>
+			if (search_by.include_dave) {
+				targetPeople.push(TPerson.DAVE)
+			}
+			if (search_by.include_jack) {
+				targetPeople.push(TPerson.JACK)
+			}
 
-			this.search_history.set(search_by_stringified, {
+			const tmpCatId = new Set<number>()
+			const tmpDescId = new Set<number>()
+			const filteredMealVariants = new Set<TMealVariant>()
+			const filteredDateMealsMap = new Map<string, { Dave?: TPersonFood, Jack?: TPersonFood }>()
+
+			for (const meal of this.date_meals) {
+				if (meal.date > search_by.end_date || meal.date < search_by.start_date) {
+					continue
+				}
+
+				for (const person of targetPeople) {
+					const mealPerson = meal[person]
+					if (!mealPerson) {
+						continue
+					}
+
+					if (search_by.only_photos && !mealPerson.photo) {
+						continue
+					}
+					if (!search_by.include_takeaway && !mealPerson.takeaway) {
+						continue
+					}
+					if (!search_by.include_vegetarian && !mealPerson.vegetarian) {
+						continue
+					}
+
+					if (!search_by.include_restaurant && !mealPerson.restaurant) {
+						continue
+					}
+
+					const matchesCategory = !search_by.category_id || mealPerson.meal_category_id === search_by.category_id
+					const matchesTerm = !searchTerm || matchedCategoryIds.has(mealPerson.meal_category_id) || matchedDescriptionIds.has(mealPerson.meal_description_id)
+
+					if (matchesCategory && matchesTerm) {
+						this.add_entry(
+							filteredDateMealsMap,
+							filteredMealVariants,
+							meal,
+							person,
+							tmpCatId,
+							tmpDescId,
+						)
+					}
+				}
+			}
+
+			this.filtered_meal_descriptions = this.get_filtered_map(tmpDescId, this.meal_descriptions)
+			this.filtered_meal_categories = this.get_filtered_map(tmpCatId, this.meal_categories)
+			this.filtered_date_meals = this.converted_map_to_array(filteredDateMealsMap)
+			this.filtered_meal_variants = filteredMealVariants
+
+			this.search_history.set(searchKey, {
 				filtered_meal_descriptions: this.filtered_meal_descriptions,
 				filtered_meal_categories: this.filtered_meal_categories,
-				filtered_meal_variants,
+				filtered_meal_variants: this.filtered_meal_variants,
 				filtered_date_meals: this.filtered_date_meals,
 			})
 
