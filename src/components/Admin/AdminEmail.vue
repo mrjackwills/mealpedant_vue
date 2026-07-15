@@ -141,8 +141,6 @@ const email = ref({
 	button_text: undefined as su,
 	link: undefined as su,
 })
-// TODO fix me
-// const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})$/
 const emailRegex = /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/
 const errorMessages = ref({
 	emails: undefined as su,
