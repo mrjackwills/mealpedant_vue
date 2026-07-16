@@ -301,7 +301,6 @@ td {
 
 .header_bg {
 	background-color: #212121;
-	/* font-size: 1rem */
 }
 
 /* Headers for the data table, probably excessive selector */
