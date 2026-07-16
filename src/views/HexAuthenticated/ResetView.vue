@@ -27,8 +27,8 @@
 							/>
 
 							<v-expand-transition>
-								<PasswordContainsEmail v-if='errors.new_password && !passNum' />
-								<HibpMessage v-if='passNum' :pass-num />
+								<PasswordContainsEmail v-if='errors.new_password && !passwordCompromised' />
+								<HibpMessage v-if='passwordCompromised' />
 							</v-expand-transition>
 
 							<section v-if='twoFA_active'>
@@ -122,7 +122,7 @@ const errors = ref({
 	token: false,
 })
 const new_passwordVisible = ref(false)
-const passNum = ref(false)
+const passwordCompromised = ref(false)
 const tokenFields = ref([
 	{
 		clearable: true,
@@ -151,8 +151,8 @@ function touch (name: string): void {
 async function reset (): Promise<void> {
 	if (v$.value.$invalid || !resetId.value || (twoFA_active.value && !user.value.token)) return
 	loading.value = true
-	passNum.value = await passwordCheck(user.value.new_password)
-	if (passNum.value) {
+	passwordCompromised.value = await passwordCheck(user.value.new_password)
+	if (passwordCompromised.value) {
 		errors.value.new_password = true
 		loading.value = false
 		return
@@ -189,9 +189,9 @@ async function reset (): Promise<void> {
 }
 
 watch(watcher_password, () => {
-	passNum.value = false
+	passwordCompromised.value = false
 	errors.value.new_password = false
-	if (!v$.value.user?.new_password?.$invalid && !passNum.value) errorMessages.value.new_password = ''
+	if (!v$.value.user?.new_password?.$invalid && !passwordCompromised.value) errorMessages.value.new_password = ''
 	else if (!v$.value.user?.new_password?.$dirty) return
 	else if (!v$.value.user?.new_password?.required) errorMessages.value.new_password = 'password required'
 	else if (!v$.value.user?.new_password?.minLength) errorMessages.value.new_password = '12 characters minimum'

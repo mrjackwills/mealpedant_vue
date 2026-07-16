@@ -141,7 +141,7 @@ const email = ref({
 	button_text: undefined as su,
 	link: undefined as su,
 })
-const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/
+const emailRegex = /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/
 const errorMessages = ref({
 	emails: undefined as su,
 	title: undefined as su,
@@ -311,7 +311,8 @@ watch(watcher_link, (i: su) => {
 		errorMessages.value.button_text = 'Link required'
 		return
 	}
-	const domainRegex = /^http(s)?:\/\/([a-zA-Z0-9-_]+\.)*[a-zA-Z0-9][a-zA-Z0-9-_]+\.[a-zA-Z]{2,11}(\/.*)?$/
+	const domainRegex = /^https?:\/\/(?:[\w-]+\.)*[a-zA-Z0-9][\w-]+\.[a-zA-Z]{2,11}(?:\/.*)?$/
+	// const domainRegex = /^http(s)?:\/\/([\w-]+\.)*[a-zA-Z0-9][\w-]+\.[a-zA-Z]{2,11}(\/.*)?$/
 	if (!i) return
 	const regexTest = domainRegex.test(i)
 	if (i && !regexTest) {

@@ -172,7 +172,7 @@ const first_id = computed(() => tableData.value[0]?.category_id)
 const last_id = computed(() => tableData.value.at(-1)?.category_id)
 
 const justify = computed(() => {
-	const suffix = authenticated.value ? (show_jack.value && show_dave.value ? 'start' : 'end') : 'end'
+	const suffix = authenticated.value && show_jack.value && show_dave.value ? 'start' : 'end'
 	return `justify-${suffix}`
 })
 

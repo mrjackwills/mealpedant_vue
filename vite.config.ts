@@ -1,5 +1,6 @@
 import type { VitePWAOptions } from 'vite-plugin-pwa'
 import { fileURLToPath, URL } from 'node:url'
+import babel from '@rolldown/plugin-babel'
 // Plugins
 import vue from '@vitejs/plugin-vue'
 import AutoImport from 'unplugin-auto-import/vite'
@@ -7,10 +8,7 @@ import AutoImport from 'unplugin-auto-import/vite'
 import Unfonts from 'unplugin-fonts/vite'
 import Components from 'unplugin-vue-components/vite'
 import { defineConfig } from 'vite'
-
-import babel from 'vite-plugin-babel'
 import compression from 'vite-plugin-compression2'
-
 import { VitePWA } from 'vite-plugin-pwa'
 import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
 
@@ -90,19 +88,12 @@ export default defineConfig({
 		// @vitejs/plugin-react v6 is OXC-only; OXC passes TC39 decorators through unchanged.
 		// vite-plugin-babel runs enforce:'pre' (before OXC) and transforms them via Babel.
 		babel({
-			filter: /\.[jt]sx?$/, // include .ts/.tsx (default only matches .js/.jsx)
-			exclude: /node_modules/, // skip pre-compiled library code
-			babelConfig: {
-				babelrc: false,
-				configFile: false,
-				plugins: [
-					// Allow Babel to parse TypeScript/TSX syntax (types remain for OXC to strip)
-					['@babel/plugin-syntax-typescript', { allExtensions: true, isTSX: true }],
-					// Transform TC39 standard decorators (version '2023-05' = ECMAScript 2023 proposal)
-					['@babel/plugin-proposal-decorators', { version: '2023-11' }],
-				],
-			},
+			presets: [{
+				preset: () => ({ plugins: [['@babel/plugin-proposal-decorators', { version: '2023-11' }]] }),
+				rolldown: { filter: { code: '@' } },
+			}],
 		}),
+
 	],
 	oxc: {},
 	define: {

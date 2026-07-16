@@ -16,11 +16,12 @@
 							<v-text-field
 								:append-inner-icon='item.appendIcon'
 								:autocomplete='item.autocomplete'
+								class='mb-n4'
 								:dense='smAndDown'
 								density='comfortable'
 								:disabled='loading'
-								:error='errorMessages[item.model] ? true : false'
-								:error-messages='errorMessages[item.model]'
+								:error='errorMessages[item.model]||externalErrors[item.model] ? true : false'
+								:error-messages='errorMessages[item.model]||externalErrors[item.model]'
 								:label='item.label'
 								:prepend-inner-icon='item.icon'
 								required
@@ -30,14 +31,13 @@
 								@click:append-inner='appendClick(item.model)'
 								@focus='focusMethod(item.model)'
 								@keydown.enter='submit'
-								@update:model-value='valueTouch(item.model, $event)'
+								@update:model-value='touch(item.model, $event)'
 							/>
 						</v-col>
 
 						<v-col class='pa-0 mt-n2' cols='12'>
 							<v-expand-transition>
-								<PasswordContainsEmail v-if='errors.new_password && !passwordCompromised' />
-								<HibpMessage v-if='passwordCompromised' v-model='passwordCompromised' />
+								<HibpMessage v-if='passwordCompromised' />
 							</v-expand-transition>
 						</v-col>
 
@@ -46,6 +46,7 @@
 								v-for='item in tokenFields'
 								:key='item.model'
 								v-model='user[item.model]'
+								class='mt-n4'
 								:dense='smAndDown'
 								:label='item.label'
 								:prepend-inner-icon='item.icon'
@@ -67,7 +68,6 @@
 							class='elevation-0 mr-4'
 							color='error'
 							dark
-							density='compact'
 							:disabled='!user.current_password && !user.new_password || loading'
 							rounded
 							:size='buttonSize'
@@ -87,7 +87,6 @@
 							class='elevation-0 text-black'
 							color='primary'
 							dark
-							density='compact'
 							:disabled
 							rounded
 							:size='buttonSize'
@@ -171,17 +170,7 @@ const textFields = computed((): Array<TChangePassword> => {
 	]
 })
 const twoFA_always_required = computed(() => twoFAModule().alwaysRequired)
-const watcher_current_password = computed(() => user.value.current_password)
-const watcher_new_password = computed(() => user.value.new_password)
 
-const errorMessages = ref({
-	current_password: '',
-	new_password: '',
-})
-const errors = ref({
-	current_password: '',
-	new_password: '',
-})
 const current_password_visible = ref(false)
 const passwordCompromised = ref(false)
 const new_password_visible = ref(false)
@@ -208,15 +197,15 @@ function appendClick (model: string): void {
 
 // Reset data, clear form
 function cancel (): void {
-	errorMessages.value.current_password = ''
-	errorMessages.value.new_password = ''
 	current_password_visible.value = false
 	new_password_visible.value = false
-	user.value.current_password = ''
-	user.value.new_password = ''
-	user.value.token = undefined
-	user.value.remove_sessions = false
-	v$.value.user?.$reset()
+	user.value = {
+		current_password: '',
+		new_password: '',
+		token: undefined,
+		remove_sessions: false,
+	}
+	v$.value.$reset()
 }
 
 /*
@@ -235,21 +224,23 @@ function focusMethod (model: 'current_password' | 'new_password' | 'token'): voi
  * @param {String} model - current model/textfield name
  * @param {any} value - current values of the model
  */
-function valueTouch (model: 'current_password' | 'new_password' | 'token', value: string): void {
+function touch (model: 'current_password' | 'new_password' | 'token', value: string): void {
 	switch (model) {
 		case 'current_password': {
 			user.value.current_password = value
-			v$.value.user?.current_password?.$touch()
+			v$.value.current_password.$touch()
 			break
 		}
 		case 'new_password': {
 			user.value.new_password = value
-			v$.value.user?.new_password?.$touch()
+			v$.value.new_password.$touch()
+			externalErrors.value.new_password = ''
+			passwordCompromised.value = false
 			break
 		}
 		case 'token': {
 			user.value.token = value
-			v$.value.user?.token?.$touch()
+			v$.value.token.$touch()
 			break
 		}
 	}
@@ -263,7 +254,7 @@ async function submit (): PV {
 
 	passwordCompromised.value = await passwordCheck(user.value.new_password)
 	if (passwordCompromised.value) {
-		errorMessages.value.new_password = 'unsafe password'
+		externalErrors.value.new_password = 'invalid password'
 		loading.value = false
 		return
 	}
@@ -278,23 +269,6 @@ async function submit (): PV {
 	cancel()
 }
 
-// common watcher method, for new and current password watcher
-function watch_password_common (): void {
-	const i = user.value.new_password
-	passwordCompromised.value = false
-	if (i && user.value.current_password && i === user.value.current_password) errorMessages.value.new_password = 'no change in password'
-	else if (user.value.current_password && i?.includes(user.value.current_password)) errorMessages.value.new_password = 'new password cannot contain old password'
-	else if (!user.value.new_password) {
-		v$.value.user?.new_password?.$reset()
-		new_password_visible.value = false
-	} else if ((currentEmail.value && i?.toLowerCase().includes(currentEmail.value.toLowerCase().trim())) || (currentEmail.value && i?.toLowerCase().includes(currentEmail.value.toLowerCase().trim()))) {
-		errorMessages.value.new_password = 'password cannot contain email'
-	} else if (!v$.value.user?.new_password?.$invalid && !passwordCompromised.value) errorMessages.value.new_password = ''
-	else if (!v$.value.user?.new_password?.$dirty) return
-	else if (!v$.value.user?.new_password?.required) errorMessages.value.new_password = 'a password is required'
-	else if (!v$.value.user?.new_password.minLen) errorMessages.value.new_password = `${12} characters minimum`
-}
-
 const rules = {
 	current_password: {
 		required,
@@ -305,16 +279,56 @@ const rules = {
 		minLen: minLength(12),
 	},
 }
-const v$ = useVuelidate(rules, user)
 
-watch(watcher_new_password, () => {
-	errorMessages.value.new_password = ''
-	watch_password_common()
+const externalErrors = ref({
+	current_password: '',
+	new_password: '',
+	token: '',
+	remove_sessions: '',
 })
 
-watch(watcher_current_password, () => {
-	errorMessages.value.current_password = ''
-	watch_password_common()
+const v$ = useVuelidate(rules, user, { $externalResults: externalErrors })
+
+const errorMessages = computed(() => {
+	const cp = v$.value.current_password
+	const np = v$.value.new_password
+
+	let current_password_err = ''
+	if (cp?.$dirty) {
+		const emailVal = currentEmail.value
+		const passVal = user.value.current_password.toLowerCase()
+
+		if (emailVal && passVal.includes(emailVal)) {
+			current_password_err = 'Your password cannot contain your email'
+		} else if (cp.minLen.$invalid) {
+			current_password_err = '12 characters minimum'
+		} else if (user.value.current_password.length === 0) {
+			current_password_err = 'password required'
+		}
+	}
+
+	let new_password_err = ''
+	if (np?.$dirty) {
+		const emailVal = currentEmail.value
+		const passVal = user.value.new_password.toLowerCase()
+
+		if (emailVal && passVal.includes(emailVal)) {
+			new_password_err = 'Your password cannot contain your email'
+		} else if (np.minLen.$invalid) {
+			new_password_err = '12 characters minimum'
+		} else if (user.value.new_password.length === 0) {
+			new_password_err = 'password required'
+		} else if (user.value.current_password && user.value.new_password?.includes(user.value.current_password)) {
+			new_password_err = 'new password cannot contain old password'
+		} else if (user.value.new_password === user.value.current_password) {
+			new_password_err = 'no change in password'
+		}
+	}
+
+	return {
+		current_password: current_password_err,
+		new_password: new_password_err,
+	}
 })
 
 </script>

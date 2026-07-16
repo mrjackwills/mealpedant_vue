@@ -1,3 +1,4 @@
+/* eslint-disable unicorn/no-this-outside-of-class */
 import { defineStore } from 'pinia'
 import router from '@/router'
 import { fetch_authenticatedUser } from '@/services/fetch'

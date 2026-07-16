@@ -101,7 +101,7 @@
 
 <script setup lang='ts'>
 
-import type { PV, su } from '@/types'
+import type { PV } from '@/types'
 import { mdiCellphoneLock, mdiClose, mdiEmail, mdiEye, mdiEyeOff, mdiLockOpenOutline, mdiLogin } from '@mdi/js'
 import useVuelidate from '@vuelidate/core'
 import { email, minLength, required } from '@vuelidate/validators'
@@ -121,8 +121,6 @@ const loading = computed({
 	},
 })
 const pwa = computed(() => browserModule().pwa)
-const watcher_email = computed(() => user.value.email)
-const watcher_password = computed(() => user.value.password)
 const signin_disabled = computed(() => loading.value || v$.value.$invalid || (twoFARequired.value && !user.value.token))
 
 const passwordVisible = ref(false)
@@ -133,10 +131,6 @@ function appendClick (): void {
 	passwordVisible.value = !passwordVisible.value
 }
 
-const errorMessages = ref({
-	email: undefined as su,
-	password: undefined as su,
-})
 const otpBackupEnabled = ref(false)
 const textFields = computed(() => {
 	return [
@@ -177,10 +171,10 @@ onMounted(() => {
 })
 
 function touch (name: string): void {
-	v$.value.user?.[name]?.$touch()
+	v$.value[name]?.$touch()
 }
 
-// / On 2fa screen reset user data nad go back to blank signin page
+// / On 2fa screen reset user data and go back to blank signin page
 function cancel (): void {
 	twoFARequired.value = false
 	user.value = {
@@ -190,6 +184,7 @@ function cancel (): void {
 		remember: false,
 	}
 	otpBackupEnabled.value = false
+	v$.value.$reset()
 }
 const localLoading = ref(false)
 
@@ -245,26 +240,14 @@ const rules = {
 }
 const v$ = useVuelidate(rules, user)
 
-watch(watcher_email, () => {
-	if (!user.value.email) {
-		[twoFARequired.value, user.value.password] = [false, '']
-		v$.value.user?.email?.$reset()
-		return
+const errorMessages = computed(() => {
+	return {
+		email: v$.value.email.$error
+			? (v$.value.email.required.$invalid ? 'email required' : 'email invalid')
+			: '',
+		password: v$.value.password.$error
+			? (v$.value.password.required.$invalid ? 'password required' : 'password is too short')
+			: '',
 	}
-	user.value.email = user.value.email.trim().toLowerCase()
-	if (!v$.value.user?.email?.$invalid) errorMessages.value.email = undefined
-	else if (!v$.value.user?.email?.$dirty) return
-	else if (!v$.value.user?.email?.required) errorMessages.value.email = 'email required'
-	else if (!v$.value.user?.email?.email) errorMessages.value.email = 'email invalid'
-})
-
-watch(watcher_password, () => {
-	if (user.value.password) {
-		v$.value.user?.password?.$reset()
-		return
-	}
-	if (!v$.value.user?.password?.$invalid) errorMessages.value.password = undefined
-	else if (!v$.value.user?.password?.$dirty) return
-	else if (!v$.value.user?.password?.required) errorMessages.value.password = 'password required'
 })
 </script>

@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory, type NavigationGuardNext, type RouteLocationNormalized, type RouteRecordRaw } from 'vue-router'
+import { createRouter, createWebHistory, type RouteLocationNormalized, type RouteRecordRaw } from 'vue-router'
 import EmptyComponent from '@/components/EmptyComponent.vue'
 import { fetch_admin, fetch_authenticatedUser, fetch_incognito } from '@/services/fetch'
 import { snackError, snackSuccess } from '@/services/snack'
@@ -28,20 +28,15 @@ async function init_check (): PV {
 	loadingModule().set_loading(false)
 }
 
-async function adminBefore (_to: RouteLocationNormalized, _from: RouteLocationNormalized, next: NavigationGuardNext): PV {
+async function adminBefore (_to: RouteLocationNormalized, _from: RouteLocationNormalized): Promise<undefined | string> {
 	await init_check()
 	const isAuthenticated = !!userModule().admin && !!userModule().authenticated
-	if (isAuthenticated) {
-		next()
-	} else {
-		next(FrontEndRoutes.BASE)
-	}
+	return isAuthenticated ? undefined : FrontEndRoutes.BASE
 }
 
-async function adminEditMeal (to: RouteLocationNormalized, _from: RouteLocationNormalized, next: NavigationGuardNext): PV {
+async function adminEditMeal (to: RouteLocationNormalized, _from: RouteLocationNormalized): Promise<undefined | string> {
 	try {
-		const dateRegex = /([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))/
-
+		const dateRegex = /[12]\d{3}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12]\d|3[01])/
 		if (to.query.date && to.query.person) {
 			const person = to.query.person.toString()
 			if (isPerson(person)) {
@@ -49,24 +44,20 @@ async function adminEditMeal (to: RouteLocationNormalized, _from: RouteLocationN
 				if (dateValid) {
 					adminModule().set_date(to.query.date.toString())
 					adminModule().set_person(person)
-					next()
+					return
 				} else {
-					next(FrontEndRoutes.ERROR)
+					return FrontEndRoutes.ERROR
 				}
 			} else {
-				next(FrontEndRoutes.ERROR)
+				return FrontEndRoutes.ERROR
 			}
 		} else {
 			const personValid = adminModule().person === TPerson.JACK || adminModule().person === TPerson.DAVE
 			const dateValid = dateRegex.test(adminModule().date)
-			if (personValid && dateValid) {
-				next()
-			} else {
-				next(FrontEndRoutes.ERROR)
-			}
+			return personValid && dateValid ? undefined : FrontEndRoutes.ERROR
 		}
 	} catch {
-		next(FrontEndRoutes.BASE)
+		return FrontEndRoutes.BASE
 	}
 }
 
@@ -107,66 +98,51 @@ const authedRoutes: Array<RouteRecordRaw> = [
 ]
 
 for (const route of authedRoutes) {
-	route.beforeEnter = async (_to, _from, next): PV => {
+	route.beforeEnter = async (_to, _from): Promise<undefined | string> => {
 		await init_check()
 		const isAuthenticated = userModule().authenticated
-		if (isAuthenticated) {
-			next()
-		} else {
-			next(FrontEndRoutes.BASE)
-		}
+		return isAuthenticated ? undefined : FrontEndRoutes.BASE
 	}
 }
 
-async function notAuthedBefore (_to: RouteLocationNormalized, _from: RouteLocationNormalized, next: NavigationGuardNext): PV {
-	try {
-		await init_check()
-	} finally {
-		const isAuthenticated = userModule().authenticated
-		if (isAuthenticated) {
-			next(FrontEndRoutes.BASE)
-		} else {
-			next()
-		}
-	}
+async function notAuthedBefore (_to: RouteLocationNormalized, _from: RouteLocationNormalized): Promise<undefined | string> {
+	await init_check()
+	const isAuthenticated = userModule().authenticated
+	return isAuthenticated ? FrontEndRoutes.BASE : undefined
 }
-async function hexPasswordReset (to: RouteLocationNormalized, _from: RouteLocationNormalized, next: NavigationGuardNext): PV {
+async function hexPasswordReset (to: RouteLocationNormalized, _from: RouteLocationNormalized): Promise<string> {
 	const secret = String(to.params?.id)
 	if (!secret || secret.length !== 128) {
 		snackError({ message: 'Invalid verification data' })
-		next(FrontEndRoutes.BASE)
+		return FrontEndRoutes.BASE
 	} else {
 		const LoadingStore = loadingModule()
 		LoadingStore.set_loading(true)
 		const success = await fetch_incognito.reset_get(secret)
 		LoadingStore.set_loading(false)
 		if (success) {
-			next(FrontEndRoutes.USER_RESET)
+			return FrontEndRoutes.USER_RESET
 		} else {
 			resetPasswordModule().set_id(undefined)
-			next(FrontEndRoutes.BASE)
+			return FrontEndRoutes.BASE
 		}
 	}
 }
 
-async function hexReset (_to: RouteLocationNormalized, _from: RouteLocationNormalized, next: NavigationGuardNext): PV {
-	if (resetPasswordModule().id) {
-		next()
-	} else {
-		next(FrontEndRoutes.ERROR)
-	}
+async function hexReset (_to: RouteLocationNormalized, _from: RouteLocationNormalized): Promise<undefined | string> {
+	return resetPasswordModule().id ? undefined : FrontEndRoutes.ERROR
 }
 
-async function hexRegister (to: RouteLocationNormalized, _from: RouteLocationNormalized, next: NavigationGuardNext): PV {
+async function hexRegister (to: RouteLocationNormalized, _from: RouteLocationNormalized): Promise<string> {
 	if (to.params.id?.length !== 128) {
 		snackError({ message: 'Invalid verification data' })
 	}
 	const success = await fetch_incognito.verify_get(String(to.params.id))
 	if (success) {
 		snackSuccess({ message: 'verified, please sign in to continue' })
-		next(FrontEndRoutes.SIGNIN)
+		return FrontEndRoutes.SIGNIN
 	} else {
-		next(FrontEndRoutes.BASE)
+		return FrontEndRoutes.BASE
 	}
 }
 const hexRoutes: Array<RouteRecordRaw> = [
@@ -214,21 +190,13 @@ const notAuthedRoutes: Array<RouteRecordRaw> = [
 	},
 ]
 
-async function baseBefore (_to: RouteLocationNormalized, _from: RouteLocationNormalized, next: NavigationGuardNext): PV {
-	try {
-		await init_check()
-	} finally {
-		next()
-	}
+async function baseBefore (_to: RouteLocationNormalized, _from: RouteLocationNormalized): Promise<undefined> {
+	await init_check()
 }
 
-async function baseMealBefore (_to: RouteLocationNormalized, _from: RouteLocationNormalized, next: NavigationGuardNext): PV {
+async function baseMealBefore (_to: RouteLocationNormalized, _from: RouteLocationNormalized): Promise<undefined | string> {
 	const isAuthenticated = userModule().authenticated
-	if (isAuthenticated) {
-		next(FrontEndRoutes.MEALS)
-	} else {
-		next()
-	}
+	return isAuthenticated ? FrontEndRoutes.MEALS : undefined
 }
 
 const baseRoutes: Array<RouteRecordRaw> = [

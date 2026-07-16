@@ -1,3 +1,4 @@
+/* eslint-disable unicorn/no-this-outside-of-class */
 import type * as types from '@/types'
 import { HttpCode } from '@/types/const_http'
 import { isHttpCode } from '@/types/typeGuards'
@@ -33,7 +34,7 @@ async function fetchRequest (
 
 		const headers: Record<string, string> = {
 			'Cache-Control': 'no-cache',
-			...(isFormData && {
+			...(!isFormData && {
 				'Content-Type': 'application/json; charset=utf-8',
 				Accept: 'application/json',
 			}),
