@@ -233,6 +233,7 @@ class Incognito {
 		return response.data.response
 	}
 
+	@wrap
 	async mealhash_get (): Promise<string> {
 		const response = await baseFetch.get(`${this.#url}/hash`)
 		return response.data.response
