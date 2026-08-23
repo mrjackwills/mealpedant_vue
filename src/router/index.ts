@@ -136,6 +136,7 @@ async function hexReset (_to: RouteLocationNormalized, _from: RouteLocationNorma
 async function hexRegister (to: RouteLocationNormalized, _from: RouteLocationNormalized): Promise<string> {
 	if (to.params.id?.length !== 128) {
 		snackError({ message: 'Invalid verification data' })
+		return FrontEndRoutes.BASE
 	}
 	const success = await fetch_incognito.verify_get(String(to.params.id))
 	if (success) {
