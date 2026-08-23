@@ -17,6 +17,7 @@
 import { mdiFormatListBulletedType } from '@mdi/js'
 import { useDisplay } from 'vuetify'
 import { formatCategoryName } from '@/vanillaTS/helpers'
+const { height } = useDisplay()
 
 const selected_category = ref(undefined as undefined | string)
 const mealStore = mealModule()
@@ -43,6 +44,6 @@ function reset (): void {
 	selected_category.value = undefined
 }
 
-const max_height = computed(() => `${useDisplay().height.value * 0.66}px`)
+const max_height = computed(() => `${height.value * 0.66}px`)
 
 </script>
