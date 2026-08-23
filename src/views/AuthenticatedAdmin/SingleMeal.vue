@@ -522,38 +522,31 @@ async function deleteMeal_confirm (authObject: TAuthObject): PV {
 
 // Upload image to server, return {o: file_name, c:file_name}
 async function fileInserted (): PV {
-	loading.value = true
 	if (!imageToUpload.value) {
-		clear()
+		await clear()
 		return
 	}
-	if (!meal.value.person || !imageToUpload.value || !meal.value) return
-
-	if (imageToUpload.value.size > 10_240_000) {
-		snackError({ message: 'filesize too large' })
-		return
-	}
-	const suffix = imageToUpload.value.type.split('/')
-	const fileType = suffix[1]?.toLowerCase()
-	if (!fileType) return
-
+	const fileType = imageToUpload.value.type.split('/', 2)[1]?.toLowerCase()
+	if (imageToUpload.value.size > 10_240_000) return snackError({ message: 'filesize too large' })
 	const acceptable = ['jpeg', 'jpg']
-	if (!acceptable.includes(fileType)) {
-		snackError({ message: 'invalid filetype' })
-		return
-	}
-	const data = new FormData()
-	const newName = `${meal.value.person.slice(0, 1)}.${fileType}`
-	data.append('image', imageToUpload.value, newName)
+	if (!fileType || !acceptable.includes(fileType)) return snackError({ message: 'invalid filetype' })
+	if (!meal.value.person) return
 
-	const response = await fetch_adminPhoto.photo_post(data)
-	if (response) {
-		[meal.value.photo_original, meal.value.photo_converted] = [response.original, response.converted]
-		imageUrl.value = env.gen_photo_url(meal.value.photo_converted)
-	}
+	loading.value = true
+	try {
+		const data = new FormData()
+		const newName = `${meal.value.person.slice(0, 1)}.${fileType}`
+		data.append('image', imageToUpload.value, newName)
 
-	imageToUpload.value = undefined
-	loading.value = false
+		const response = await fetch_adminPhoto.photo_post(data)
+		if (response) {
+			[meal.value.photo_original, meal.value.photo_converted] = [response.original, response.converted]
+			imageUrl.value = env.gen_photo_url(meal.value.photo_converted)
+		}
+	} finally {
+		imageToUpload.value = undefined
+		loading.value = false
+	}
 }
 
 // Remove whitespace from end of category, when input has been blurred
