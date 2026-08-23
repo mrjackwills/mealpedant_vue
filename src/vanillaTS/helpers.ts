@@ -43,6 +43,8 @@ export function secondsToText (s: number, short = true): string {
 	const hour = Math.floor(s / 60 / 60 % 24)
 	const day = Math.floor(s / 60 / 60 / 24)
 
+	const seconds_s = Math.trunc(s % 60) > 1 ? 's' : ''
+
 	let result = ''
 
 	if (day > 0) {
@@ -53,8 +55,8 @@ export function secondsToText (s: number, short = true): string {
 	}
 
 	result += short
-		? `${minute}m, ${second}s`
-		: `${minute} minute${minute === '01' ? '' : 's'}, ${second} seconds`
+		? `${minute}m, ${second}${seconds_s}`
+		: `${minute} minute${minute === '01' ? '' : 's'}, ${second} second${seconds_s}`
 	return result
 }
 
