@@ -468,18 +468,21 @@ async function cancel (): PV {
 
 // When image removed from file input, send a request to delete file from sever
 async function clear (): PV {
-	loading.value = true
-	if (!meal.value.photo_original || !meal.value.photo_converted) return
-	if (!editMealHasPhoto.value) {
-		fetch_adminPhoto.photo_delete({
-			original: meal.value.photo_original,
-			converted: meal.value.photo_converted,
-		})
+	try {
+		loading.value = true
+		if (!meal.value.photo_original || !meal.value.photo_converted) return
+		if (!editMealHasPhoto.value) {
+			await fetch_adminPhoto.photo_delete({
+				original: meal.value.photo_original,
+				converted: meal.value.photo_converted,
+			})
+		}
+	} finally {
+		meal.value.photo_converted = ''
+		meal.value.photo_original = ''
+		imageUrl.value = ''
+		loading.value = false
 	}
-	meal.value.photo_converted = ''
-	meal.value.photo_original = ''
-	imageUrl.value = ''
-	loading.value = false
 }
 
 // Dialog to ask user if they really want to delete a meal
@@ -610,19 +613,23 @@ async function updateMeal_confirm (): PV {
 	if (v$.value.$invalid) return
 	loading.value = true
 
-	if (!meal.value.photo_original) meal.value.photo_original = ''
-	if (!meal.value.photo_converted) meal.value.photo_converted = ''
-	const success = await fetch_adminMeal.meal_patch(gen_update_meal())
-	if (success) {
-		snackSuccess({
-			message: 'meal edited',
-			type: 'success',
-			icon: mdiDatabaseEdit,
-		})
-		// something here is sometimes causing memory issues
-		await complete_clear()
-		completed.value = true
-		router.push(FrontEndRoutes.MEALS)
+	try {
+		if (!meal.value.photo_original) meal.value.photo_original = ''
+		if (!meal.value.photo_converted) meal.value.photo_converted = ''
+		const success = await fetch_adminMeal.meal_patch(gen_update_meal())
+		if (success) {
+			snackSuccess({
+				message: 'meal edited',
+				type: 'success',
+				icon: mdiDatabaseEdit,
+			})
+			// something here is sometimes causing memory issues
+			await complete_clear()
+			completed.value = true
+			await router.push(FrontEndRoutes.MEALS)
+		}
+	} finally {
+		loading.value = false
 	}
 }
 
