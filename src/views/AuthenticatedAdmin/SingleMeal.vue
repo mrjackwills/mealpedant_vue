@@ -168,7 +168,7 @@
 							</v-col>
 
 							<!-- File input / photo name -->
-							<v-col class='ma-0 pa-0 mb-n5' :cols='imageUrl ? "12" : "12"'>
+							<v-col class='ma-0 pa-0 mb-n5' cols='12'>
 								<v-file-input
 									v-if='!imageUrl'
 									v-model='imageToUpload'
