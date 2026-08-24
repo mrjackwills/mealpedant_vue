@@ -15,7 +15,7 @@
 </template>
 
 <script setup lang='ts'>
-import { useSwipe } from '@vueuse/core'
+import { useMediaQuery, useSwipe } from '@vueuse/core'
 import { useHead } from '@vueuse/head'
 import { registerSW } from 'virtual:pwa-register'
 import { useRegisterSW } from 'virtual:pwa-register/vue'
@@ -39,7 +39,7 @@ const authenticated = computed(() => userModule().authenticated)
 
 const { isSwiping, direction } = useSwipe(swipe)
 
-function check_pwa (): void {
+function check_pwa_status (): void {
 	if ('serviceWorker' in navigator) {
 		registerSW({
 			onNeedRefresh () {
@@ -51,10 +51,11 @@ function check_pwa (): void {
 const service_interval = ref(0)
 
 onBeforeMount(async () => {
-	check_pwa()
+	check_pwa_status()
 	await fetch_incognito.online_get()
 	init.value = true
-	service_interval.value = setInterval(check_pwa, 1000 * 60 * 20)
+	service_interval.value = setInterval(check_pwa_status, 1000 * 60 * 20)
+	browserModule().set_pwa(useMediaQuery('(display-mode: standalone)').value)
 })
 
 watch(isSwiping, (i: boolean) => {
