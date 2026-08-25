@@ -3,6 +3,7 @@
 		id='nav_menu'
 		v-model='drawer'
 		app
+		class='unselectable'
 		color='navmenu'
 		:location='mobile ? "right" : "left"'
 		:mobile-breakpoint='840'
