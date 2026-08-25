@@ -200,41 +200,24 @@ export const mealModule = defineStore(ModuleName.Meal, {
 
 		// convert a compressed_search_by to a search_by
 		uncompress_search_by (x: c_search_by): search_by {
-			const dsb = default_search_by(userModule().authenticated)
-			if (x.c && x.c !== dsb.category_id) {
-				dsb.category_id = x.c
+			const authenticated = userModule().authenticated
+			const dsb = default_search_by(authenticated)
+			const result = {
+				category_id: x.c ?? dsb.category_id,
+				end_date: x.e === undefined ? dsb.end_date : uncompress_date(x.e),
+				include_dave: x.d === undefined ? dsb.include_dave : num_to_bool(x.d),
+				include_jack: x.j === undefined ? dsb.include_jack : num_to_bool(x.j),
+				include_restaurant: x.r === undefined ? dsb.include_restaurant : false,
+				include_takeaway: x.t === undefined ? dsb.include_takeaway : false,
+				include_vegetarian: x.v === undefined ? dsb.include_vegetarian : false,
+				only_photos: x.p === undefined ? dsb.only_photos : num_to_bool(x.p),
+				start_date: x.s === undefined ? dsb.start_date : uncompress_date(x.s),
+				term: x.m ?? dsb.term,
 			}
-			if (x.d && num_to_bool(x.d) !== dsb.include_dave) {
-				dsb.include_dave = num_to_bool(x.d)
+			if (!authenticated) {
+				result.include_dave = false
 			}
-			if (x.e && x.e !== dsb.end_date) {
-				dsb.end_date = uncompress_date(x.e)
-			}
-			if (x.j && num_to_bool(x.j) !== dsb.include_jack) {
-				dsb.include_jack = num_to_bool(x.j)
-			}
-			if (x.m && x.m !== dsb.term) {
-				dsb.term = x.m
-			}
-			if (x.p && num_to_bool(x.p) !== dsb.only_photos) {
-				dsb.only_photos = num_to_bool(x.p)
-			}
-			if (x.r) {
-				dsb.include_restaurant = false
-			}
-			if (x.s && x.s !== dsb.start_date) {
-				dsb.start_date = uncompress_date(x.s)
-			}
-			if (x.t) {
-				dsb.include_takeaway = false
-			}
-			if (x.v) {
-				dsb.include_vegetarian = false
-			}
-			if (!userModule().authenticated) {
-				dsb.include_dave = false
-			}
-			return dsb
+			return result
 		},
 
 		// convert a search_by to a compress_search_by
