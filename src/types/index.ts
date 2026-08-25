@@ -48,7 +48,6 @@ type TAttemptPatch = { attempt: boolean }
 type TPasswordResetId = { password_reset_id: number }
 type TPasswordReset = { reset: boolean }
 type TTfaSecret = { two_fa_secret: boolean }
-type TLogLevels = 'debug' | 'error' | 'verbose' | 'warn'
 
 export type TPhoto = Record<'o' | 'c', string>
 export type TPhotoLong = Record<'original' | 'converted', string>
@@ -66,8 +65,6 @@ export type TAdminPatch = {
 	patch: TActivePatch | TAttemptPatch | TPasswordResetId | TPasswordReset | TTfaSecret
 	email: string
 }
-
-export type TId = { id: string }
 
 export type TCategoryTableDate = {
 	category_name: string
@@ -132,8 +129,6 @@ export type TInfobarmessage = {
 	color: 'infobar'
 }
 
-export type TCategory = Record<'id' | 'c' | 'n', string>
-
 export type TButtonText = 'confirm' | 'disable' | 'remove' | 'refresh' | 'restart' | 'delete' | 'update'
 
 export type TDialogTitle = 'Remove Backup Codes' | 'Disable Two-Factor Authentication' | 'Confirm' | 'Restart Server' | 'Delete Meal' | 'Update Meal'
@@ -143,24 +138,11 @@ export type TMealVariant = 'restaurant' | 'takeaway' | 'vegetarian'
 export type TChangePassword = Record<'autocomplete' | 'icon' | 'label' | 'type' | 'appendIcon', string>
   & { model: 'current_password' | 'new_password' }
 
-export type TResetPassword = Record<'autocomplete' | 'icon' | 'label' | 'type' | 'appendIcon', string>
-  & { model: 'new_password' }
-
-export type TErrorLog = Record<'error_log_id' | 'message' | 'stack' | 'uuid', string> & {
-	timestamp: Date
-	level: TLogLevels
-	http_code?: number
-}
 export type TLogs = {
 	timestamp: string
 	level: string
 	fields: Record<string, string>
 	target: string
-}
-
-export type TFooterProps = {
-	itemsPerPageOptions: Array<number>
-	itemsPerPageText: string
 }
 
 export type TCategoryTotals = Array<{

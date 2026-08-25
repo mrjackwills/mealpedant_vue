@@ -36,7 +36,6 @@ declare module 'vue' {
     NavMenu: typeof import('./src/components/Nav/NavMenu.vue')['default']
     OfflineRow: typeof import('./src/components/OfflineRow.vue')['default']
     PhotoDialog: typeof import('./src/components/Food/PhotoDialog.vue')['default']
-    RefreshButton: typeof import('./src/components/Buttons/RefreshButton.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SelectorButton: typeof import('./src/components/Buttons/SelectorButton.vue')['default']

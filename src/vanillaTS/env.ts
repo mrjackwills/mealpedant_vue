@@ -11,8 +11,6 @@ class Env {
 
 	readonly #domain_www = String(import.meta.env.VITE_APP_DOMAIN_WWW)
 
-	readonly #mode_production = import.meta.env.VITE_APP_MODE === 'production'
-
 	get app_version (): string {
 		return this.#app_version
 	}
@@ -31,10 +29,6 @@ class Env {
 
 	get domain_www (): string {
 		return this.#domain_www
-	}
-
-	get mode_production (): boolean {
-		return this.#mode_production
 	}
 
 	// / Generate a url for a given photoname

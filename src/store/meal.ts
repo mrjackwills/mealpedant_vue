@@ -129,7 +129,6 @@ export const mealModule = defineStore(ModuleName.Meal, {
 		meal_categories: new Map() as MealCategoryMap,
 		meal_types: ['restaurant', 'takeaway', 'vegetarian'] as Array<TMealVariant>,
 
-		// default_search_by: default_search_by(userModule().authenticated),
 		default_search_by_stringified: JSON.stringify(default_search_by(userModule().authenticated)),
 
 		search_by: default_search_by(userModule().authenticated),
