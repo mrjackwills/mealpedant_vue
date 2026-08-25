@@ -129,7 +129,7 @@ export type TInfobarmessage = {
 	color: 'infobar'
 }
 
-export type TButtonText = 'confirm' | 'disable' | 'remove' | 'refresh' | 'restart' | 'delete' | 'update'
+export type TButtonText = 'confirm' | 'disable' | 'remove' | 'refresh' | 'restart' | 'delete' | 'update' | 'generate'
 
 export type TDialogTitle = 'Remove Backup Codes' | 'Disable Two-Factor Authentication' | 'Confirm' | 'Restart Server' | 'Delete Meal' | 'Update Meal'
 

@@ -287,8 +287,8 @@ class AuthenticatedUser {
 
 	@wrap
 	@isAuthenticated
-	async twoFA_post (): Promise<Array<string> | undefined> {
-		const response = await baseFetch.post(`${this.#url}/twofa`)
+	async twoFA_post (authObject: types.TAuthObject): Promise<Array<string> | undefined> {
+		const response = await baseFetch.post(`${this.#url}/twofa`, authObject)
 		return response?.data?.response?.backups
 	}
 
