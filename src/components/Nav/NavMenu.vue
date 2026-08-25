@@ -170,20 +170,19 @@
 import type { PV } from '@/types'
 import {
 	mdiAccountCircle,
-	mdiAccountPlus,
 	mdiChevronLeft,
 	mdiChevronRight,
 	mdiClose,
 	mdiCog,
 	mdiDeleteSweep,
 	mdiFood,
-	mdiLogin,
 	mdiPlusCircle,
 	mdiPower,
 } from '@mdi/js'
 import { useDisplay } from 'vuetify'
 import { fetch_admin } from '@/services/fetch'
 import { FrontEndRoutes } from '@/types/const_routes'
+import { registerLinks } from '@/vanillaTS/globalConst'
 const { smAndDown } = useDisplay()
 
 const [drawStore, userStore] = [drawerModule(), userModule()]
@@ -252,23 +251,6 @@ const adminLinks = [
 		icon: mdiCog,
 		text: 'admin',
 		route: FrontEndRoutes.ADMIN,
-	},
-]
-const registerLinks = [
-	{
-		icon: mdiFood,
-		text: 'meals',
-		route: FrontEndRoutes.MEALS,
-	},
-	{
-		icon: mdiAccountPlus,
-		text: 'register',
-		route: FrontEndRoutes.REGISTER,
-	},
-	{
-		icon: mdiLogin,
-		text: 'sign-in',
-		route: FrontEndRoutes.SIGNIN,
 	},
 ]
 

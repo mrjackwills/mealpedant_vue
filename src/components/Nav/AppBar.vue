@@ -74,9 +74,10 @@
 </template>
 
 <script setup lang='ts'>
-import { mdiAccountPlus, mdiFood, mdiLogin, mdiMenu } from '@mdi/js'
+import { mdiMenu } from '@mdi/js'
 import { useDisplay } from 'vuetify'
-import { FrontEndNames, FrontEndRoutes } from '@/types/const_routes'
+import { FrontEndRoutes } from '@/types/const_routes'
+import { registerLinks } from '@/vanillaTS/globalConst'
 
 const { smAndDown } = useDisplay()
 
@@ -103,24 +104,6 @@ const loading = computed(() => loadingModule().loading)
 const navTitleFontSize = computed(() => mobile.value ? 'text-headline-medium' : 'text-headline-large')
 const toolbarHeight = computed(() => mobile.value ? 56 : 80)
 const userEmail = computed(() => userModule().email)
-
-const registerLinks = [
-	{
-		icon: mdiFood,
-		text: FrontEndNames.MEALS,
-		route: FrontEndRoutes.MEALS,
-	},
-	{
-		icon: mdiAccountPlus,
-		text: FrontEndNames.REGISTER,
-		route: FrontEndRoutes.REGISTER,
-	},
-	{
-		icon: mdiLogin,
-		text: FrontEndNames.SIGNIN,
-		route: FrontEndRoutes.SIGNIN,
-	},
-]
 
 </script>
 
