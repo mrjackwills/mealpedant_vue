@@ -52,7 +52,7 @@
 							:disabled='loading'
 							flat
 							rounded
-							vairant='flat'
+							variant='flat'
 							@click='cancel'
 						>
 							<ButtonIcon :icon='mdiClose' />
@@ -206,7 +206,6 @@ async function signin (): PV {
 		userModule().set_authenticated(true)
 		snackbarModule().$reset()
 		infobarModule().$reset()
-		mealModule().$reset()
 		mealStorage.delete()
 		await fetch_authenticatedUser.authenticated_get()
 		await mealStorage.seed_meal_pinia()

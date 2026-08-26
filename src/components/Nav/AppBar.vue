@@ -26,7 +26,7 @@
 
 		<v-toolbar-items v-if='!authed && !mobile' class=''>
 			<v-btn v-for='(item, index) in registerLinks' :key='`${index}`' class='cl' :to='item.route'>
-				<v-icon class='mr-1' dark :icon='item.icon' small />
+				<v-icon class='mr-1' :icon='item.icon' size='small' />
 				{{ item.text }}
 			</v-btn>
 		</v-toolbar-items>

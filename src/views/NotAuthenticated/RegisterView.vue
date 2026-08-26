@@ -31,7 +31,6 @@
 					<v-btn
 						class='elevation-0 mr-4'
 						:color='loading || completed ? "" : "error"'
-						dark
 						:disabled='loading || completed'
 						large
 						rounded
@@ -45,7 +44,6 @@
 					<v-btn
 						class='elevation-0'
 						:color='loading || v$.$invalid || completed ? "" : "secondary"'
-						dark
 						:disabled='loading || v$.$invalid || completed'
 						large
 						rounded

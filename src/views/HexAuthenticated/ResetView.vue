@@ -35,7 +35,7 @@
 									v-for='item in tokenFields'
 									:key='item.model'
 									v-model='user[item.model]'
-									:dense='smAndDown'
+									:density='smAndDown ? "compact" : "default"'
 									:disabled='loading || completed'
 									:error='errors[item.model]'
 									:error-messages='errorMessages[item.model]'

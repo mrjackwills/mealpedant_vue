@@ -4,7 +4,7 @@
 			<v-alert class='pa-0 ma-0 pa-3' :color>
 				<v-row class='ma-0 pa-0 justify-space-between align-center'>
 					<v-col class='pa-0 ma-0' cols='1' lg='auto'>
-						<v-icon color='white' :icon='mdiInformation' small />
+						<v-icon color='white' :icon='mdiInformation' size='small' />
 					</v-col>
 
 					<v-col class='text-white pa-0 ma-0 text-center text-label-medium' cols='10' lg='auto'>
@@ -12,7 +12,7 @@
 					</v-col>
 
 					<v-col class='pa-0 ma-0' cols='1' lg='auto'>
-						<v-icon color='white' :icon='mdiClose' small @click='infoClose' />
+						<v-icon color='white' :icon='mdiClose' size='small' @click='infoClose' />
 					</v-col>
 				</v-row>
 			</v-alert>

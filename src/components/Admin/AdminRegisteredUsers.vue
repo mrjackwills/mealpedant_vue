@@ -2,7 +2,6 @@
 	<v-row class=' justify-center' width='100%'>
 
 		<v-col
-			id='datatable'
 			v-touch='{
 				left: () => toggleDrawer(true),
 				right: () => toggleDrawer(false),
@@ -62,12 +61,12 @@
 					</v-row>
 				</template>
 
-				<template #[`item.last`]='{ item: itam_last }'>
+				<template #[`item.last`]='{ item: item_last }'>
 					<v-row
-						v-for='(chosen, index) in [itam_last.login_ip, itam_last.login_success]'
+						v-for='(chosen, index) in [item_last.login_ip, item_last.login_success]'
 						:key='index'
 						class='ma-0 pa-0 justify-start'
-						denssty='compact'
+						density='compact'
 					>
 						<v-col class='ma-0 pa-0' cols='auto'>
 							<span class='smalltext' :class='index === 1 && !chosen ? "text-mealtype" : ""'>
