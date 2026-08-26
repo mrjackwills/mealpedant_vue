@@ -8,6 +8,7 @@
 + set pwa status, [f6cddf3f96f925e4b50a86fd34076e49e7697812]
 + unselectable, [3cc0f0a7e3a964b2cf0d295758423c99097d1176]
 + Vuetify prop typos, [2c73568c8570386243cab6d1c7c7b28e668196a6], [82800a37af3ea2d5db94227ac5c18c3365e4569b]
++ require password when enableding 2FA always_required, [6183e39c2284ebdf058a0f8cb403a5fc886380b9]
 
 ### Fixes
 + AdminBackup typo, [17bde3da9a182cdd8c30f6b5b5630f00a0c4f79f]
