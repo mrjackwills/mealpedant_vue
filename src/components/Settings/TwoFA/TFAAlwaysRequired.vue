@@ -71,7 +71,19 @@ const loading = computed({
 	},
 })
 
-async function confirm_function (authObject: TAuthObject): PV {
+// TODO can refactor in here
+
+async function enable_always_required_function (authObject: TAuthObject): PV {
+	loading.value = true
+	const success = await fetch_authenticatedUser.setupTwoFA_patch({
+		...authObject,
+		always_required: true,
+	})
+	if (success) snackSuccess({ message: 'extra two-factor authentication prompts enabled' })
+	loading.value = false
+}
+
+async function remove_always_required_function (authObject: TAuthObject): PV {
 	loading.value = true
 	const success = await fetch_authenticatedUser.setupTwoFA_patch({
 		...authObject,
@@ -84,24 +96,31 @@ async function confirm_function (authObject: TAuthObject): PV {
 	loading.value = false
 }
 
-function show_dialog (): void {
+function enable_always_required (): void {
+	dialoger({
+		message: 'enabling extra two-factor authentication prompts requires authentication.',
+		buttonText: 'confirm',
+		title: 'Confirm',
+		passwordRequired: true,
+		confirmFunction: enable_always_required_function,
+	})
+}
+
+function remove_always_required (): void {
 	dialoger({
 		message: 'are you sure you want to remove the extra two-factor authentication prompts?',
 		buttonText: 'confirm',
 		title: 'Confirm',
 		passwordRequired: true,
-		confirmFunction: confirm_function,
+		confirmFunction: remove_always_required_function,
 	})
 }
 
 async function toggle (): PV {
 	if (always_required.value) {
-		show_dialog()
+		remove_always_required()
 	} else {
-		loading.value = true
-		const success = await fetch_authenticatedUser.setupTwoFA_patch({ always_required: true })
-		if (success) snackSuccess({ message: 'extra two-factor authentication prompts enabled' })
-		loading.value = false
+		enable_always_required()
 	}
 }
 </script>
