@@ -22,7 +22,7 @@
 										<v-date-picker
 											v-model='mealDate'
 											first-day-of-week='1'
-											:min='genesisDateString'
+											:min='genesisDateString()'
 										/>
 									</v-menu>
 								</v-text-field>

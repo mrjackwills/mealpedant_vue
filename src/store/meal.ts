@@ -256,8 +256,9 @@ export const mealModule = defineStore(ModuleName.Meal, {
 				// every() short-circuits on the first out-of-order pair, like the old break
 				dateMealsSorted = meals.date_meals.every((meal, i, arr) => i === 0 || arr[i - 1].date <= meal.date)
 
-				// The underlying data changed, so cached term matches are stale
+				// The underlying data changed, so cached term matches & filter results are stale
 				termMatchCache.clear()
+				this.clear_search_history()
 			}
 		},
 
