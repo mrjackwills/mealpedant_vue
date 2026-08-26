@@ -92,7 +92,7 @@ const adminRoutes: Array<RouteRecordRaw> = [
 const authedRoutes: Array<RouteRecordRaw> = [
 	{
 		path: FrontEndRoutes.SETTINGS,
-		name: FrontEndRoutes.SETTINGS,
+		name: FrontEndNames.SETTINGS,
 		component: () => import('@/views/Authenticated/SettingsView.vue'),
 	},
 ]
