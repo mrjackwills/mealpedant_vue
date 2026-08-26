@@ -49,9 +49,7 @@ function uncompress_meals (input: c_MealInfo): MealInfo | undefined {
 					meal_description_id: i.j.m,
 					meal_category_id: i.j.c,
 				}
-				if (i.j.r) {
-					jack.restaurant = i.j.r
-				}
+
 				if (i.j.v) {
 					jack.vegetarian = i.j.v
 				}
@@ -70,7 +68,9 @@ function uncompress_meals (input: c_MealInfo): MealInfo | undefined {
 				const dave: TPersonFood = {
 					meal_description_id: i.d.m,
 					meal_category_id: i.d.c,
-					restaurant: i.d.r,
+				}
+				if (i.d.r) {
+					dave.restaurant = i.d.r
 				}
 				if (i.d.v) {
 					dave.vegetarian = i.d.v
@@ -95,7 +95,6 @@ function uncompress_meals (input: c_MealInfo): MealInfo | undefined {
 		}
 	} catch (error) {
 		snackError({ message: `${error}` })
-		// Returning undefined signals "nothing was loaded", so callers skip the assignment
 	}
 }
 
