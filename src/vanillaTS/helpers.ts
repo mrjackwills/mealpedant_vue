@@ -3,6 +3,9 @@ import { genesisDate } from './globalConst'
 // Convert bytes to x.xx in megabytes
 export const bytes_to_mb = (x: number): string => (x / (1024 * 1024)).toFixed(2)
 
+// Work out percentages, fixes NaN errors
+export const percentages = (part: number, whole: number): string => whole === 0 ? '0.00' : (100 / whole * part).toFixed(2)
+
 type Months = Record<string, string>
 const months: Months = {
 	Jan: `01`,
