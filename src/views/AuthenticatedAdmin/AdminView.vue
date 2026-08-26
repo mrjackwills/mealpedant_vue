@@ -241,7 +241,7 @@ async function dispatch (fetch: TAdminFetchNames): PV {
  */
 async function refresh (fetch: TAdminFetchNames): PV {
 	loading.value = true
-	dispatch(fetch)
+	await dispatch(fetch)
 	loading.value = false
 }
 
