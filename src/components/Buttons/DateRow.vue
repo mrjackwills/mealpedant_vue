@@ -85,8 +85,8 @@ watch(endModel, (i: u<Date>) => {
 	}
 })
 
-const startDate = ref(genesisDateString())
-const endDate = ref(todayDateString())
+const startDate = ref(mealStore.search_by.start_date)
+const endDate = ref(mealStore.search_by.end_date)
 
 const is_filtered = computed(() => mealStore.is_filtered)
 watch(is_filtered, (i: boolean) => {
