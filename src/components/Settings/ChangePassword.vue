@@ -298,10 +298,10 @@ const errorMessages = computed(() => {
 
 		if (emailVal && passVal.includes(emailVal)) {
 			current_password_err = 'Your password cannot contain your email'
-		} else if (cp.minLen.$invalid) {
-			current_password_err = '12 characters minimum'
 		} else if (user.value.current_password.length === 0) {
 			current_password_err = 'password required'
+		} else if (cp.minLen.$invalid) {
+			current_password_err = '12 characters minimum'
 		}
 	}
 
@@ -312,10 +312,10 @@ const errorMessages = computed(() => {
 
 		if (emailVal && passVal.includes(emailVal)) {
 			new_password_err = 'Your password cannot contain your email'
-		} else if (np.minLen.$invalid) {
-			new_password_err = '12 characters minimum'
 		} else if (user.value.new_password.length === 0) {
 			new_password_err = 'password required'
+		} else if (np.minLen.$invalid) {
+			new_password_err = '12 characters minimum'
 		} else if (user.value.current_password && user.value.new_password?.includes(user.value.current_password)) {
 			new_password_err = 'new password cannot contain old password'
 		} else if (user.value.new_password === user.value.current_password) {

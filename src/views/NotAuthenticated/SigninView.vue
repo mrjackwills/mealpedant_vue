@@ -104,7 +104,7 @@
 import type { PV } from '@/types'
 import { mdiCellphoneLock, mdiClose, mdiEmail, mdiEye, mdiEyeOff, mdiLockOpenOutline, mdiLogin } from '@mdi/js'
 import useVuelidate from '@vuelidate/core'
-import { email, minLength, required } from '@vuelidate/validators'
+import { email, required } from '@vuelidate/validators'
 import { useRouter } from 'vue-router'
 import { useDisplay } from 'vuetify'
 import { fetch_authenticatedUser, fetch_incognito } from '@/services/fetch'
@@ -234,7 +234,6 @@ const rules = {
 	},
 	password: {
 		required,
-		minLen: minLength(12),
 	},
 }
 const v$ = useVuelidate(rules, user)
@@ -245,7 +244,7 @@ const errorMessages = computed(() => {
 			? (v$.value.email.required.$invalid ? 'email required' : 'email invalid')
 			: '',
 		password: v$.value.password.$error
-			? (v$.value.password.required.$invalid ? 'password required' : 'password is too short')
+			? 'password required'
 			: '',
 	}
 })

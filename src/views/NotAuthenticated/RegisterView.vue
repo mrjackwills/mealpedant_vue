@@ -241,10 +241,10 @@ const errorMessages = computed(() => {
 
 		if (emailVal && passVal.includes(emailVal)) {
 			passwordErr = 'Your password cannot contain your email'
-		} else if (pv.minLen.$invalid) {
-			passwordErr = '12 characters minimum'
 		} else if (user.value.password.length === 0) {
 			passwordErr = 'password required'
+		} else if (pv.minLen.$invalid) {
+			passwordErr = '12 characters minimum'
 		}
 	}
 
