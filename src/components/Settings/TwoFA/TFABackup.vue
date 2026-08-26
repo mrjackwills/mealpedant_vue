@@ -82,7 +82,6 @@
 							<v-btn
 								class='text-black'
 								color='primary'
-								:dark='true'
 								rounded
 								variant='flat'
 								@click='downloadCodes'

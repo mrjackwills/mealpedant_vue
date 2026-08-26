@@ -17,7 +17,6 @@
 								:append-inner-icon='item.appendIcon'
 								:autocomplete='item.autocomplete'
 								class='mb-n4'
-								:dense='smAndDown'
 								density='comfortable'
 								:disabled='loading'
 								:error='errorMessages[item.model]||externalErrors[item.model] ? true : false'
@@ -47,7 +46,7 @@
 								:key='item.model'
 								v-model='user[item.model]'
 								class='mt-n4'
-								:dense='smAndDown'
+								:density='smAndDown ? "compact" : "default"'
 								:label='item.label'
 								:prepend-inner-icon='item.icon'
 								required
@@ -86,7 +85,6 @@
 						<v-btn
 							class='elevation-0 text-black'
 							color='primary'
-							dark
 							:disabled
 							rounded
 							:size='buttonSize'
