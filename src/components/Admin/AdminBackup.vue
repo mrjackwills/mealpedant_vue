@@ -92,7 +92,7 @@ const headers = [
 		title: 'name',
 		align: 'start',
 		sortable: true,
-		value: 'filename',
+		value: 'file_name',
 		width: '70%',
 	},
 	{
