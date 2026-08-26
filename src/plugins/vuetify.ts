@@ -11,7 +11,7 @@ const customDarkTheme: ThemeDefinition = {
 		secondary: '#6e95c5',
 		error: '#6C0505',
 		mealtype: '#eda3e4',
-		infobar: 'c58f6e',
+		infobar: '#c58f6e',
 		offwhite: '#ffeecb',
 		dark: '#1e1e1e',
 		navmenu: '#363636',

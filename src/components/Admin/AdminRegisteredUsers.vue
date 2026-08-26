@@ -81,7 +81,7 @@
 						:email='item_password.email'
 						:password-creation-ip='item_password.password_reset_creation_ip'
 						:password-reset-date='item_password.password_reset_date'
-						:password-reset-it='item_password.password_reset_id'
+						:password-reset-id='item_password.password_reset_id'
 						:reset_string='item_password.reset_string'
 					/>
 				</template>
