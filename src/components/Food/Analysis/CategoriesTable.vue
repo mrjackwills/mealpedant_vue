@@ -47,7 +47,7 @@
 							class='ma-0 pa-0 font-italic mono-num'
 							cols='6'
 						>
-							{{ (100 / (total_meals) * item.t).toFixed(2) }}%
+							{{ percentages(item.t, total_meals) }}%
 						</v-col>
 					</v-row>
 
@@ -67,8 +67,7 @@
 								</v-col>
 
 								<v-col v-tooltip:top='"% split"' class='ma-0 pa-0 font-italic mono-num'>
-									<span>{{ (100 / (item.t) *
-										item.d).toFixed(2) }}% </span>
+									<span>{{ percentages(item.d, item.t) }}% </span>
 								</v-col>
 							</v-row>
 						</v-col>
@@ -84,11 +83,10 @@
 									class='ma-0 pa-0 font-italic mono-num'
 								>
 									<span v-if='authenticated'>
-										{{ (100 / (item.t) *
-											item.j).toFixed(2) }}% </span>
+										{{ percentages(item.j, item.t) }}% </span>
 
 									<span v-else>
-										{{ (100 / (originalLength) * item.j).toFixed(2) }}%
+										{{ percentages(item.j, originalLength) }}%
 									</span>
 								</v-col>
 							</v-row>
@@ -146,7 +144,7 @@
 						<span class='font-weight-bold text-mealtype mono-num'>{{ tableData.length }}</span>
 
 						<span v-tooltip:top='"% all categories"' class='font-italic text-mealtype mono-num'>
-							({{ (100 / (total_categories) * tableData.length).toFixed(2) }}%)
+							({{ percentages(tableData.length, total_categories) }}%)
 						</span>
 					</section>
 				</v-col>
@@ -160,7 +158,7 @@
 import type { TCategoryTableDate } from '@/types'
 import { mdiArrowCollapseDown, mdiArrowCollapseUp } from '@mdi/js'
 import { useDisplay } from 'vuetify'
-import { formatCategoryName } from '@/vanillaTS/helpers'
+import { formatCategoryName, percentages } from '@/vanillaTS/helpers'
 
 const { smAndDown, platform } = useDisplay()
 

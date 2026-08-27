@@ -22,7 +22,7 @@
 										<v-date-picker
 											v-model='mealDate'
 											first-day-of-week='1'
-											:min='genesisDateString'
+											:min='genesisDateString()'
 										/>
 									</v-menu>
 								</v-text-field>
@@ -168,7 +168,7 @@
 							</v-col>
 
 							<!-- File input / photo name -->
-							<v-col class='ma-0 pa-0 mb-n5' :cols='imageUrl ? "12" : "12"'>
+							<v-col class='ma-0 pa-0 mb-n5' cols='12'>
 								<v-file-input
 									v-if='!imageUrl'
 									v-model='imageToUpload'
@@ -468,18 +468,21 @@ async function cancel (): PV {
 
 // When image removed from file input, send a request to delete file from sever
 async function clear (): PV {
-	loading.value = true
-	if (!meal.value.photo_original || !meal.value.photo_converted) return
-	if (!editMealHasPhoto.value) {
-		fetch_adminPhoto.photo_delete({
-			original: meal.value.photo_original,
-			converted: meal.value.photo_converted,
-		})
+	try {
+		loading.value = true
+		if (!meal.value.photo_original || !meal.value.photo_converted) return
+		if (!editMealHasPhoto.value) {
+			await fetch_adminPhoto.photo_delete({
+				original: meal.value.photo_original,
+				converted: meal.value.photo_converted,
+			})
+		}
+	} finally {
+		meal.value.photo_converted = ''
+		meal.value.photo_original = ''
+		imageUrl.value = ''
+		loading.value = false
 	}
-	meal.value.photo_converted = ''
-	meal.value.photo_original = ''
-	imageUrl.value = ''
-	loading.value = false
 }
 
 // Dialog to ask user if they really want to delete a meal
@@ -519,38 +522,31 @@ async function deleteMeal_confirm (authObject: TAuthObject): PV {
 
 // Upload image to server, return {o: file_name, c:file_name}
 async function fileInserted (): PV {
-	loading.value = true
 	if (!imageToUpload.value) {
-		clear()
+		await clear()
 		return
 	}
-	if (!meal.value.person || !imageToUpload.value || !meal.value) return
-
-	if (imageToUpload.value.size > 10_240_000) {
-		snackError({ message: 'filesize too large' })
-		return
-	}
-	const suffix = imageToUpload.value.type.split('/')
-	const fileType = suffix[1]?.toLowerCase()
-	if (!fileType) return
-
+	const fileType = imageToUpload.value.type.split('/', 2)[1]?.toLowerCase()
+	if (imageToUpload.value.size > 10_240_000) return snackError({ message: 'filesize too large' })
 	const acceptable = ['jpeg', 'jpg']
-	if (!acceptable.includes(fileType)) {
-		snackError({ message: 'invalid filetype' })
-		return
-	}
-	const data = new FormData()
-	const newName = `${meal.value.person.slice(0, 1)}.${fileType}`
-	data.append('image', imageToUpload.value, newName)
+	if (!fileType || !acceptable.includes(fileType)) return snackError({ message: 'invalid filetype' })
+	if (!meal.value.person) return
 
-	const response = await fetch_adminPhoto.photo_post(data)
-	if (response) {
-		[meal.value.photo_original, meal.value.photo_converted] = [response.original, response.converted]
-		imageUrl.value = env.gen_photo_url(meal.value.photo_converted)
-	}
+	loading.value = true
+	try {
+		const data = new FormData()
+		const newName = `${meal.value.person.slice(0, 1)}.${fileType}`
+		data.append('image', imageToUpload.value, newName)
 
-	imageToUpload.value = undefined
-	loading.value = false
+		const response = await fetch_adminPhoto.photo_post(data)
+		if (response) {
+			[meal.value.photo_original, meal.value.photo_converted] = [response.original, response.converted]
+			imageUrl.value = env.gen_photo_url(meal.value.photo_converted)
+		}
+	} finally {
+		imageToUpload.value = undefined
+		loading.value = false
+	}
 }
 
 // Remove whitespace from end of category, when input has been blurred
@@ -610,19 +606,23 @@ async function updateMeal_confirm (): PV {
 	if (v$.value.$invalid) return
 	loading.value = true
 
-	if (!meal.value.photo_original) meal.value.photo_original = ''
-	if (!meal.value.photo_converted) meal.value.photo_converted = ''
-	const success = await fetch_adminMeal.meal_patch(gen_update_meal())
-	if (success) {
-		snackSuccess({
-			message: 'meal edited',
-			type: 'success',
-			icon: mdiDatabaseEdit,
-		})
-		// something here is sometimes causing memory issues
-		await complete_clear()
-		completed.value = true
-		router.push(FrontEndRoutes.MEALS)
+	try {
+		if (!meal.value.photo_original) meal.value.photo_original = ''
+		if (!meal.value.photo_converted) meal.value.photo_converted = ''
+		const success = await fetch_adminMeal.meal_patch(gen_update_meal())
+		if (success) {
+			snackSuccess({
+				message: 'meal edited',
+				type: 'success',
+				icon: mdiDatabaseEdit,
+			})
+			// something here is sometimes causing memory issues
+			await complete_clear()
+			completed.value = true
+			await router.push(FrontEndRoutes.MEALS)
+		}
+	} finally {
+		loading.value = false
 	}
 }
 

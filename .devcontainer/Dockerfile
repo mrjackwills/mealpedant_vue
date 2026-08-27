@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/devcontainers/typescript-node:20
+FROM mcr.microsoft.com/devcontainers/typescript-node
 
 RUN printf "alias cls='clear'\nalias ll='ls -l --human-readable --color=auto --group-directories-first --classify --time-style=long-iso -all'" >> /etc/bash.bashrc
 

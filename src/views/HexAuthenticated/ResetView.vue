@@ -27,7 +27,6 @@
 							/>
 
 							<v-expand-transition>
-								<PasswordContainsEmail v-if='errors.new_password && !passwordCompromised' />
 								<HibpMessage v-if='passwordCompromised' />
 							</v-expand-transition>
 
@@ -36,7 +35,7 @@
 									v-for='item in tokenFields'
 									:key='item.model'
 									v-model='user[item.model]'
-									:dense='smAndDown'
+									:density='smAndDown ? "compact" : "default"'
 									:disabled='loading || completed'
 									:error='errors[item.model]'
 									:error-messages='errorMessages[item.model]'
@@ -191,10 +190,10 @@ async function reset (): Promise<void> {
 watch(watcher_password, () => {
 	passwordCompromised.value = false
 	errors.value.new_password = false
-	if (!v$.value.user?.new_password?.$invalid && !passwordCompromised.value) errorMessages.value.new_password = ''
-	else if (!v$.value.user?.new_password?.$dirty) return
-	else if (!v$.value.user?.new_password?.required) errorMessages.value.new_password = 'password required'
-	else if (!v$.value.user?.new_password?.minLength) errorMessages.value.new_password = '12 characters minimum'
+	if (!v$.value.new_password.$invalid && !passwordCompromised.value) errorMessages.value.new_password = ''
+	else if (!v$.value.new_password.$dirty) return
+	else if (v$.value.new_password.required.$invalid) errorMessages.value.new_password = 'password required'
+	else if (v$.value.new_password.minLen.$invalid) errorMessages.value.new_password = '12 characters minimum'
 })
 
 const rules = {

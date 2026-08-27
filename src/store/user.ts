@@ -15,10 +15,10 @@ export const userModule = defineStore(ModuleName.User, {
 	actions: {
 
 		set_authenticated (b: boolean): void {
+			this.authenticated = b
 			mealStorage.delete()
 			mealViewModule().$reset()
 			mealModule().$reset()
-			this.authenticated = b
 		},
 
 		set_admin (b: boolean): void {
@@ -46,6 +46,7 @@ export const userModule = defineStore(ModuleName.User, {
 			infobarModule().$reset()
 			mealViewModule().$reset()
 			mealModule().$reset()
+			twoFAModule().$reset()
 			mealStorage.delete()
 			router.push(FrontEndRoutes.BASE)
 			loadingModule().set_loading(false)

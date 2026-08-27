@@ -13,12 +13,12 @@ type BothTPersonFood = {
 }
 
 // Convert a yymmdd to yyyy-mm-dd
-// const uncompress_date = (input: string): string => `20${input.at(0)}${input.at(1)}-${input.at(2)}${input.at(3)}-${input.at(4)}${input.at(5)}`
 const uncompress_date = (input: string): string => `20${input.slice(0, 2)}-${input.slice(2, 4)}-${input.slice(4, 6)}`
 
 // Convert a yyyy-mm-dd to yymmdd
 const compress_date = (input: string): string => input.slice(2).replaceAll('-', '')
 
+// Return the default, unfiltered search criteria, with some fields tuned to the current auth state
 function default_search_by (authed: boolean): search_by {
 	return {
 		category_id: 0,
@@ -49,9 +49,7 @@ function uncompress_meals (input: c_MealInfo): MealInfo | undefined {
 					meal_description_id: i.j.m,
 					meal_category_id: i.j.c,
 				}
-				if (i.j.r) {
-					jack.restaurant = i.j.r
-				}
+
 				if (i.j.v) {
 					jack.vegetarian = i.j.v
 				}
@@ -70,7 +68,9 @@ function uncompress_meals (input: c_MealInfo): MealInfo | undefined {
 				const dave: TPersonFood = {
 					meal_description_id: i.d.m,
 					meal_category_id: i.d.c,
-					restaurant: i.d.r,
+				}
+				if (i.d.r) {
+					dave.restaurant = i.d.r
 				}
 				if (i.d.v) {
 					dave.vegetarian = i.d.v
@@ -98,12 +98,28 @@ function uncompress_meals (input: c_MealInfo): MealInfo | undefined {
 	}
 }
 
+// Convert the compressed 1/0 flag into a boolean
 const num_to_bool = (x: number): boolean => x === 1
+// Convert a boolean into the compressed 1/0 flag
 const bool_to_num = (x: boolean): number => x ? 1 : 0
+
+// Holds the pending debounced filter query-param update
+let filterQueryTimeout: ReturnType<typeof setTimeout> | undefined
+
+// Maximum entries kept in the search history & term match caches
+const searchHistoryMax = 20
+const termMatchCacheMax = 50
+
+// Cache of search term -> matched category/description ids, cleared whenever the meal data changes
+const termMatchCache = new Map<string, { categories: Set<number>, descriptions: Set<number> }>()
+
+// Whether date_meals is confirmed sorted ascending by date, recorded when the data loads
+let dateMealsSorted = false
 
 type SearchHistory = Map<string, MealHistoryValue>
 
 export const mealModule = defineStore(ModuleName.Meal, {
+	// Reactive state: the uncompressed meal dataset, the active search criteria, and the derived filtered view & caches
 	state: () => ({
 		hash: '',
 		date_meals: [] as Array<DateMeal>,
@@ -112,7 +128,6 @@ export const mealModule = defineStore(ModuleName.Meal, {
 		meal_categories: new Map() as MealCategoryMap,
 		meal_types: ['restaurant', 'takeaway', 'vegetarian'] as Array<TMealVariant>,
 
-		// default_search_by: default_search_by(userModule().authenticated),
 		default_search_by_stringified: JSON.stringify(default_search_by(userModule().authenticated)),
 
 		search_by: default_search_by(userModule().authenticated),
@@ -130,15 +145,19 @@ export const mealModule = defineStore(ModuleName.Meal, {
 
 	getters: {
 
+		// Whether the current search includes Jack's meals
 		show_jack (): boolean {
 			return this.search_by.include_jack
 		},
+		// Whether the current search includes Dave's meals
 		show_dave (): boolean {
 			return this.search_by.include_dave
 		},
+		// Available meal variants, restricted to those present in the filtered results when a filter is applied
 		get_meal_types (): Array<TMealVariant> {
 			return this.is_filtered ? Array.from(this.filtered_meal_variants).toSorted((a, b) => a.localeCompare(b)) : this.meal_types
 		},
+		// Get a category name by id, or an empty string if unknown
 		get_category_by_id: state => {
 			return (id: number): string => state.meal_categories.get(id) ?? ''
 		},
@@ -151,6 +170,7 @@ export const mealModule = defineStore(ModuleName.Meal, {
 		get_all_categories_sorted_alpha (): Array<[number, string]> {
 			return Array.from(this.meal_categories).toSorted((a, b) => a[1].localeCompare(b[1]))
 		},
+		// Get a description name by id, or an empty string if unknown
 		get_description_by_id: state => {
 			return (id: number): string => state.meal_descriptions.get(id) ?? ''
 		},
@@ -179,41 +199,24 @@ export const mealModule = defineStore(ModuleName.Meal, {
 
 		// convert a compressed_search_by to a search_by
 		uncompress_search_by (x: c_search_by): search_by {
-			const dsb = default_search_by(userModule().authenticated)
-			if (x.c && x.c !== dsb.category_id) {
-				dsb.category_id = x.c
+			const authenticated = userModule().authenticated
+			const dsb = default_search_by(authenticated)
+			const result = {
+				category_id: x.c ?? dsb.category_id,
+				end_date: x.e === undefined ? dsb.end_date : uncompress_date(x.e),
+				include_dave: x.d === undefined ? dsb.include_dave : num_to_bool(x.d),
+				include_jack: x.j === undefined ? dsb.include_jack : num_to_bool(x.j),
+				include_restaurant: x.r === undefined ? dsb.include_restaurant : false,
+				include_takeaway: x.t === undefined ? dsb.include_takeaway : false,
+				include_vegetarian: x.v === undefined ? dsb.include_vegetarian : false,
+				only_photos: x.p === undefined ? dsb.only_photos : num_to_bool(x.p),
+				start_date: x.s === undefined ? dsb.start_date : uncompress_date(x.s),
+				term: x.m ?? dsb.term,
 			}
-			if (x.d && num_to_bool(x.d) !== dsb.include_dave) {
-				dsb.include_dave = num_to_bool(x.d)
+			if (!authenticated) {
+				result.include_dave = false
 			}
-			if (x.e && x.e !== dsb.end_date) {
-				dsb.end_date = uncompress_date(x.e)
-			}
-			if (x.j && num_to_bool(x.j) !== dsb.include_jack) {
-				dsb.include_jack = num_to_bool(x.j)
-			}
-			if (x.m && x.m !== dsb.term) {
-				dsb.term = x.m
-			}
-			if (x.p && num_to_bool(x.p) !== dsb.only_photos) {
-				dsb.only_photos = num_to_bool(x.p)
-			}
-			if (x.r) {
-				dsb.include_restaurant = false
-			}
-			if (x.s && x.s !== dsb.start_date) {
-				dsb.start_date = uncompress_date(x.s)
-			}
-			if (x.t) {
-				dsb.include_takeaway = false
-			}
-			if (x.v) {
-				dsb.include_vegetarian = false
-			}
-			if (!userModule().authenticated) {
-				dsb.include_dave = false
-			}
-			return dsb
+			return result
 		},
 
 		// convert a search_by to a compress_search_by
@@ -233,31 +236,44 @@ export const mealModule = defineStore(ModuleName.Meal, {
 			}
 		},
 
+		// Replace the whole meal dataset from a (possibly cached) compressed response, and rebuild all derived state
 		set (x: c_MealInfo) {
 			const meals = uncompress_meals(x)
 			if (meals) {
 				this.date_meals = meals.date_meals
 				this.meal_descriptions = meals.meal_descriptions
 				this.meal_categories = meals.meal_categories
+				// Normalised copy (diacritics removed, uppercased) so term matching is case & diacritic insensitive
 				this.meal_description_normalized = new Map<number, string>(
 					[...meals.meal_descriptions.entries()].map(([key, value]) => [
 						key,
 						this.normalise_string(value),
 					]),
 				)
+
+				// Detect whether the meals arrived sorted ascending by date, so searches can skip out-of-range slices.
+				// every() short-circuits on the first out-of-order pair, like the old break
+				dateMealsSorted = meals.date_meals.every((meal, i, arr) => i === 0 || arr[i - 1].date <= meal.date)
+
+				// The underlying data changed, so cached term matches & filter results are stale
+				termMatchCache.clear()
+				this.clear_search_history()
 			}
 		},
 
+		// Store the data-source hash, used to detect when the server's meal data changes
 		set_hash (x: string) {
 			this.hash = x
 		},
 
+		// Drop all cached filter results
 		clear_search_history () {
 			this.search_history = new Map()
 		},
 
 		// Clear all the filters, will still keep search history in a map
 		clear_all_filters () {
+			clearTimeout(filterQueryTimeout)
 			this.filtered_meal_descriptions = new Map()
 			this.filtered_meal_categories = new Map()
 			this.filtered_meal_variants = new Set()
@@ -266,7 +282,9 @@ export const mealModule = defineStore(ModuleName.Meal, {
 			this.filtered_date_meals = []
 			this.search_by = default_search_by(userModule().authenticated)
 			this.filter_b64 = ''
-			router.replace({ query: {} })
+			if (router.currentRoute.value.query.filter !== undefined) {
+				router.replace({ query: {} })
+			}
 		},
 
 		// Toggle vegetarian, then search
@@ -349,49 +367,79 @@ export const mealModule = defineStore(ModuleName.Meal, {
 			return i.normalize('NFD').replaceAll(/\p{Diacritic}/gu, '').toUpperCase()
 		},
 
-		// Filter the meals by the current search_by settings
-		// Could pre
-		// Or set a loading value in here, and use that in the chip switch
-		// Or, pre-calc it all
+		/*
+		 * Recompute the filtered view from the full dataset using the current search_by criteria.
+		 * Results are cached by the serialised search_by, so repeated or cycled searches are instant,
+		 * and the shareable ?filter= URL is updated lazily on success.
+		 */
 		filter_by_search_by (): void {
 			const { search_by } = this
+			// Serialise the whole criteria as the cache key, so identical searches hit the cache
 			const searchKey = JSON.stringify(search_by)
 
+			// Default (unfiltered) search == just clear any applied filter, nothing else to compute
 			if (searchKey === this.default_search_by_stringified) {
 				this.clear_all_filters()
 				return
 			}
 
+			// Record the shareable, compressed base64 form of the criteria, ignoring entries identical to the defaults
 			this.filter_b64 = btoa(JSON.stringify(this.compress_search_by(search_by)))
-			router.replace({ query: { filter: this.filter_b64 } })
 
 			const cachedResult = this.search_history.get(searchKey)
 			if (cachedResult) {
+				// Cache hit: restore the exact previously computed view, no need to re-scan the dataset
+				this.search_history.delete(searchKey)
+				this.search_history.set(searchKey, cachedResult)
 				this.filtered_meal_descriptions = cachedResult.filtered_meal_descriptions
 				this.filtered_meal_categories = cachedResult.filtered_meal_categories
 				this.filtered_date_meals = cachedResult.filtered_date_meals
 				this.filtered_meal_variants = cachedResult.filtered_meal_variants
 				this.is_filtered = true
+				this.update_filter_query()
 				return
 			}
 
+			// Normalise the term once, so it compares correctly against the already-normalised descriptions
 			const searchTerm = this.normalise_string(search_by.term || '')
-			const matchedCategoryIds = new Set<number>()
-			const matchedDescriptionIds = new Set<number>()
+
+			// Sets of category/description ids whose name contains the term, used to match meals fast later
+			let matchedCategoryIds = new Set<number>()
+			let matchedDescriptionIds = new Set<number>()
 
 			if (searchTerm) {
-				for (const [id, name] of this.meal_categories) {
-					if (name.includes(searchTerm)) {
-						matchedCategoryIds.add(id)
+				// Reuse the precomputed term matches when available, so re-searching a term is near-free
+				let termMatches = termMatchCache.get(searchTerm)
+				if (!termMatches) {
+					const categories = new Set<number>()
+					const descriptions = new Set<number>()
+					// Brute-force scan for matching names — done once per new term, then cached
+					for (const [id, name] of this.meal_categories) {
+						if (name.includes(searchTerm)) {
+							categories.add(id)
+						}
+					}
+					for (const [id, name] of this.meal_description_normalized) {
+						if (name.includes(searchTerm)) {
+							descriptions.add(id)
+						}
+					}
+					termMatches = { categories, descriptions }
+					termMatchCache.set(searchTerm, termMatches)
+
+					// Evict the oldest entry when over the cap, keeping the cache memory bounded
+					if (termMatchCache.size > termMatchCacheMax) {
+						const oldest = termMatchCache.keys().next().value
+						if (oldest !== undefined) {
+							termMatchCache.delete(oldest)
+						}
 					}
 				}
-				for (const [id, name] of this.meal_description_normalized) {
-					if (name.includes(searchTerm)) {
-						matchedDescriptionIds.add(id)
-					}
-				}
+				matchedCategoryIds = termMatches.categories
+				matchedDescriptionIds = termMatches.descriptions
 			}
 
+			// Which people this search should include, derived from the include_* toggles
 			const targetPeople = [] as Array<typeof TPerson.DAVE | typeof TPerson.JACK>
 			if (search_by.include_dave) {
 				targetPeople.push(TPerson.DAVE)
@@ -400,57 +448,84 @@ export const mealModule = defineStore(ModuleName.Meal, {
 				targetPeople.push(TPerson.JACK)
 			}
 
+			// Accumulators: ids of the categories/descriptions present in the results, the variants seen, and the matching days keyed by date
 			const tmpCatId = new Set<number>()
 			const tmpDescId = new Set<number>()
 			const filteredMealVariants = new Set<TMealVariant>()
-			const filteredDateMealsMap = new Map<string, { Dave?: TPersonFood, Jack?: TPersonFood }>()
+			const filteredDateMealsMap = new Map<string, BothTPersonFood>()
 
-			for (const meal of this.date_meals) {
-				if (meal.date > search_by.end_date || meal.date < search_by.start_date) {
-					continue
-				}
-
+			/*
+			 * Test one meal's people against every filter. Each check is an early-out;
+			 * only reaching the bottom means that person's meal is included in the result.
+			 */
+			const process_meal = (meal: DateMeal): void => {
 				for (const person of targetPeople) {
 					const mealPerson = meal[person]
 					if (!mealPerson) {
-						continue
+						continue // this person didn't eat on this date
 					}
-
 					if (search_by.only_photos && !mealPerson.photo) {
-						continue
+						continue // photos-only filter rejects meals without a photo
 					}
-					if (!search_by.include_takeaway && !mealPerson.takeaway) {
-						continue
+					if (!search_by.include_takeaway && mealPerson.takeaway) {
+						continue // takeaway meals are excluded
 					}
-					if (!search_by.include_vegetarian && !mealPerson.vegetarian) {
-						continue
+					if (!search_by.include_vegetarian && mealPerson.vegetarian) {
+						continue // vegetarian meals are excluded
+					}
+					if (!search_by.include_restaurant && mealPerson.restaurant) {
+						continue // restaurant meals are excluded
+					}
+					if (search_by.category_id && mealPerson.meal_category_id !== search_by.category_id) {
+						continue // different category than the one selected
+					}
+					if (searchTerm && !matchedCategoryIds.has(mealPerson.meal_category_id) && !matchedDescriptionIds.has(mealPerson.meal_description_id)) {
+						continue // term not found in this meal's category or description
 					}
 
-					if (!search_by.include_restaurant && !mealPerson.restaurant) {
-						continue
+					this.add_entry(filteredDateMealsMap, filteredMealVariants, tmpCatId, tmpDescId, meal, person, mealPerson)
+				}
+			}
+
+			/*
+			 * Walk only the meals within the date range. When the data is sorted ascending
+			 * we binary-search straight to the start of the range and stop at its end.
+			 */
+			if (dateMealsSorted) {
+				// Find the first index whose date is >= start_date (standard lower-bound search)
+				let low = 0
+				let high = this.date_meals.length
+				while (low < high) {
+					const mid = Math.floor((low + high) / 2)
+					if (this.date_meals[mid].date < search_by.start_date) {
+						low = mid + 1
+					} else {
+						high = mid
 					}
-
-					const matchesCategory = !search_by.category_id || mealPerson.meal_category_id === search_by.category_id
-					const matchesTerm = !searchTerm || matchedCategoryIds.has(mealPerson.meal_category_id) || matchedDescriptionIds.has(mealPerson.meal_description_id)
-
-					if (matchesCategory && matchesTerm) {
-						this.add_entry(
-							filteredDateMealsMap,
-							filteredMealVariants,
-							meal,
-							person,
-							tmpCatId,
-							tmpDescId,
-						)
+				}
+				// Iterate from there, stopping at the first meal past end_date (all later ones are even newer)
+				for (const meal of this.date_meals.slice(low)) {
+					if (meal.date > search_by.end_date) {
+						break
+					}
+					process_meal(meal)
+				}
+			} else {
+				// Unsorted data: fall back to scanning everything, only processing meals inside the range
+				for (const meal of this.date_meals) {
+					if (meal.date >= search_by.start_date && meal.date <= search_by.end_date) {
+						process_meal(meal)
 					}
 				}
 			}
 
+			// Assemble the final view from the accumulated ids, the variant set and the sorted day list
 			this.filtered_meal_descriptions = this.get_filtered_map(tmpDescId, this.meal_descriptions)
 			this.filtered_meal_categories = this.get_filtered_map(tmpCatId, this.meal_categories)
 			this.filtered_date_meals = this.converted_map_to_array(filteredDateMealsMap)
 			this.filtered_meal_variants = filteredMealVariants
 
+			// Store the computed view so the same search is instant next time
 			this.search_history.set(searchKey, {
 				filtered_meal_descriptions: this.filtered_meal_descriptions,
 				filtered_meal_categories: this.filtered_meal_categories,
@@ -458,7 +533,30 @@ export const mealModule = defineStore(ModuleName.Meal, {
 				filtered_date_meals: this.filtered_date_meals,
 			})
 
+			// Evict the oldest cached entry when over the cap (LRU), keeping cache memory bounded
+			if (this.search_history.size > searchHistoryMax) {
+				const oldest = this.search_history.keys().next().value
+				if (oldest !== undefined) {
+					this.search_history.delete(oldest)
+				}
+			}
+
 			this.is_filtered = true
+			this.update_filter_query()
+		},
+
+		/*
+		 * Update the filter query param in the URL
+		 * The query param is only read on mount, so it's safe to update lazily
+		 */
+		update_filter_query () {
+			clearTimeout(filterQueryTimeout)
+			if (router.currentRoute.value.query.filter === this.filter_b64) {
+				return
+			}
+			filterQueryTimeout = setTimeout(() => {
+				router.replace({ query: { filter: this.filter_b64 } })
+			}, 300)
 		},
 
 		/*
@@ -503,39 +601,47 @@ export const mealModule = defineStore(ModuleName.Meal, {
 			return total
 		},
 
-		// Add an entry to the filtered_output, and add variants, and description/category id's
+		// Add a matched meal/person to the filtered output, and record variants & description/category ids
 		add_entry (
 			filtered_date_meals: Map<string, BothTPersonFood>,
 			filtered_meal_variants: Set<TMealVariant>,
+			temp_category_id_set: Set<number>,
+			temp_meal_description_id_set: Set<number>,
 			meal: DateMeal,
 			person: TPersonVal,
-			tmp_cat_id: Set<number>,
-			tmp_desc_id: Set<number>,
+			meal_person: TPersonFood,
 		) {
-			this.add_variant(filtered_meal_variants, meal, person)
-			this.add_description_category_id(tmp_cat_id, tmp_desc_id, meal, person)
-			this.add_date_meal(filtered_date_meals, meal, person)
-		},
+			this.add_variant(filtered_meal_variants, meal_person)
+			this.add_description_category_id(temp_category_id_set, temp_meal_description_id_set, meal_person)
 
-		// Add a given meals description & category id's to the temp sets
-		add_description_category_id (temp_category_id_set: Set<number>, temp_meal_description_id_set: Set<number>, meal: DateMeal, person: TPersonVal) {
-			if (meal[person]) {
-				temp_category_id_set.add(meal[person].meal_category_id)
-				temp_meal_description_id_set.add(meal[person].meal_description_id)
+			// Merge into the existing day's entry, or create a new one for just this person
+			const exists = filtered_date_meals.get(meal.date)
+			if (exists) {
+				exists[person] = meal_person
+			} else if (person === TPerson.JACK) {
+				filtered_date_meals.set(meal.date, { Jack: meal_person })
+			} else {
+				filtered_date_meals.set(meal.date, { Dave: meal_person })
 			}
 		},
 
-		// Check if a given datemeal/person in order to populate the filtered_meal_variants
-		add_variant (filtered_meal_variants: Set<TMealVariant>, meal: DateMeal, person: TPersonVal) {
-			if (meal[person]?.restaurant) {
+		// Add a given person food's variant flags to the set
+		add_variant (filtered_meal_variants: Set<TMealVariant>, meal_person: TPersonFood) {
+			if (meal_person.restaurant) {
 				filtered_meal_variants.add('restaurant')
 			}
-			if (meal[person]?.takeaway) {
+			if (meal_person.takeaway) {
 				filtered_meal_variants.add('takeaway')
 			}
-			if (meal[person]?.vegetarian) {
+			if (meal_person.vegetarian) {
 				filtered_meal_variants.add('vegetarian')
 			}
+		},
+
+		// Add a given person food's description & category ids to the temp sets
+		add_description_category_id (temp_category_id_set: Set<number>, temp_meal_description_id_set: Set<number>, meal_person: TPersonFood) {
+			temp_category_id_set.add(meal_person.meal_category_id)
+			temp_meal_description_id_set.add(meal_person.meal_description_id)
 		},
 
 		/*
@@ -551,30 +657,9 @@ export const mealModule = defineStore(ModuleName.Meal, {
 					Dave: value.Dave,
 				})
 			}
-			output.sort((a, b) => b.date.localeCompare(a.date))
+			// ISO dates order identically under relational comparison, much faster than localeCompare
+			output.sort((a, b) => (a.date < b.date ? 1 : (a.date > b.date ? -1 : 0)))
 			return output
-		},
-
-		/*
-		 * Add a filtered meal to the filtered array, using the index of a meal already in the array,
-		 * else add a new entry for a given person
-		 */
-		add_date_meal (filtered_date_meals: Map<string, BothTPersonFood>, meal: DateMeal, person: TPersonVal) {
-			const exists = filtered_date_meals.get(meal.date)
-			if (meal.Jack) {
-				if (exists) {
-					exists.Jack = meal.Jack
-				} else if (person === TPerson.JACK) {
-					filtered_date_meals.set(meal.date, { Jack: meal.Jack })
-				}
-			}
-			if (meal.Dave) {
-				if (exists) {
-					exists.Dave = meal.Dave
-				} else if (person === TPerson.DAVE) {
-					filtered_date_meals.set(meal.date, { Dave: meal.Dave })
-				}
-			}
 		},
 
 		// Convert a set into a map, for descriptions & categories

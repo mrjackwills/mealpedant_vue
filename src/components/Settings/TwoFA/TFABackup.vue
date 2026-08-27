@@ -82,7 +82,6 @@
 							<v-btn
 								class='text-black'
 								color='primary'
-								:dark='true'
 								rounded
 								variant='flat'
 								@click='downloadCodes'
@@ -192,7 +191,13 @@ async function buttonPress (): PV {
 			confirmFunction: generateBackups,
 		})
 	} else {
-		generateBackups()
+		dialoger({
+			message: 'Generating backup tokens requires authentication.',
+			buttonText: 'generate',
+			title: 'Confirm',
+			passwordRequired: true,
+			confirmFunction: generateBackups,
+		})
 	}
 }
 
@@ -204,8 +209,8 @@ async function generateBackups (authObject?: TAuthObject): PV {
 	if (backup.value && authObject) {
 		const response = await fetch_authenticatedUser.twoFA_patch(authObject)
 		if (response) backupArray.value = response
-	} else if (!backup.value) {
-		const backups = await fetch_authenticatedUser.twoFA_post()
+	} else if (!backup.value && authObject) {
+		const backups = await fetch_authenticatedUser.twoFA_post(authObject)
 		if (backups) backupArray.value = backups
 	}
 	loading.value = false

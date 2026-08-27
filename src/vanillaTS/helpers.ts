@@ -3,6 +3,9 @@ import { genesisDate } from './globalConst'
 // Convert bytes to x.xx in megabytes
 export const bytes_to_mb = (x: number): string => (x / (1024 * 1024)).toFixed(2)
 
+// Work out percentages, fixes NaN errors
+export const percentages = (part: number, whole: number): string => whole === 0 ? '0.00' : (100 / whole * part).toFixed(2)
+
 type Months = Record<string, string>
 const months: Months = {
 	Jan: `01`,
@@ -43,6 +46,8 @@ export function secondsToText (s: number, short = true): string {
 	const hour = Math.floor(s / 60 / 60 % 24)
 	const day = Math.floor(s / 60 / 60 / 24)
 
+	const seconds_s = Math.trunc(s % 60) > 1 ? 's' : ''
+
 	let result = ''
 
 	if (day > 0) {
@@ -53,8 +58,8 @@ export function secondsToText (s: number, short = true): string {
 	}
 
 	result += short
-		? `${minute}m, ${second}s`
-		: `${minute} minute${minute === '01' ? '' : 's'}, ${second} seconds`
+		? `${minute}m, ${second}${seconds_s}`
+		: `${minute} minute${minute === '01' ? '' : 's'}, ${second} second${seconds_s}`
 	return result
 }
 

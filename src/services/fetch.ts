@@ -233,6 +233,7 @@ class Incognito {
 		return response.data.response
 	}
 
+	@wrap
 	async mealhash_get (): Promise<string> {
 		const response = await baseFetch.get(`${this.#url}/hash`)
 		return response.data.response
@@ -286,8 +287,8 @@ class AuthenticatedUser {
 
 	@wrap
 	@isAuthenticated
-	async twoFA_post (): Promise<Array<string> | undefined> {
-		const response = await baseFetch.post(`${this.#url}/twofa`)
+	async twoFA_post (authObject: types.TAuthObject): Promise<Array<string> | undefined> {
+		const response = await baseFetch.post(`${this.#url}/twofa`, authObject)
 		return response?.data?.response?.backups
 	}
 

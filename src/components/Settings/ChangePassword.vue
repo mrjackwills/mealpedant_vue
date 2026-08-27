@@ -17,7 +17,6 @@
 								:append-inner-icon='item.appendIcon'
 								:autocomplete='item.autocomplete'
 								class='mb-n4'
-								:dense='smAndDown'
 								density='comfortable'
 								:disabled='loading'
 								:error='errorMessages[item.model]||externalErrors[item.model] ? true : false'
@@ -47,7 +46,7 @@
 								:key='item.model'
 								v-model='user[item.model]'
 								class='mt-n4'
-								:dense='smAndDown'
+								:density='smAndDown ? "compact" : "default"'
 								:label='item.label'
 								:prepend-inner-icon='item.icon'
 								required
@@ -86,7 +85,6 @@
 						<v-btn
 							class='elevation-0 text-black'
 							color='primary'
-							dark
 							:disabled
 							rounded
 							:size='buttonSize'
@@ -300,10 +298,10 @@ const errorMessages = computed(() => {
 
 		if (emailVal && passVal.includes(emailVal)) {
 			current_password_err = 'Your password cannot contain your email'
-		} else if (cp.minLen.$invalid) {
-			current_password_err = '12 characters minimum'
 		} else if (user.value.current_password.length === 0) {
 			current_password_err = 'password required'
+		} else if (cp.minLen.$invalid) {
+			current_password_err = '12 characters minimum'
 		}
 	}
 
@@ -314,10 +312,10 @@ const errorMessages = computed(() => {
 
 		if (emailVal && passVal.includes(emailVal)) {
 			new_password_err = 'Your password cannot contain your email'
-		} else if (np.minLen.$invalid) {
-			new_password_err = '12 characters minimum'
 		} else if (user.value.new_password.length === 0) {
 			new_password_err = 'password required'
+		} else if (np.minLen.$invalid) {
+			new_password_err = '12 characters minimum'
 		} else if (user.value.current_password && user.value.new_password?.includes(user.value.current_password)) {
 			new_password_err = 'new password cannot contain old password'
 		} else if (user.value.new_password === user.value.current_password) {

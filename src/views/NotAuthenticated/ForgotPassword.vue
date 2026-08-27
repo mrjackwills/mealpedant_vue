@@ -83,9 +83,9 @@ const send_disabled = computed(() => v$.value.$invalid || loading.value || compl
 
 const emailErrors = computed((): Array<string> => {
 	const errors: Array<string> = []
-	if (!v$.value.user?.email?.$dirty) return errors
-	if (!v$.value.user?.email?.$dirty) errors.push('email invalid')
-	if (!v$.value.email?.required) errors.push('email required')
+	if (!v$.value.email?.$dirty) return errors
+	if (v$.value.email.required.$invalid) errors.push('email required')
+	if (v$.value.email.email.$invalid) errors.push('email invalid')
 	return errors
 })
 
@@ -96,7 +96,7 @@ const user = ref({ email: '' })
 
 const router = useRouter()
 function touch (): void {
-	v$.value.user?.email?.$touch()
+	v$.value.email?.$touch()
 }
 
 function goback (): void {

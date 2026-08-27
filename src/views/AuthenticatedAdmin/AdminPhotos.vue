@@ -69,7 +69,7 @@
 					<v-row class='justify-center bg-black ma-0 pa-0'>
 
 						<v-col class='ma-0 pa-0' cols='12'>
-							<span :class='item.person === "Dave" ? "text-primary" : "text-secondary"'>
+							<span :class='item.person === TPerson.DAVE ? "text-primary" : "text-secondary"'>
 								<v-row class='ma-0 pa-0 justify-space-around'>
 									<v-col class='ma-0 pa-0 cl' cols='auto'>
 										<a :href='editHref(item)'>{{ item.meal_date }} {{ item.person }}</a>
@@ -89,7 +89,7 @@
 						</v-col>
 
 						<v-col class='ma-0 pa-0' cols='12'>
-							<span :class='item.person === "Dave" ? "text-primary" : "text-secondary"'>
+							<span :class='item.person === TPerson.DAVE ? "text-primary" : "text-secondary"'>
 								<v-row class='ma-0 pa-0 justify-space-around'>
 									<v-col class='ma-0 pa-0 cl' cols='auto'>
 										<a

@@ -1,5 +1,6 @@
 <template>
 	<v-app-bar
+
 		:extended='!online'
 		extension-height='40'
 		flat
@@ -7,14 +8,14 @@
 		name='header'
 	>
 		<router-link :to='FrontEndRoutes.MEALS'>
-			<v-avatar class='cl mx-2' :size='`${toolbarHeight - 8}px`' tile>
+			<v-avatar class='cl mx-2 unselectable' :size='`${toolbarHeight - 8}px`' tile>
 				<v-img id='topOfPage' :eager='true' src='@/assets/tile_svg.svg' />
 			</v-avatar>
 		</router-link>
 
 		<v-toolbar-title>
 			<router-link class='text-white' :to='FrontEndRoutes.MEALS'>
-				<span class='font-weight-bold' :class='navTitleFontSize' FrontendRoutes.BASE>Meal Pedant</span>
+				<span class='font-weight-bold unselectable' :class='navTitleFontSize'>Meal Pedant</span>
 
 				<section v-if='!mobile' class='mx-1'>
 					<span class='font-weight-light font-italic tag-line text-body-large'>"A meticulous daily log of
@@ -25,13 +26,13 @@
 
 		<v-toolbar-items v-if='!authed && !mobile' class=''>
 			<v-btn v-for='(item, index) in registerLinks' :key='`${index}`' class='cl' :to='item.route'>
-				<v-icon class='mr-1' dark :icon='item.icon' small />
+				<v-icon class='mr-1' :icon='item.icon' size='small' />
 				{{ item.text }}
 			</v-btn>
 		</v-toolbar-items>
 
 		<v-toolbar-items v-if='authed && !mobile' class=''>
-			<v-row class='align-center'>
+			<v-row class='align-center unselectable'>
 				<v-col class='cl' cols='auto mr-6'>
 					<router-link :to='FrontEndRoutes.SETTINGS'>
 						<v-chip class='text-white'>
@@ -74,9 +75,10 @@
 </template>
 
 <script setup lang='ts'>
-import { mdiAccountPlus, mdiFood, mdiLogin, mdiMenu } from '@mdi/js'
+import { mdiMenu } from '@mdi/js'
 import { useDisplay } from 'vuetify'
-import { FrontEndNames, FrontEndRoutes } from '@/types/const_routes'
+import { FrontEndRoutes } from '@/types/const_routes'
+import { registerLinks } from '@/vanillaTS/globalConst'
 
 const { smAndDown } = useDisplay()
 
@@ -103,24 +105,6 @@ const loading = computed(() => loadingModule().loading)
 const navTitleFontSize = computed(() => mobile.value ? 'text-headline-medium' : 'text-headline-large')
 const toolbarHeight = computed(() => mobile.value ? 56 : 80)
 const userEmail = computed(() => userModule().email)
-
-const registerLinks = [
-	{
-		icon: mdiFood,
-		text: FrontEndNames.MEALS,
-		route: FrontEndRoutes.MEALS,
-	},
-	{
-		icon: mdiAccountPlus,
-		text: FrontEndNames.REGISTER,
-		route: FrontEndRoutes.REGISTER,
-	},
-	{
-		icon: mdiLogin,
-		text: FrontEndNames.SIGNIN,
-		route: FrontEndRoutes.SIGNIN,
-	},
-]
 
 </script>
 

@@ -31,7 +31,7 @@
 									:append-inner-icon='item.appendIcon'
 									:autocomplete='item.autocomplete'
 									class='mb-n3'
-									:dense='smAndDown'
+									:density='smAndDown ? "compact" : "default"'
 									:disabled='loading'
 									:label='item.label'
 									:prepend-inner-icon='item.icon'
@@ -48,7 +48,7 @@
 										v-for='item in tokenFields'
 										:key='item.model'
 										v-model='user[item.model]'
-										:dense='smAndDown'
+										:density='smAndDown ? "compact" : "default"'
 										:label='item.label'
 										:prepend-inner-icon='item.icon'
 										required
@@ -71,7 +71,7 @@
 								<v-btn
 									color='error'
 									rounded
-									:small='smAndDown'
+									:size='smAndDown?"small":""'
 									variant='flat'
 									@click='cancel'
 								>
@@ -85,7 +85,7 @@
 									color='secondary'
 									:disabled
 									rounded
-									:small='smAndDown'
+									:size='smAndDown?"small":""'
 									:variant='disabled ? "outlined" : "flat"'
 									@click='click'
 								>

@@ -1,4 +1,4 @@
-import type { c_MealInfo, PV } from '@/types'
+import type { c_MealInfo } from '@/types'
 import { fetch_authenticatedFood, fetch_incognito } from '@/services/fetch'
 
 class MealStorage {
@@ -53,41 +53,43 @@ class MealStorage {
 
 	// Check hash and get meals, save to storage, else return and insert into pinia
 	async seed_meal_pinia (): Promise<void> {
-		loadingModule().set_loading(true)
-		const authenticated = userModule().authenticated
-		const hash = this.hash_get()
 		try {
+			loadingModule().set_loading(true)
+			const authenticated = userModule().authenticated
 			const latest_hash = authenticated ? await fetch_authenticatedFood.mealhash_get() : await fetch_incognito.mealhash_get()
-			if (latest_hash) {
-				this.hash_set(latest_hash)
-			}
+
+			const hash = this.hash_get()
 			if (hash && hash === latest_hash) {
-				const meals_in_storage = this.meals_get()
-				await (meals_in_storage ? this.#get_set_meals_to_pinia(authenticated, meals_in_storage) : this.#get_set_meals_to_pinia(authenticated))
-			} else {
-				await this.#get_set_meals_to_pinia(authenticated)
+				const cached = this.meals_get()
+				if (cached) {
+					this.#use_meals(cached)
+					return
+				}
+			}
+
+			const fetched = authenticated ? await fetch_authenticatedFood.all_get() : await fetch_incognito.meals_get()
+			if (fetched) {
+				this.#use_meals(fetched)
+				// Only persist the hash once its matching meals are stored,
+				// else stale meals get served as fresh on the next load
+				if (latest_hash) {
+					this.hash_set(latest_hash)
+				}
 			}
 		} catch {
-			const meals_in_storage = this.meals_get()
-			if (meals_in_storage) {
-				await this.#get_set_meals_to_pinia(authenticated, meals_in_storage)
+			const cached = this.meals_get()
+			if (cached) {
+				this.#use_meals(cached)
 			}
+		} finally {
+			loadingModule().set_loading(false)
 		}
-
-		loadingModule().set_loading(false)
 	}
 
-	async #get_set_meals_to_pinia (authenticated: boolean, current_meals?: c_MealInfo): PV {
-		if (current_meals) {
-			this.meals_set(current_meals)
-			mealModule().set(current_meals)
-		} else {
-			const current_meals = authenticated ? await fetch_authenticatedFood.all_get() : await fetch_incognito.meals_get()
-			if (current_meals) {
-				this.meals_set(current_meals)
-				mealModule().set(current_meals)
-			}
-		}
+	// Write meals to localStorage and pinia
+	#use_meals (meals: c_MealInfo): void {
+		this.meals_set(meals)
+		mealModule().set(meals)
 	}
 }
 

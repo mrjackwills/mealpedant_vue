@@ -31,7 +31,6 @@
 					<v-btn
 						class='elevation-0 mr-4'
 						:color='loading || completed ? "" : "error"'
-						dark
 						:disabled='loading || completed'
 						large
 						rounded
@@ -45,7 +44,6 @@
 					<v-btn
 						class='elevation-0'
 						:color='loading || v$.$invalid || completed ? "" : "secondary"'
-						dark
 						:disabled='loading || v$.$invalid || completed'
 						large
 						rounded
@@ -243,10 +241,10 @@ const errorMessages = computed(() => {
 
 		if (emailVal && passVal.includes(emailVal)) {
 			passwordErr = 'Your password cannot contain your email'
-		} else if (pv.minLen.$invalid) {
-			passwordErr = '12 characters minimum'
 		} else if (user.value.password.length === 0) {
 			passwordErr = 'password required'
+		} else if (pv.minLen.$invalid) {
+			passwordErr = '12 characters minimum'
 		}
 	}
 

@@ -160,7 +160,7 @@
 						<span class='font-weight-bold text-mealtype'>{{ filteredDays }}</span>
 
 						<span v-tooltip:top='"% all days"' class='font-italic text-mealtype'>
-							({{ (100 / (totalMeals) * filteredDays).toFixed(2) }}%)
+							({{ percentages(filteredDays, totalMeals) }}%)
 						</span>
 					</section>
 				</v-col>
@@ -178,6 +178,7 @@ import { useDisplay, useLayout } from 'vuetify'
 import { VRow } from 'vuetify/components'
 import { type DateMeal, TPerson } from '@/types'
 import { days, genesisDate, months } from '@/vanillaTS/globalConst'
+import { percentages } from '@/vanillaTS/helpers'
 const { smAndDown, mdAndDown } = useDisplay()
 const mealStore = mealModule()
 

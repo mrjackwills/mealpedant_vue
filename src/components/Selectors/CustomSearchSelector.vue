@@ -11,15 +11,16 @@
 
 <script setup lang='ts'>
 import { mdiMagnify } from '@mdi/js'
+import { watchDebounced } from '@vueuse/core'
 
 const mealStore = mealModule()
 
 const searchTerm = ref('')
 
-watch(searchTerm, (i: string) => {
+watchDebounced(searchTerm, (i: string) => {
 	mealStore.set_search_by_term(i)
 	browserModule().set_pageTitle(i)
-})
+}, { debounce: 100 })
 
 // The reset can get called from other modules, so need to watch then reset
 const is_filtered = computed(() => mealStore.is_filtered)
